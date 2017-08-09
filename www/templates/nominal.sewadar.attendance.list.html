@@ -1,0 +1,68 @@
+<ion-view class="login-home-body"> 
+    <div class="bar bar-header bar-balanced custom-header-bar jatha-member" ng-class="{'my-disable':isDisabled}">
+        <div class="sewa-name">
+            <button class="button icon ion-chevron-left icon-before" on-tap="goBack()">
+                <span class='header-title nominal-att-title' ng-bind="(nominal_id)? nominalRollsData.sewa_name : 'Add New Nominal Roll'"></span>
+            </button>
+        </div>
+        <div class='right rt-buttons'>
+            <button class="button button-icon button-add add-jatha-member on-mob-display-none" on-tap="openJathaMembers()" ng-if="(nominal_status == 'Approved')"><i class="icon ion-plus plus-icon"></i> Jatha Members</button>
+            <button class="button button-icon button-add on-mob-display-none" on-tap="openPopoverForTempSewadar()" ng-if="(nominal_status == 'Approved')"><i class="icon ion-plus plus-icon"></i> Open Sewadar</button>
+            <button class="button icon ion-printer icon-before on-mob-display-none" on-tap="print()" ng-if="(nominal_status == 'Approved')"></button>
+           <!--  <button class="button button-icon button-clear ion-android-more-vertical" on-tap="openHeaderPopover()"></button> -->
+            <!-- <header-popover class="on-tab-display-none"></header-popover>  -->
+        </div>
+    </div>
+        
+    <div class="list search-wrapper" ng-if="isBatchNumber" ng-class="{'my-disable':isDisabled}">
+        <label class="item item-input srch-width">
+            <i class="icon ion-search placeholder-icon search-icon"></i>
+            <input 
+            type="tel" 
+            placeholder="Search Sewadar by Badge No."
+            autocomplete="off"
+            class = "text-transform-capital placehoder-text-change att-search"
+            ng-model="searchQuery"
+            ng-model-options="{debounce : 500}"
+            spellcheck = "false"
+            ng-change = "search(searchQuery)"
+            search-popover-diretive
+            action-enter = "search(searchQuery)"
+            set-focus-directive
+            >
+            <!-- <span class="button search_btn" on-tap="byNameOrBatch('name')">By Name</span> -->
+        </label> 
+        <span class="button ion-arrow-swap swap-btn" on-tap="openNameOrBadgePopover()"></span>           
+    </div>
+
+    <div class="list search-wrapper" ng-if="!isBatchNumber">
+        <label class="item item-input srch-width">
+            <i class="icon ion-search placeholder-icon search-icon"></i>
+            <input 
+            type="search" 
+            placeholder="Search Sewadar by Name"
+            autocomplete="off"
+            class = "text-transform-capital placehoder-text-change att-search"
+            ng-model="searchQuery"
+            ng-model-options="{debounce : 500}"
+            spellcheck = "false"
+            ng-change = "search(searchQuery)"
+            search-popover-diretive
+            action-enter="search(searchQuery)"
+            set-focus-directive
+            >
+            <!-- <span class="button search_btn" on-tap="byNameOrBatch('batch')">By Batch</span> -->
+        </label>  
+        <span class="button ion-arrow-swap swap-btn" on-tap="openNameOrBadgePopover()"></span>          
+    </div>   
+    <ion-floating-menu backdrop="true" class = "floating-btn-for-list">
+        <ion-floating-item class="print-class" ng-click="print()" icon="ion-printer" text="Print"></ion-floating-item>
+        <ion-floating-item class="open-sewadar-class"ng-click="openPopoverForTempSewadar()" icon="ion-plus" text="Open Sewadar" menu-open-icon = "ion-plus"></ion-floating-item>
+        <ion-floating-item class="jatha-class" ng-click="openJathaMembers()" icon="ion-plus" text="Jatha Members"></ion-floating-item>
+    </ion-floating-menu>
+	<ion-content has-bouncing = "false" class="stop-scroll" ng-class="{'my-disable':isDisabled}">
+        <div class="common-search-wrapper"> 	
+		  <sewadars-listing-directive></sewadars-listing-directive>
+        </div>
+	</ion-content>
+</ion-view>

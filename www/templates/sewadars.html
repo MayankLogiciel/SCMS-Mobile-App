@@ -1,0 +1,74 @@
+<ion-view class="login-home-body"> 
+	<ion-header-bar class="bar-balanced custom-header-bar">
+		<div class="buttons left-button row">
+			<button class="button button-icon button-stable ion-chevron-left col-10" on-tap="goBack()">
+			</button>
+			<span class='col col-80 header-title'>Sewadar Data</span>
+			<button class="button button-icon button-stable col-10" >
+			</button>
+		</div>
+	</ion-header-bar>
+	
+	<div class="list search-wrapper" ng-if="isBatchNumber">
+			<label class="item item-input search-box srch-width">
+				<i class="icon ion-search placeholder-icon search-icon"></i>
+				<input 
+					type="tel" 
+					placeholder="Search Sewadar by Badge No."
+					autocomplete="off"
+					class = "text-transform-capital att-search" 
+					ng-model="searchQuery"
+					ng-model-options="{debounce : 500}"
+					spellcheck = "false"
+					ng-change = "search(searchQuery)"
+					set-focus-directive
+				>
+				<!-- <span class="button search_btn" on-tap="byNameOrBatch('name')">By Name</span> -->
+			</label>    		
+			<span class="button ion-arrow-swap swap-btn" on-tap="openNameOrBadgePopover()"></span>
+		</div>	
+		<div class="list search-wrapper" ng-if="!isBatchNumber">
+			<label class="item item-input srch-width">
+				<i class="icon ion-search placeholder-icon search-icon"></i>
+				<input 
+					type="search" 
+					placeholder="Search Sewadar by Name"
+					autocomplete="off"
+					class = "text-transform-capital att-search placehoder-text-change" 
+					ng-model="searchQuery"
+					ng-model-options="{debounce : 500}"
+					spellcheck = "false"
+					ng-change = "search(searchQuery)"
+					set-focus-directive
+				>
+				<!-- <span class="button search_btn" on-tap="byNameOrBatch('batch')">By Batch</span> -->
+			</label>    
+			<span class="button ion-arrow-swap swap-btn" on-tap="openNameOrBadgePopover()"></span>		
+		</div>	
+		
+	<ion-content has-bouncing = "false" class="stop-scroll">
+		<div sewadar-detail-modal-diretive>
+			<a class="item item-avatar listing-attend" ng-repeat="sewadar in sewadars" on-hold="quickActions(sewadar)" on-tap="selectedSewadarDetail(sewadar,'viewSewadar')">
+	      		<img class="list-avtar" ng-if='sewadar.photo && sewadar.isImageFound' ng-src="{{imagePath + sewadar.photo}}?{{timeStampPhoto}}"/>
+				<img class="list-avtar" ng-if='!sewadar.photo || !sewadar.isImageFound' ng-src="{{defaultImage}}"/>
+	      		<h2 class="row list-avtar-wrapper">  
+	      			<div class="col list-sewadar-content-margin">    		
+			      		<h2 class="list-content-avtar">
+			      			<span ng-bind="sewadar.name" class="text-transform-capital" ></span>
+			      		</h2>
+				      	<h2 class="list-content-avtar-content">
+							<span ng-bind="sewadar.guardian" class="text-transform-capital" ></span>
+							<span ng-if="sewadar.batch_no"> | </span>
+							<span ng-bind="sewadar.batch_no"></span>
+							<span ng-if="sewadar.gender" class = "hide-dept-on-mob"> | </span>
+							<br class="display-block-dept-on-mob">
+							<span ng-bind="(sewadar.gender=='M')?'Male':'Female'"></span>
+							<span ng-if="sewadar.department_name"> | </span>
+							<span ng-bind="sewadar.department_name" class="text-transform-capital" ></span>			
+						</h2>				
+	      			</div>
+	      		</h2>
+	    	</a>
+		</div>
+	</ion-content>
+</ion-view>

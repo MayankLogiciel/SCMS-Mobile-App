@@ -1,0 +1,68 @@
+<ion-view class="login-home-body"> 
+    <ion-header-bar class="bar-balanced custom-header-bar">
+        <button class="button button-icon button-stable ion-chevron-left col-10 arrow-back" on-tap="goBack()">
+        </button>
+        <span class="title col-80 db-import">Import Database</span>
+        <button class="button button-icon button-stable col-10">
+        </button>
+    </ion-header-bar>
+    <ion-content has-bouncing = "false">    
+    <div class="scms-import">        
+        <div class='login-img'>
+            <img src="img\logo.png" alt="">
+         </div>           
+        <form class="scms-common-margin-for-login-and-home" name="importForm" novalidate> 
+            <div class="list">
+                <div class="list list-inset login-wraper">
+                    <label class="item item-input custom-text">
+                        <i class="icon ion-android-globe placeholder-icon"></i>
+                        <input 
+                            type="text" 
+                            name="server-url"
+                            autocomplete="off"
+                            validator="required"
+                            required-error-message="* Please enter valid server url"
+                            message-id="url_id" 
+                            ng-model="importData.server_url" 
+                            ng-change="serverURL(importData.server_url)"
+                            placeholder="Server Url"> 
+                    </label>
+                </div> 
+                <p id='url_id'></p>
+                <div class="list list-inset login-wraper">
+                    <label class="item item-input custom-text">
+                        <i class="icon ion-email placeholder-icon"></i>
+                        <input 
+                            type="email" 
+                            name="email"
+                            autocomplete="off"
+                            validator="email"
+                            message-id="email_id" 
+                            ng-model="importData.username" 
+                            placeholder="Email"> 
+                    </label>
+                </div> 
+                <p id='email_id'></p>
+                <div class="list list-inset login-wraper">
+                    <label class="item item-input custom-text">
+                        <i class="icon ion-locked placeholder-icon"></i>
+                        <input 
+                            type="password" 
+                            name="password"
+                            message-id="password_id"
+                            autocomplete="off"
+                            validator="required"
+                            required-error-message="* Please enter password"
+                            ng-model="importData.password" 
+                            placeholder="Password">
+                    </label>                    
+                </div>
+                <p id='password_id'></p>
+                <button class="button button-block button-assertive btn-padding" validation-submit="importForm" ng-click="import(importData)" type="submit">
+                    IMPORT
+                </button>
+            </div>
+        </form>
+    </div>
+    </ion-content>
+</ion-view>

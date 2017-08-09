@@ -1,0 +1,39 @@
+<ion-popover-view class="fit custom-popover sewadar-popover">
+      <ion-header-bar>
+            <h1 class="title">
+                  <i class="icon ion-close-round" ng-click="closePopoverForSewadar()"></i>
+            </h1>
+      </ion-header-bar>
+      <ion-content class="has-header"> 
+            <div sewadar-detail-modal-diretive>
+                  <div class="list list-padding row list-image" ng-repeat="sewadar in sewadars">
+                        <div class="col col-90">
+                              <a 
+                                    class="item item-avatar item-margin row"
+                                    >
+                                    <img ng-if='sewadar.photo && sewadar.isImageFound' ng-src="{{imagePath + sewadar.photo}}?{{timeStampPhoto}}" class = "profile-image-in-popover"/>
+                                    <img ng-if='!sewadar.photo || !sewadar.isImageFound' ng-src="{{defaultImage}}" class = "profile-image-in-popover"/>
+                                    <ion-radio ng-model="selectedSewadar.name"  ng-change='selectedSewadarDetail(sewadar);' ng-value="sewadar.name" class="attendance-to-mark">
+                                          <h2 class="list-content name-on-mob-sewadar">{{sewadar.name}}</h2>
+                                          <h2 class="hide-dept-on-mob1">
+                                                {{sewadar.guardian}}  | {{sewadar.batch_no}} | {{(sewadar.gender=='M')?'Male':'Female'}} | {{sewadar.department_name}}
+                                          </h2> 
+                                          <h2 class ="display-block-dept-on-mob1">
+                                                {{sewadar.guardian}}  | {{sewadar.batch_no}} 
+                                                <br> 
+                                                {{(sewadar.gender=='M')?'Male':'Female'}} | {{sewadar.department_name}}
+                                          </h2>
+                                    </ion-radio>           
+                              </a>
+                        </div>
+                        <div class="col col-10 tick-mark-attendance">
+                              <!-- <button class="button button-balanced" on-tap="SaveDataToAttandanceTable(sewadar); closePopoverForSewadar();">
+                                    Mark
+                              </button> -->
+                              <i class="icon ion-ios-checkmark list-mark" on-tap="SaveDataToAttandanceTable(sewadar); closePopoverForSewadar(curDate);"></i>
+                        </div>
+                  </div>
+
+            </div>
+      </ion-content>
+</ion-popover-view>

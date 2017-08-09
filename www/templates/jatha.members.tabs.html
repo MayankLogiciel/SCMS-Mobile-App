@@ -1,0 +1,84 @@
+<ion-view class="login-home-body">	    
+	<ion-header-bar class="bar-balanced custom-header-bar">
+		<div class="buttons left-button row">
+			<button class="button button-icon button-stable ion-chevron-left col-20" on-tap="goBack()">
+			</button>
+			<span class='col col-60 header-title'>Jatha Members</span>
+			<button class="button button-icon button-add col-20 btn-required-width" ng-if="!isFemale" on-tap="addMaleSewadars()">
+				+ Male {{maleSelectedCount <= 0 ? '' : '(' +maleSelectedCount+ ')'}}
+				
+			</button>
+			<button class="button button-icon button-add col-20 btn-required-width" ng-if="isFemale" on-tap="addFemaleSewadars()">
+				+ Female {{femaleSelectedCount <= 0 ? '' : '(' +femaleSelectedCount+ ')'}}
+			</button>
+		</div>		
+	</ion-header-bar>
+	<!-- Tabs for Jatha Member Page -->
+	<ion-tabs class="tabs-striped tabs-color-assertive tabs-icon-top tab-jatha-member">		
+
+		<!--Male tab-->
+		<ion-tab title="Male Members ({{maleMembers.length}})" ng-click="tabClicked('male')">
+				<ion-content has-bouncing = "false" class="stop-scroll-top">
+					<div class="list list-padding row jatha-list" ng-repeat="member in maleMembers" ng-class="{'final-diable':member.isDisabled}">	
+						<div class="col col-90">
+							<a 
+							class="item item-avatar item-margin row"
+							>
+								<img ng-if='member.photo && member.isImageFound' ng-src="{{imagePath + member.photo}}" class = "jatha-img"/>
+								<img ng-if='!member.photo || !member.isImageFound' ng-src="{{defaultImage}}" class = "jatha-img"/>
+								<h2 class="list-content name-on-mob">
+									<span ng-bind="member.name" class="text-transform-capital" ></span>
+								</h2>
+								<h2 class = "info-on-mob">
+									<span ng-bind="member.guardian" class="text-transform-capital" ></span>		
+									<span> | </span>
+									<span ng-bind="member.batch_no"></span>
+									<span class = "hide-dept-on-mob"> | </span>
+									<br class="display-block-dept-on-mob">
+									<span ng-bind="(member.gender=='M')?'Male':'Female'"></span>
+									<span> | </span>
+									<span ng-bind="member.department_name" class="text-transform-capital" ></span>		
+								</h2>					
+							</a>
+						</div>
+						<div class="col col-10 member-checkbox">
+		                    <ion-checkbox ng-model="member.isSelected" ng-change="markSelected(member, 'male')" ng-disabled = 'member.isDisabled' class = "checkbox-dimension">
+	                        </ion-checkbox >
+		                </div>	
+					</div>
+				</ion-content> 
+		</ion-tab>
+		<!--Female  tab-->
+		<ion-tab title="Female Members ({{femaleMembers.length}})" ng-click="tabClicked('female')">
+				<ion-content has-bouncing = "false" class="stop-scroll-top">
+					<div class="list list-padding row jatha-list" ng-repeat="member in femaleMembers" ng-class="{'final-diable':member.isDisabled}">	
+						<div class="col col-90">
+							<a 
+							class="item item-avatar item-margin row"
+							>
+								<img ng-if='member.photo && member.isImageFound' ng-src="{{imagePath + member.photo}}" class = "jatha-img"/>
+								<img ng-if='!member.photo || !member.isImageFound' ng-src="{{defaultImage}}" class = "jatha-img"/>
+								<h2 class="list-content name-on-mob">
+									<span ng-bind="member.name" class="text-transform-capital" ></span>
+								</h2>
+								<h2 class = "info-on-mob">
+									<span ng-bind="member.guardian" class="text-transform-capital" ></span>		
+									<span> | </span>
+									<span ng-bind="member.batch_no"></span>
+									<span class = "hide-dept-on-mob"> | </span>
+									<br class="display-block-dept-on-mob">
+									<span ng-bind="(member.gender=='M')?'Male':'Female'"></span>
+									<span> | </span>
+									<span ng-bind="member.department_name" class="text-transform-capital" ></span>		
+								</h2>					
+							</a>
+						</div>
+						<div class="col col-10 member-checkbox">
+		                    <ion-checkbox ng-model="member.isSelected" ng-change="markSelected(member, 'female')" ng-disabled = 'member.isDisabled' class = "checkbox-dimension">
+	                        </ion-checkbox >
+		                </div>	
+					</div>
+				</ion-content>
+		</ion-tab>	
+	</ion-tabs> 
+</ion-view>

@@ -1,0 +1,216 @@
+<ion-view class="login-home-body"> 
+    <ion-header-bar class="bar-balanced custom-header-bar">
+        <div class="buttons left-button row">
+            <button class="button button-icon button-stable ion-chevron-left col-10" on-tap="goBack()">
+            </button>
+            <span class=' col col-80 header-title' on-tap="goBack()" ng-bind="(nominal_id)? 'Edit Nominal Roll' : 'Add New Nominal Roll'"></span>
+            <button class="button button-icon button-stable col-10">
+            </button>
+        </div>
+    </ion-header-bar>       
+    <ion-content has-bouncing = "false" scroll="true">
+    <form name='nominalForm' class="scms-common-margin-for-login-and-home nominal-add-edit-form nominal-add-edit-form-width" novalidate>
+            <div class="list">
+                <div class="row">       
+                    <div class="col col-50"> 
+                    <!-- nominal_id -->
+                        <div class="list list-inset login-wraper" ng-class="{'final-diable':nominal_id && nominal_user != 'secretary'}">
+                            <label class="item item-input custom-text nominal-roll-add-edit-input">
+                                <i class="icon ion-calendar placeholder-icon"></i>
+                                <input 
+                                type="text" 
+                                autocomplete="off"
+                                ng-model="nominal.date_from"
+                                name="Date From" 
+                                validator="required"
+                                message-id="from-date-id"
+                                required-error-message="* Enter start date"
+                                placeholder="Date From"
+                                ng-click="openDatePicker('from')"
+                                ng-disabled = "nominal_id && nominal_user != 'secretary'"
+                                readonly> 
+                            </label>
+                        </div> 
+                        <p id='from-date-id'></p>
+
+
+                        <label class="item item-input item-select option-sewa" ng-init = "getListForSewas()" ng-class="{'final-diable':nominal_id && nominal_user != 'secretary'}">
+                            <i class="icon ion-location placeholder-icon"></i>
+                            <select 
+                                name="sewa-place" 
+                                ng-model="nominalRollsData.nominalPlace"
+                                ng-options="sewa.sewa_name for sewa in sewas track by sewa.sewa_id"
+                                message-id="sewa-id"
+                                required-error-message="* Please select the sewa place"
+                                ng-change="selectedSewa(nominalRollsData.nominalPlace)" 
+                                validator="required"
+                                ng-disabled = "nominal_id && nominal_user != 'secretary'"
+                                >
+                                <option selected value="">Select Sewa Place</option>
+                            </select>
+                        </label>
+                        <p id='sewa-id'></p> 
+
+
+                        <label class="item item-input item-select option-sewa" ng-class="{'final-diable':nominal_id && nominal_user != 'secretary'}">
+                            <i class="icon ion-clock placeholder-icon"></i>
+                            <select 
+                                name="sewa-schedule"
+                                message-id="schedule-id"
+                                required-error-message="* Please select schedule or unschedule"
+                                ng-change="selectedSchedule(nominalRollsData.value)" 
+                                validator="required"
+                                ng-model="nominalRollsData.value" 
+                                ng-options="schedule for schedule in nominalRollsData.values"
+                                ng-disabled = "nominal_id && nominal_user != 'secretary'"
+                                >
+                            </select>
+                        </label>
+                        <p id='schedule-id'></p> 
+
+
+                        <div class="list list-inset login-wraper" ng-class="{'final-diable':nominal_id && nominal_user != 'secretary'}">
+                            <label class="item item-input custom-text nominal-roll-add-edit-input">
+                                <i class="icon ion-person placeholder-icon"></i>
+                                <input 
+                                class="text-transform-capital" 
+                                type="text" 
+                                autocomplete="off"
+                                ng-model="nominal.name"
+                                name="jathedar_name" 
+                                validator="required"
+                                message-id="jathedar-id"
+                                required-error-message="* Enter Jathedar name"
+                                placeholder="Jathedar Name"
+                                ng-disabled = "nominal_id && nominal_user != 'secretary' "/>
+                            </label>
+                        </div>
+                        <p id='jathedar-id'></p>
+
+                        <label class="item item-input item-select option-sewa" ng-init = "getListForVehicle()" >
+                            <i class="icon ion-android-car placeholder-icon"></i>
+                            <select 
+                                name="vehicle-type" 
+                                ng-model="nominalRollsData.nominalVehicle"
+                                ng-options="vehicle.vehicle_name for vehicle in vehicles track by vehicle.vehicle_id"
+                                ng-change="selectedVehicle(nominalRollsData.nominalVehicle)"
+                                >
+                                <option selected value="">Select Vehicle Type</option>
+                            </select>
+                        </label>
+                        <p></p>
+
+                        <div class="list list-inset login-wraper" ng-class="{'final-diable':isVehicaltypeSected}">
+                            <label class="item item-input custom-text nominal-roll-add-edit-input">
+                                <i class="icon ion-person placeholder-icon"></i>
+                                <input 
+                                class="text-transform-capital" 
+                                type="text" 
+                                autocomplete="off"
+                                ng-model="nominal.driver_name"
+                                name="driver_name" 
+                                placeholder="Driver Name"
+                                ng-disabled = 'isVehicaltypeSected'/>
+                            </label>
+                        </div>
+                        <p></p>
+                    </div>
+                    <div class="col col-50">
+
+                        <div class="list list-inset login-wraper" ng-class="{'final-diable':nominal_id && nominal_user != 'secretary'}">
+                            <label class="item item-input custom-text nominal-roll-add-edit-input">
+                                <i class="icon ion-calendar placeholder-icon"></i>
+                                <input 
+                                type="text" 
+                                autocomplete="off"
+                                ng-model="nominal.date_to"
+                                name="Date To" 
+                                validator="required"
+                                message-id="to-date-id"
+                                required-error-message="* Enter end date"
+                                placeholder="Date To"
+                                ng-click="openDatePicker('to')"
+                                ng-disabled = "nominal_id && nominal_user != 'secretary' "
+                                readonly> 
+                            </label>
+                        </div> 
+                        <p id='to-date-id'></p>        
+
+
+                        <div class="list list-inset login-wraper" ng-class="{'final-diable':newEntryDisabled || (nominal_id && nominal_user != 'secretary') }">
+                            <label class="item item-input custom-text nominal-roll-add-edit-input">
+                                <i class="icon ion-location placeholder-icon"></i>
+                                <input 
+                                class="text-transform-capital" 
+                                type="text" 
+                                autocomplete="off"
+                                ng-model="nominal.new_sewa"
+                                name="misc"                                 
+                                placeholder="New Sewa Entry"
+                                ng-change = "miscSewa(nominal.new_sewa)"
+                                ng-disabled = "newEntryDisabled || (nominal_id && nominal_user != 'secretary')"/>
+                            </label>
+                        </div>
+                        <p ng-if= "isValidMiscSewa"></p>
+                        <p ng-if = "!isValidMiscSewa" class=" mob-err-msg">* Please enter new sewa place</p>                     
+                       
+                        <label class="item item-input item-select option-sewa" ng-init = "getListForJatha()" ng-class="{'final-diable':nominal_id && nominal_user != 'secretary'}">
+                            <i class="icon ion-ios-people placeholder-icon"></i>
+                            <select 
+                                name="jatha" 
+                                ng-model="nominalRollsData.nominalDept"
+                                ng-options="jatha.jatha_name for jatha in jathas track by jatha.department_id"
+                                message-id="jatha-id"
+                                required-error-message="* Please select jatha"
+                                ng-change="selectedJatha(nominalRollsData.nominalDept)" 
+                                validator="required"
+                                ng-disabled = "nominal_id && nominal_user != 'secretary' "
+                                >
+                                <option selected value="">Select Jatha</option>
+                            </select>
+                        </label>
+                        <p id='jatha-id'></p> 
+
+                        <div class="list list-inset login-wraper" ng-class="{'final-diable':nominal_id && nominal_user != 'secretary'}">
+                            <label class="item item-input custom-text nominal-roll-add-edit-input">
+                                <i class="icon ion-android-call placeholder-icon"></i>
+                                <input 
+                                    type="tel"
+                                    ng-model="nominal.contact_no"
+                                    name="jathedar_contact"
+                                    autocomplete="off"
+                                    placeholder="Contact Number"
+                                    validator="required"
+                                    message-id="contact_no"
+                                    required-error-message="* Enter valid phone number"
+                                    maxlength = '10'
+                                    ng-disabled = "nominal_id && nominal_user != 'secretary' "
+                                    />
+                            </label>
+                        </div>
+                        <p id='contact_no' ng-if= "!isNotValidNumber"></p>
+                        <p ng-if= "isNotValidNumber && nominal.contact_no.length < 10" class="mob-err-msg">* Enter valid phone number</p> 
+                        <p ng-if= "isNotValidNumber && nominal.contact_no.length == 10"></p>
+
+                        <div class="list list-inset login-wraper"  ng-class="{'final-diable':isVehicaltypeSected}">
+                            <label class="item item-input custom-text nominal-roll-add-edit-input">
+                                <i class="icon ion-card placeholder-icon"></i>
+                                <input 
+                                type="text" 
+                                class = "text-transform-uppercase placehoder-text-change" 
+                                autocomplete="off"
+                                ng-model="nominal.vehicle_no"
+                                name="vehicle_number" 
+                                placeholder="Vehicle Number"
+                                ng-disabled = 'isVehicaltypeSected'/>
+                            </label>
+                        </div>
+                        <p></p>                      
+                    </div>
+                </div>                 
+                <button class="button button-block button-assertive btn-padding" validation-submit="nominalForm" ng-click="addEditNominal(nominal)" type="submit" ng-bind="addEditButton">                                    
+                </button> 
+            </div>       
+        </form>                   
+    </ion-content>
+</ion-view>

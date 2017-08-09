@@ -1,0 +1,37 @@
+<ion-view class="login-home-body"> 
+    <ion-header-bar class="bar-balanced custom-header-bar">
+        <div class="buttons left-button row">
+            <button class="button button-icon button-stable ion-chevron-left col-10" on-tap="goBack()">
+            </button>
+            <span class='col col-90 header-title'>Sync To Server</span>
+        </div>
+    </ion-header-bar>
+    <ion-content class="stop-scrol-sync">
+        <h3 class="upload-data">UPLOAD DATA</h3>
+        <div class="sync-pic">
+            <h4 class="profile-pic">Profile pictures to sync: {{picturesCount}}</h4>
+            <button class="button button-assertive profile-pic-sync-btn" on-tap="uploadImageOneByOne('only-pics')">
+                <i class="icon ion-android-sync"></i>Sync Now
+            </button>
+        </div>
+        <div class="sync-pic">
+            <h4 class="profile-pic">Nominal Rolls to sync: {{nominalCount}}</h4>
+            <h4 class="satsang-day-sewadars-sync">Satsang Day attendance to sync: {{attendanceCount}}</h4>
+            <button class="button button-assertive profile-pic-sync-btn" on-tap ="uploadDatabase()">
+                <i class="icon ion-android-sync"></i>Sync Now
+            </button>
+        </div>
+        <h3 class="download-img">DOWNLOAD DATA</h3>
+        <span class="sync-date" ng-if = "syncDateAndTime != null">Last Sync On: {{syncDateAndTime.date +"-"+ syncDateAndTime.time}}</span>
+        <div class="download-images-from-db all-img">
+            <button class="button button-assertive profile-pic-sync-btn1 " on-tap="importImagesFromServer('all')">
+                <i class="icon ion-android-sync"></i>Import All Images
+            </button>
+        </div>
+        <div class="download-images-from-db">
+            <button class="button button-assertive profile-pic-sync-btn1" on-tap ="importImagesFromServer()">
+                <i class="icon ion-android-sync"></i>Import Only Updated Images
+            </button>
+        </div>
+    </ion-content>    
+</ion-view>

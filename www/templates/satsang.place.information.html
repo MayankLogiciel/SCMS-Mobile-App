@@ -1,0 +1,42 @@
+<ion-view class="login-home-body">
+    <ion-header-bar class="bar-balanced custom-header-bar">
+        <div class="buttons left-button row">
+            <button class="button button-icon button-stable ion-chevron-left col-10" on-tap="goBack()">
+            </button>
+            <span class='col col-90 header-title'>Satsang Place Information</span>
+        </div>
+    </ion-header-bar>
+    <ion-content has-bouncing = "false" class="has-header">
+        <div class="list info-wrapper">
+            <label class="item item-input item-floating-label img-label">
+                 <img src="img\logo.png" alt="">
+            </label>
+            <label class="item item-input item-floating-label">
+                <span class="input-label">Satsang Place</span>
+                <input type="text" ng-model="info.place" ng-change="placeInfo(info)" placeholder="Satsang Place" class="text-transform-capital" >
+            </label>
+            <label class="item item-input item-floating-label">
+                <span class="input-label">Area</span>
+                <input type="text" ng-model="info.area" ng-change="placeInfo(info)" placeholder="Area" class="text-transform-capital" >
+            </label>
+            <label class="item item-input item-floating-label">
+                <span class="input-label" class="text-transform-capital">Zone</span>
+                <input type="text" ng-model="info.zone" ng-change="placeInfo(info)" placeholder="Zone">
+            </label>
+            <label class="item item-input item-floating-label">
+                <span class="input-label">Phone Number 1</span>
+                <input type="tel" ng-model="info.mobile1" ng-change="placeInfo(info)" placeholder="Phone Number 1" maxlength="10"
+                                    pattern="[0-9]{10}">
+            </label>
+             <label class="item item-input item-floating-label">
+                <span class="input-label">Phone Number 2</span>
+                <input type="tel" ng-model="info.mobile2" ng-change="placeInfo(info)" placeholder="Phone Number 2" maxlength="10"
+                                    pattern="[0-9]{10}">
+            </label>
+            <label class="item item-input item-floating-label">
+                <span class="input-label" class="text-transform-capital">Server Url</span>
+                <input type="text" ng-model="info.serverURL" ng-change="placeInfo(info)" placeholder="Server Url">
+            </label>
+        </div>
+    </ion-content>
+</ion-view>

@@ -1,0 +1,211 @@
+<ion-view class="login-home-body">    
+	<ion-header-bar class="bar-balanced custom-header-bar">
+		<div class="buttons left-button row">
+			<button class="button button-icon button-stable ion-chevron-left col-20" on-tap="goBack()">
+			</button>
+			<span class='col col-60 header-title'>Nominal Rolls</span>
+			<button class="button button-icon button-add col-20 nominal-roll-add-btn" ui-sref="addedit-nominal_rolls({action: 'add'})">
+				<i class="icon ion-plus plus-icon"></i> Nominal Roll
+			</button>
+		</div>		
+	</ion-header-bar>
+
+	<div class="list search-wrapper">
+			<label class="item item-input">
+				<i class="icon ion-search placeholder-icon search-icon"></i>
+				<input 
+				type="search" 
+				placeholder="Search Name"
+				autocomplete="off"
+				ng-model="searchQuery"
+				spellcheck = "false"
+				>
+			</label>  		
+		</div>
+
+	
+	<ion-content has-bouncing = "false" scroll="true" class="stop-scroll">
+		
+		<div class="common-search-wrapper">			
+			<div 
+			class="list nominal-list nominal-list-mob" 
+			ng-repeat="nominal in nominals | filter:searchQuery | orderBy: 'date_from': Desc" on-hold="quickActions(nominal)" on-tap="viewAndMarkAttendanceNominal(nominal)">
+			<a class="item item-button-right">
+				<!-- <button class="button button-balanced" on-tap="editNominal(nominal)" >
+	      			Add Sewadar
+	    		</button> -->
+				<!-- <h4>
+					<label>Nominal Roll Name:</label>
+					<span ng-bind="nominal.name"></span>
+					<span ng-if="nominal.status=='draft'" class="badge badge-assertive" ng-bind="nominal.status"></span>
+				</h4> -->
+				<!--  -->
+				<div class="row nominal-list-on-tab">	
+					<div class="col col-90">
+						<div class="row">   
+							<div class="col col-50">                            
+								<h4>
+									<label>Date From:</label>
+									<span ng-bind="nominal.date_from"></span>
+								</h4> 
+								<h4>
+									<label>Sewa Place:</label>
+									<span ng-bind="nominal.sewa_name" class="text-transform-capital"></span>
+								</h4> 
+
+								<h4>
+									<label>Scheduled Status</label>
+									<span class="text-transform-capital">
+										{{nominal.is_scheduled == 0 ? 'Unscheduled' : 'Scheduled'}}
+									</span>
+								</h4> 
+
+								<h4 >
+									<label>Jathedar Name:</label>
+									<span ng-bind="nominal.name" class="text-transform-capital" ></span>
+								</h4>
+
+								<h4>
+									<label>Vehicle Type:</label>
+									<span>
+										{{nominal.vehicle_type == 'null'? 'N/A': nominal.vehicle_type}}
+									</span>
+								</h4>
+
+								<h4>
+									<label>Driver Name:</label>
+									<span class="text-transform-capital" >
+										{{nominal.driver_name == 'null'? 'N/A': nominal.driver_name}}
+									</span>                     
+								</h4> 
+
+
+							</div> 
+							<div class="col col-50 driver-data margin-bt-data">
+								<h4>
+									<label>Date To:</label>
+									<span ng-bind="nominal.date_to"></span>                  
+								</h4>
+
+								<h4 ng-class="{'final-diable':nominal.new_sewa == 'null'}">
+									<label>Misc Sewa Place:</label>
+									<span class="text-transform-capital">
+										{{nominal.new_sewa == 'null' ? 'N/A' : nominal.new_sewa}}
+									</span>
+								</h4> 
+
+
+								<h4>
+									<label>Jatha:</label>
+									<span ng-bind="nominal.jatha_name" class="text-transform-capital" ></span>
+								</h4> 
+
+								<h4>
+									<label>Contact No:</label>
+									<span ng-bind="nominal.contact_no"></span>
+								</h4>
+
+								<h4>
+									<label>Vehicle Number:</label>	                                 
+									<span class = "text-transform-uppercase">
+										{{nominal.vehicle_no == 'null'? 'N/A': nominal.vehicle_no}}
+									</span>                 
+								</h4> 	                                                       
+								<h4>
+									<label>Status:</label>
+									<span ng-bind="nominal.status" class="text-transform-capital" ></span>
+								</h4>                             
+							</div> 
+						</div>          
+					</div>
+					<div class="col col-10 remove-add-btn-on-mob">	                   
+						<i class="icon ion-plus-circled list-nominal-add" on-tap="viewAndMarkAttendanceNominal(nominal)"></i>
+					</div>
+				</div>   
+
+
+				<div class="nominal-list-on-mob">
+					<h4>
+						<label>Date From:</label>
+						<span ng-bind="nominal.date_from"></span>
+					</h4>
+					<h4>
+						<label>Date To:</label>
+						<span ng-bind="nominal.date_to"></span>                  
+					</h4> 
+					<h4>
+						<label>Sewa Place:</label>
+						<span ng-bind="nominal.sewa_name" class="text-transform-capital"></span>
+					</h4> 
+					<h4 ng-class="{'final-diable':nominal.new_sewa == 'null'}">
+						<label>Misc Sewa Place:</label>
+						<span class="text-transform-capital">
+							{{nominal.new_sewa == 'null' ? 'N/A' : nominal.new_sewa}}
+						</span>
+					</h4>
+					<h4>
+						<label>Scheduled Status:</label>
+						<span class="text-transform-capital">
+							{{nominal.is_scheduled == 0 ? 'Unscheduled' : 'Scheduled'}}
+						</span>
+					</h4>
+					<h4>
+						<label>Jatha:</label>
+						<span ng-bind="nominal.jatha_name" class="text-transform-capital" ></span>
+					</h4>
+					<h4 >
+						<label>Jathedar Name:</label>
+						<span ng-bind="nominal.name" class="text-transform-capital" ></span>
+					</h4>
+					<h4>
+						<label>Contact No:</label>
+						<span ng-bind="nominal.contact_no"></span>
+					</h4>
+					<h4>
+						<label>Vehicle Type:</label>
+						<span>
+							{{nominal.vehicle_type == 'null'? 'N/A': nominal.vehicle_type}}
+						</span>
+					</h4>
+					<h4>
+						<label>Vehicle Number:</label>	                                 
+						<span class = "text-transform-uppercase">
+							{{nominal.vehicle_no == 'null'? 'N/A': nominal.vehicle_no}}
+						</span>                 
+					</h4> 
+					<h4>
+						<label>Driver Name:</label>	                                
+						<span class="text-transform-capital" >
+							{{nominal.driver_name == 'null'? 'N/A': nominal.driver_name}}
+						</span>                     
+					</h4> 
+					<h4>
+						<label>Status:</label>
+						<span ng-bind="nominal.status" class="text-transform-capital" ></span>
+					</h4> 
+				</div>     
+				   
+			</a>			
+		</div>
+		</div>
+</ion-content>
+<div class="fixed-outside">
+	<div class="button-bar">
+		<button class="button ion-ios-calendar button-assertive btn-border" on-tap="openPopoverForDateFilter()">
+			Filter
+			<h4 ng-if="nominaldate && showDateRange" class="filter-date">
+				<span ng-bind="nominaldate.from_date"></span>
+				<span>to</span>
+				<span ng-bind= "nominaldate.to_date ? nominaldate.to_date : currentDate"></span>
+			</h4>
+			
+		</button>		
+		<button ng-if = "!Desc" class="button  ion-arrow-up-c button-assertive ascDesc" on-tap="ascendingDescending('asc')">
+			DESC
+		</button>
+		<button ng-if = "Desc" class="button ion-arrow-down-c button-assertive ascDesc" on-tap="ascendingDescending('desc')">
+			ASC
+		</button>	
+	</div>
+</div>		
+</ion-view>

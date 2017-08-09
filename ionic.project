@@ -1,0 +1,21 @@
+{
+  "name": "SCMS_Attendance",
+  "app_id": "",
+  "gulpStartupTasks": [
+    "sass",
+    "copyplugins",
+    "templatecache",
+    "watch"
+  ],
+  "watchPatterns": [
+    "www/**/*",
+    "!www/lib/**/*"
+  ],
+  "browsers": [
+    {
+      "platform": "android",
+      "browser": "crosswalk",
+      "version": "12.41.296.5"
+    }
+  ]
+}

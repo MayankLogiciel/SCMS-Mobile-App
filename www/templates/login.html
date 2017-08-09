@@ -1,0 +1,55 @@
+<ion-view class="login-home-body"> 
+    <!-- <ion-header-bar class="bar-balanced custom-header-bar">
+        <h1 class="title">LOGIN</h1>
+    </ion-header-bar> -->
+    <ion-content has-bouncing = "false">    
+    <div class="scms-login">
+        <h2 class="welcome-to">Welcome To</h2>
+        <h2 class="welcome-msg">Satsang Center Management System</h2>
+        <div class='login-img'>
+            <img src="img\logo.png" alt="">
+         </div>           
+        <form class="scms-common-margin-for-login-and-home" name="loginForma" novalidate> 
+            <div class="list">
+                <div class="list list-inset login-wraper">
+                    <label class="item item-input custom-text">
+                        <i class="icon ion-email placeholder-icon"></i>
+                        <input 
+                            type="email" 
+                            name="email"
+                            autocomplete="off"
+                            validator="email"
+                            message-id="email_id" 
+                            ng-model="loginData.username" 
+                            placeholder="Email"> 
+                    </label>
+                </div> 
+                <p id='email_id'></p>
+                <div class="list list-inset login-wraper">
+                    <label class="item item-input custom-text">
+                        <i class="icon ion-locked placeholder-icon"></i>
+                        <input 
+                            type="password" 
+                            name="password"
+                            message-id="password_id"
+                            autocomplete="off"
+                            validator="required"
+                            required-error-message="* Please enter password"
+                            ng-model="loginData.password" 
+                            placeholder="Password">
+                    </label>                    
+                </div>
+                <p id='password_id'></p>
+                <button class="button button-block button-balanced btn-padding" validation-submit="loginForma" ng-click="login(loginData)" type="submit">
+                    LOGIN
+                </button>
+            </div>
+        </form>
+
+        <button class="button button-block button-assertive btn-padding import-btn"  
+        on-tap="importDatabase()">
+            IMPORT DATABASE
+        </button>
+    </div>
+    </ion-content>
+</ion-view>

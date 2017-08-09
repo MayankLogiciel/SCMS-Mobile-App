@@ -1,0 +1,42 @@
+<ion-view class="login-home-body home-popup"> 
+	<ion-header-bar class="bar-balanced custom-header-bar">
+		<div class="buttons left-button row home-Header">
+			<button class="button button-icon button-stable col-10">
+			</button>
+			<span class='col col-80'>Satsang Center Management System</span>
+			<a class="col-10 log-out" on-tap="logOut()">
+				<i class="icon ion-log-out"></i>	
+			</a>
+		</div>		
+	</ion-header-bar>   
+	<ion-content has-bouncing = "false">
+		<div class="list scms-home">
+			<div class="row">
+				<button class="button button-block button-calm btn-padding col" ui-sref="satsang-attendance-list">
+					<i class="icon ion-ios-calendar"></i>
+					<span>Satsang Day Attendance</span>
+				</button>
+				<button class="button button-block button-energized btn-padding col" ui-sref="nominal_rolls">
+					<i class="icon ion-ios-calendar-outline"></i>
+					<span>Nominal Rolls</span>
+				</button>
+			</div> 
+			<div class="row">
+				<button class="button button-block button-assertive btn-padding col" ui-sref="sewadars">
+					<i class="icon ion-ios-people"></i>
+					<span>Sewadar Data</span>
+				</button>
+				<button class="button button-block button-royal btn-padding col" ui-sref="satsang-place">
+					<i class="icon ion-location"></i>
+					<span>Satsang Place Information</span>
+				</button>
+			</div> 
+			<div class="row">
+				<button class="button button-block button-assertive btn-padding col" on-tap="syncDatabase()">
+					<i class="icon ion-android-sync"></i>
+					<span>Sync Data</span>
+				</button>				
+			</div> 
+		</div>
+	</ion-content>
+</ion-view>

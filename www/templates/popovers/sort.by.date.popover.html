@@ -1,0 +1,39 @@
+<ion-popover-view class="fit custom-popover date-popover">
+    
+    <ion-content class="has-header"> 
+		<div class="list list-inset login-wraper">
+    		<label class="item item-input custom-text date-popover-body tp-level">
+    			<i class="icon ion-calendar placeholder-icon"></i>
+    			<input 
+    			type="text" 
+    			autocomplete="off"
+    			ng-model="nominaldate.from_date"
+    			name="Date From" 
+    			placeholder="Date From"
+    			ng-click="openDatePicker('from')"
+    			readonly> 
+    		</label>
+    	</div>
+    	<div class="list list-inset login-wraper">
+    		<label class="item item-input custom-text date-popover-body">
+    			<i class="icon ion-calendar placeholder-icon"></i>
+    			<input 
+    			type="text" 
+    			autocomplete="off"
+    			ng-model="nominaldate.to_date"
+    			name="Date To" 
+    			placeholder="Date To"
+    			ng-click="openDatePicker('to')"
+    			readonly> 
+    		</label>
+    	</div> 
+        <div class="button-bar filter-button">
+        	<button class="button button-block button-assertive btn-padding" ng-click="filterByDate(nominaldate)" type="submit">
+        	Apply
+        	</button>  
+            <button class="button button-block button-stable btn-padding" ng-click="clear()" type="submit">
+            Clear
+            </button>
+        </div> 
+    </ion-content>
+</ion-popover-view>

@@ -1,0 +1,96 @@
+<ion-popover-view class="fit custom-popover temp-sewadar-form">
+      <div class="bar bar-header bar-balanced">
+            <h1 class="title temp-sewa">Add Open Sewadar</h1>
+      </div>
+      <ion-content class="has-header"> 
+            <form name='FormTemp' class="temp-form" ng-if="nominal_id" novalidate>
+                  <div class="list">
+                        <div class="list list-inset login-wraper temp-name">
+                              <label class="item item-input custom-text height-on-mob">
+                                    <i class="icon ion-person placeholder-icon"></i>
+                                    <input 
+                                    class="text-transform-capital" 
+                                    type="text" 
+                                    name="name"
+                                    autocomplete="off"
+                                    validator="required"
+                                    message-id = 'name_id'
+                                    ng-model="TempSewadarData.name"
+                                    required-error-message="* enter name for open sewadar" 
+                                    placeholder="Name"/>
+                              </label>
+                        </div>
+                        <p id='name_id'></p>
+
+                        <div class="list list-inset login-wraper temp-name">
+                              <label class="item item-input custom-text height-on-mob">
+                                    <i class="icon ion-person placeholder-icon"></i>
+                                    <input 
+                                    class="text-transform-capital" 
+                                    type="text" 
+                                    name="gname"
+                                    autocomplete="off"
+                                    validator="required"
+                                    message-id = 'gname_id'
+                                    ng-model="TempSewadarData.guardian"
+                                    required-error-message="* enter name for open sewadar guardian" 
+                                    placeholder="Father's/ Husband's Name"/>
+                              </label>
+                        </div>
+                        <p id='gname_id'></p>
+
+                        <div class="list list-inset login-wraper temp-name">
+                              <label class="item item-input custom-text  height-on-mob">
+                                    <i class="icon ion-home placeholder-icon"></i>
+                                    <input 
+                                    class="text-transform-capital" 
+                                    type="text" 
+                                    name="address"
+                                    autocomplete="off"
+                                    validator="required"
+                                    message-id = 'address_id'
+                                    ng-model="TempSewadarData.address"
+                                    required-error-message="* enter address for open sewadar" 
+                                    placeholder="Address"/>
+                              </label>
+                        </div>
+                        <p id='address_id'></p>
+
+                        <div class="list list-inset login-wraper temp-name">
+                              <label class="item item-input custom-text  height-on-mob">
+                                    <i class="icon ion-calendar placeholder-icon"></i>
+                                    <input 
+                                    class="text-transform-capital" 
+                                    type="number" 
+                                    name="age"
+                                    autocomplete="off"
+                                    validator="required"
+                                    message-id = 'age_id'
+                                    ng-model="TempSewadarData.age"
+                                    required-error-message="* enter age of open sewadar" 
+                                    placeholder="age"/>
+                              </label>
+                        </div>
+                        <p id='age_id'></p>
+
+                        <div class="row custom-text-temp">
+                              <div class="col left-col">
+                                    <ion-checkbox ng-model="TempSewadarData.Male" ng-change=CheckedGender('Male') value="Male">Male
+                                    </ion-checkbox>
+                              </div>
+                              <div class="col right-col">
+                                    <ion-checkbox ng-model="TempSewadarData.Female" ng-change=CheckedGender('Female') value="Female">Female
+                                    </ion-checkbox>
+                              </div>
+                        </div>
+                        <p ng-if="showError">* select gender</p> 
+                  </div>
+                  <div class="bar bar-footer custom-footer open-sewadar-footer">       
+                        <div class="button-bar">
+                              <a class="button button-assertive temp-sewa-btn" ng-click="addTempSewadar(TempSewadarData);" validation-submit="FormTemp">MARK ATTENDANCE</a>
+                              <a class="button button-stable temp-sewa-btn" ng-click="closePopoverForTempSewadar()" validation-reset="FormTemp">CANCEL</a>
+                        </div>      
+                  </div>
+            </form>
+      </ion-content>
+</ion-popover-view>

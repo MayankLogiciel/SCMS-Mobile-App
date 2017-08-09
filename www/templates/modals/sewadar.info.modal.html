@@ -1,0 +1,59 @@
+<ion-modal-view class="custom-model">	
+	<div class="bar bar-header bar-balanced">	
+		<h1 class="title" ng-if="sewadar.batch_no">Sewadar Detail</h1>
+		<h1 class="title" ng-if="!sewadar.batch_no">Open Sewadar Detail</h1>
+	</div>
+	<ion-content class="has-header">
+		<ion-list>			
+			<div class='modal-padding'>				
+				<h4 class="title row">
+					<label class="col modal-name" ng-bind="sewadar.name"></label>
+					<div class="col col-height">
+						<img ng-if='sewadar.photo && !isImageNotAvailable' ng-src="{{imagePath + sewadar.photo}}?{{timeStampPhoto || ''}}" height="300" width="300" />
+		                <img ng-if='!sewadar.photo || isImageNotAvailable' ng-src="{{defaultImage}}" height="300" width="300"/>
+		                <button class="button button-assertive ion-camera camera-model-button" on-tap="clickPhoto()" ng-if="showCameraOption"></button>
+					</div>					
+				</h4>
+				<h4 ng-if="sewadar.guardian" class="g-name">
+					<label>G. Name:</label>
+					<span ng-bind="sewadar.guardian""></span>
+				</h4>
+				<h4 ng-if="sewadar.batch_no">
+					<label>Batch No:</label>
+					<span ng-bind="sewadar.batch_no"></span>
+				</h4>
+				<h4 ng-if="sewadar.designation_name">
+					<label>Designation:</label>
+					<span ng-bind="sewadar.designation_name"></span>
+				</h4 ng-if="sewadar.department_name">
+				<h4 ng-if="sewadar.department_name">
+					<label>Dept. Name:</label>
+					<span ng-bind="sewadar.department_name"></span>
+				</h4>
+				<h4 ng-if="sewadar.dob">
+					<label>DOB:</label>
+					<span ng-bind="sewadar.dob"></span>
+				</h4>
+				<h4 ng-if="sewadar.gender">
+					<label>Gender:</label>
+					<span ng-bind="(sewadar.gender=='M')?'Male':'Female'"></span>
+				</h4>
+				<h4 ng-if="sewadar.sewadar_contact">
+					<label>Contact Number:</label>
+					<span ng-bind="sewadar.sewadar_contact"></span>
+				</h4>
+				<h4 ng-if="sewadar.address">
+					<label>Address:</label>
+					<span ng-bind="sewadar.address"></span>
+				</h4>	
+			</div>					
+		</ion-list>
+	</ion-content>
+	<div class="bar bar-footer custom-footer">		
+		<div class="button-bar">
+			<a class="button button-assertive" ng-click="closeModalForSewadarDetail(); SaveDataToAttandanceTable(sewadar);closePopoverForSewadar();" ng-bind="buttonTextForSewadarModel" ng-if="buttonTextForSewadarModel=='MARK ATTENDANCE'"></a>
+			<a class="button button-balanced" ng-click="deleteSewadar(sewadar);" ng-bind="buttonTextForSewadarModel" ng-if="buttonTextForSewadarModel !='MARK ATTENDANCE' && isCurrentDate && !isAttendaceClosed" ></a>
+			<a class="button button-stable" ng-click="closeModalForSewadarDetail();">CANCEL</a>
+		</div>	
+	</div>
+</ion-modal-view>

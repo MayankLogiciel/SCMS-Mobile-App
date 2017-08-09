@@ -1,0 +1,49 @@
+<ion-view class="login-home-body">    
+	<ion-header-bar class="bar-balanced custom-header-bar">
+		<div class="buttons left-button row">
+			<div  on-tap="goBack()" class="col-80 row">				
+				<button class="button button-icon button-stable ion-chevron-left col-10 sat-att-list-back-width">
+				</button>
+				<span class='col col-90 sat-att-list-title'>Satsang Day Attendance List</span>
+			</div>
+			<button class="button button-icon button-add col-20 edit-btn-att" on-tap="viewAttendees(todayDate, 'edit')" ng-if = "editRequired == todayDate">
+				<i class="icon ion-edit"></i><span class = "sat-att-list-edit">Attendees</span>
+			</button>
+		</div>
+	</ion-header-bar>	
+	<ion-content has-bouncing = "false" class = 'override-has-header'>
+		<div 
+		class="list nominal-list date-count" 
+		 ng-if="!isTodaysData || dateWiseAttendanceList.length==0" on-tap="viewAttendees(todayDate)">
+			<a class="item item-button-right">
+				<button class="button button-assertive" on-tap="viewAttendees(todayDate)" >
+					<i class="icon ion-plus btn-icon-day-attendance"></i>Attendees
+				</button>
+				<h2>
+					<span ng-bind="currentDate"></span>
+				</h2>
+				<h3>
+					<span>Total Attendees: </span>
+					<span ng-bind= "count"></span>
+				</h3>
+			</a>			
+		</div>
+		<div 
+		class="list nominal-list date-count" 
+		ng-repeat="attendance in dateWiseAttendanceList | orderBy:'-date'" on-tap="viewAttendees(attendance.date)">
+		<a class="item item-button-right">			
+			<button class="button button-assertive" on-tap="viewAttendees(attendance.date)" >
+      			<i class="icon ion-eye btn-icon-day-attendance"></i>Attendees
+    		</button>
+    		<h2>
+    			<span ng-bind="attendance.date | date: 'EEEE, d MMMM, y' "></span>
+    		</h2>
+    		<h3>
+    			<span>Total Attendees: </span>
+    			<span ng-bind= "attendance.attendeesCount"></span>
+    		</h3>
+    	</a>			
+	</div>
+
+</ion-content>	
+</ion-view>
