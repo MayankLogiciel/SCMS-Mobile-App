@@ -1,18 +1,27 @@
 <ion-view class="login-home-body">	    
 	<ion-header-bar class="bar-balanced custom-header-bar">
 		<div class="buttons left-button row">
-			<button class="button button-icon button-stable ion-chevron-left col-20" on-tap="goBack()">
+			<button class="button button-icon button-stable ion-chevron-left col-20 btn-back-left" on-tap="goBack()">
 			</button>
-			<span class='col col-60 header-title'>Jatha Members</span>
-			<button class="button button-icon button-add col-20 btn-required-width" ng-if="!isFemale" on-tap="addMaleSewadars()">
+			<span class='col col-60 select-span header-title jatha-title jatha-filter' ng-init = "getListForJatha()">
+				<select 
+                    name="jatha" 
+                    ng-model="nominalRollsData.jatha_name"
+                    ng-options="jatha.jatha_name for jatha in jathas track by jatha.department_id"
+                    ng-change="selectedJatha(nominalRollsData.jatha_name)"
+                    >
+                    <option selected value="">{{nominalRollsData.jatha_name}}<span class="caret">&nbsp;&#9662;</span></option>                    
+                </select>
+			</span>
+			<button class="button button-icon button-add col-20 btn-required-width btn-male-female" ng-if="!isFemale" on-tap="addMaleSewadars()">
 				+ Male {{maleSelectedCount <= 0 ? '' : '(' +maleSelectedCount+ ')'}}
 				
 			</button>
-			<button class="button button-icon button-add col-20 btn-required-width" ng-if="isFemale" on-tap="addFemaleSewadars()">
+			<button class="button button-icon button-add col-20 btn-required-width btn-male-female" ng-if="isFemale" on-tap="addFemaleSewadars()">
 				+ Female {{femaleSelectedCount <= 0 ? '' : '(' +femaleSelectedCount+ ')'}}
 			</button>
 		</div>		
-	</ion-header-bar>
+	</ion-header-bar>	
 	<!-- Tabs for Jatha Member Page -->
 	<ion-tabs class="tabs-striped tabs-color-assertive tabs-icon-top tab-jatha-member">		
 

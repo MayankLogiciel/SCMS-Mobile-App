@@ -112,7 +112,6 @@
                         }                        
                   }, function(err){
                         if(err.status == -1) {
-                              console.log("hellooooooo");
                               $cordovaToast.show('Please enter valid server url', 'short', 'center'); 
                               $scope.cancelLoading();
                               return;
@@ -193,7 +192,6 @@
                                           return;
                                     case null:
                                           $scope.cancelLoading();
-                                          console.log("hellooooooo123456");
                                           $cordovaToast.show('Please enter valid server url', 'short', 'center');
                                           return;  
                               }
@@ -210,7 +208,6 @@
                         $cordovaToast.show('Please Check your network connection', 'short', 'center');
                         return;
                   }else if($scope.serverURlPrefix == null) {
-                        console.log("hellooooooo456789");
                         $cordovaToast.show('Please enter valid server url', 'short', 'center');
                         return;
                   }else if($scope.getToken == null) {
@@ -285,7 +282,6 @@
                         $cordovaFileTransfer.upload(url, targetPath, options, trustAllHosts).then(function(result) {
                               DeleteFromTables();
                         }, function(err) {
-                              console.log(err);
                               $timeout(function() {
                                     switch(err.http_status) {
 

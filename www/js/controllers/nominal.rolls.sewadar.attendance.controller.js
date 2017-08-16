@@ -335,7 +335,7 @@
                               males.push({name:'', age: '', gender: '', id: null, guardian: '', batch_no: '', address: ''});
                               males.push({name:'', age: '', gender: '', id: null, guardian: '', batch_no: '', address: ''});
                         }
-                  }
+                  }                  
 
                   $scope.males = males;
 
@@ -450,7 +450,7 @@
                                           if($scope.incharge.gender == 'M') {
                                                 var tableRow = '<tr height = "28" > <td style="border: 1px solid #000; font-size: 10px; text-align: center;">'+(i+1+offset)+'</td> <td style="border: 1px solid #000; font-size: 10px; padding-left: 5px; width: 125px;">'+$scope.sewadarPrintList[i].name + '</td> <td style="border: 1px solid #000; font-size: 10px; padding-left: 5px; width: 125px;">'+$scope.sewadarPrintList[i].guardian+'</td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;">'+$scope.sewadarPrintList[i].gender+'</td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;">'+$scope.sewadarPrintList[i].age+'</td> <td style="border: 1px solid #000; font-size: 10px; text-overflow:ellipsis; padding-left: 5px">'+$scope.sewadarPrintList[i].address+'</td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;">'+$scope.sewadarPrintList[i].batch_no+'</td> </tr>';
                                                 if(i===22) {
-                                                      var footerRow = '<tr><td colspan = 7>'+footer+'</td></tr><tr ><td colspan = 7></td></tr><tr ><td colspan = 7></td></tr><tr ><td colspan = 7></td></tr><tr ><td colspan = 7></td></tr><tr ><td colspan = 7></td></tr><tr ><td colspan = 7></td></tr><tr ><td colspan = 7></td></tr><tr><td colspan = 7></td></tr>';
+                                                      var footerRow = '<tr><td colspan = 7>'+footer+'</td></tr><tr ><td colspan = 7></td></tr><tr ><td colspan = 7></td></tr><tr ><td colspan = 7></td></tr>';
                                                       tableRow = tableRow.concat(footerRow);
                                                 } 
                                                 if(i==0) {
@@ -467,7 +467,7 @@
                                           if($scope.incharge.gender == 'F') {
                                                 var tableRow = '<tr height = "28"> <td style="border: 1px solid #000; font-size: 10px; text-align: center;">'+(i+1+offset)+'</td> <td style="border: 1px solid #000; font-size: 10px; padding-left: 5px; width: 125px;">'+$scope.sewadarPrintList[i].name + '</td> <td style="border: 1px solid #000; font-size: 10px; padding-left: 5px; width: 125px;">'+$scope.sewadarPrintList[i].guardian+'</td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;">'+$scope.sewadarPrintList[i].gender+'</td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;">'+$scope.sewadarPrintList[i].age+'</td> <td style="border: 1px solid #000; font-size: 10px; text-overflow:ellipsis; padding-left: 5px">'+$scope.sewadarPrintList[i].address+'</td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;">'+$scope.sewadarPrintList[i].batch_no+'</td> </tr>';
                                                 if(i===22) {
-                                                      var footerRow = '<tr><td colspan = 7>'+footer+'</td></tr><tr ><td colspan = 7></td></tr><tr ><td colspan = 7></td></tr><tr ><td colspan = 7></td></tr><tr ><td colspan = 7></td></tr><tr ><td colspan = 7></td></tr><tr ><td colspan = 7></td></tr><tr ><td colspan = 7></td></tr><tr><td colspan = 7></td></tr>';
+                                                      var footerRow = '<tr><td colspan = 7>'+footer+'</td></tr><tr ><td colspan = 7></td></tr><tr ><td colspan = 7></td></tr><tr ><td colspan = 7></td></tr>';
                                                       tableRow = tableRow.concat(footerRow);
                                                 }
 
@@ -481,26 +481,44 @@
                                                       tableRow = elem.innerHTML;
                                                 }
 
-                                          }
-                                         
-                                          if(i===$scope.sewadarPrintList.length-1) {
-                                                var tableEndFooter = tableEnd;
-                                                tableRow = tableRow.concat(tableEndFooter); 
-                                          }                                                
+                                          } 
+                                          // if($scope.sewadarPrintList.length >= 23) {                                                
+                                          //       if(i===$scope.sewadarPrintList.length-1) {
+                                          //             var tableEndFooter = tableEnd;
+                                          //             tableRow = tableRow.concat(tableEndFooter); 
+                                          //       }                                              
+                                          // }                                        
                                           tableRows.push(tableRow);
                                     }
                               }, $scope.incharge);
+
                                         
                               var tableRowsToString = "";
                               var tableRowsContinueToString = "";
                               tableRowsToString= tableRows.join(' ');  
                               tableRowsContinueToString= tableRowsContinue.join(' '); 
                               var printedPage =  htmlBodyStart + header + subHeader + tableStart + tableRowsToString ;
+                              var printedPage1 =  htmlBodyStart + header + subHeader + tableStart + tableRowsToString ;
+                              
                               var printedPageContinue = htmlBodyStart + tableStart + tableRowsContinueToString + tableEnd ;
-                              if($scope.sewadarPrintList.length >= 23) {                        
-                                    var printPageFinal = printedPage;
+                              if($scope.sewadarPrintList.length >= 23) {  
+                                    if($scope.sewadarPrintList.length > 23) {
+                                          var pageNo = Math.floor(($scope.sewadarPrintList.length - 24) / 36);
+                                          var printRecord = 36 * (pageNo + 1) + 23;
+                                          var emptyRowsG;
+                                          for(var s=$scope.sewadarPrintList.length; s < printRecord; s++){  
+                                                emptyRowsG = '<tr height = "28" > <td style="border: 1px solid #000; font-size: 10px; text-align: center;">'+(s+1)+'</td> <td style="border: 1px solid #000; font-size: 10px; padding-left: 5px; width: 125px;"></td> <td style="border: 1px solid #000; font-size: 10px; padding-left: 5px; width: 125px;"></td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td> <td style="border: 1px solid #000; font-size: 10px; text-overflow:ellipsis; padding-left: 5px"></td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td> </tr>'                                         
+                                                printedPage = printedPage.concat(emptyRowsG);
+                                          }                        
+                                          var printPageFinal = printedPage;
+                                    }                                  
                               } else {
-                                    var printPageFinal = printedPage + fixedFooter;  
+                                    var emptyRows;
+                                    for(var r=$scope.sewadarPrintList.length+1; r<24; r++){  
+                                          emptyRows = '<tr height = "28" > <td style="border: 1px solid #000; font-size: 10px; text-align: center;">'+r+'</td> <td style="border: 1px solid #000; font-size: 10px; padding-left: 5px; width: 125px;"></td> <td style="border: 1px solid #000; font-size: 10px; padding-left: 5px; width: 125px;"></td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td> <td style="border: 1px solid #000; font-size: 10px; text-overflow:ellipsis; padding-left: 5px"></td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td> </tr>'                                         
+                                          printedPage1 = printedPage1.concat(emptyRows);
+                                    }
+                                    var printPageFinal = printedPage1 + fixedFooter;  
                               }
                               if($cordovaPrinter.isAvailable()) {
                                     $cordovaPrinter.print(printPageFinal, { duplex: 'long',  portrait: true}, function (res) {

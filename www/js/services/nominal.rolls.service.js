@@ -28,8 +28,7 @@
         this.getNominalRollsDateFilterData = function() {
             return nominalRollsDateFilterData;           
         }; 
-
-	};
+    };
 
     nominalRollsService.$inject  = [];
 

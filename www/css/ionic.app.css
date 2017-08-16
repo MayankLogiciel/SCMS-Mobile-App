@@ -10050,6 +10050,9 @@ a.button {
 .print-class span.label-container {
   width: 50px !important; }
 
+.jatha-title {
+  text-align: left !important; }
+
 .open-sewadar-class span.label-container {
   width: 112px !important; }
 
@@ -10145,6 +10148,39 @@ a.button {
       right: 0;
       margin-left: auto;
       margin-right: auto; } }
+
+.btn-male-female {
+  margin-left: 10% !important; }
+
+.caret {
+  font-size: 12px !important; }
+
+.jatha-filter {
+  text-align: left !important;
+  margin-left: 10% !important; }
+  .jatha-filter select {
+    font-size: 25px !important;
+    font-weight: bold !important;
+    line-height: 24px !important;
+    background: #952425;
+    color: #fff;
+    border: 0 !important;
+    margin-top: 2px !important;
+    -webkit-appearance: none; }
+    .jatha-filter select option:first-child {
+      display: none; }
+  @media (max-width: 480px) {
+    .jatha-filter select {
+      font-size: 16px !important;
+      line-height: 20px !important; } }
+
+.btn-back-left {
+  max-width: 10% !important; }
+
+.select-span {
+  max-width: 70% !important;
+  padding-top: 7px !important;
+  margin-left: 0 !important; }
 
 .custom-model {
   width: 90%;
@@ -10891,6 +10927,10 @@ a.button {
 .jatha-member .button {
   min-height: 43px !important;
   top: 6px; }
+
+.jatha-member .btn-sewa-name.activated {
+  background: #952425;
+  opacity: 0.4; }
 
 .jatha-member .right {
   width: 50%;
