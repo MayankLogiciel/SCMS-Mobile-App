@@ -80,7 +80,7 @@
             }
 
             $scope.getListForSewas = function() {
-                  var query = "SELECT name as sewa_name, id as sewa_id FROM sewas";
+                  var query = "SELECT name as sewa_name, id as sewa_id FROM sewas ORDER BY sewa_name ASC";
                   $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
                         if(res.rows.length > 0) {
                               for(var i= 0; i<res.rows.length; i++) { 
@@ -93,7 +93,7 @@
             };  
 
             $scope.getListForJatha = function() {
-                  var query = "SELECT name as jatha_name, id as department_id FROM departments";
+                  var query = "SELECT name as jatha_name, id as department_id FROM departments ORDER BY jatha_name ASC";
                   $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
                         if(res.rows.length > 0) {
                               for(var i= 0; i<res.rows.length; i++) { 
@@ -105,7 +105,7 @@
             };    
 
             $scope.getListForVehicle = function() {
-                  var query = "SELECT name as vehicle_name, id as vehicle_id FROM vehicles";
+                  var query = "SELECT name as vehicle_name, id as vehicle_id FROM vehicles ORDER BY vehicle_name ASC";
                   $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
                         if(res.rows.length > 0) {
                               for(var i= 0; i<res.rows.length; i++) { 

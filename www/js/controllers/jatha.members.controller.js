@@ -41,7 +41,7 @@
                         $scope.jathas = []; 
                   }
                   var jathaName;     
-                  var query = "SELECT name as jatha_name FROM departments where id = " + jatha.department_id;
+                  var query = "SELECT name as jatha_name FROM departments where id = " + jatha.department_id ;
                   $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
                         for(var i= 0; i<res.rows.length; i++) {
                               jathaName = res.rows.item(i).jatha_name;
@@ -66,7 +66,7 @@
             }
 
             $scope.getListForJatha = function() {
-                  var query = "SELECT name as jatha_name, id as department_id FROM departments";
+                  var query = "SELECT name as jatha_name, id as department_id FROM departments ORDER BY jatha_name ASC";
                   $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
                         if(res.rows.length > 0) {
                               for(var i= 0; i<res.rows.length; i++) { 
