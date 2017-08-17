@@ -20,7 +20,7 @@
                                 <input 
                                 type="text" 
                                 autocomplete="off"
-                                ng-model="nominal.date_from"
+                                ng-model="nominal.date_from | date: 'dd-MM-yyyy'"
                                 name="Date From" 
                                 validator="required"
                                 message-id="from-date-id"
@@ -123,7 +123,7 @@
                                 <input 
                                 type="text" 
                                 autocomplete="off"
-                                ng-model="nominal.date_to"
+                                ng-model="nominal.date_to | date: 'dd-MM-yyyy'"
                                 name="Date To" 
                                 validator="required"
                                 message-id="to-date-id"

@@ -31,22 +31,13 @@
 			class="list nominal-list nominal-list-mob" 
 			ng-repeat="nominal in nominals | filter:searchQuery | orderBy: 'date_from': Desc" on-hold="quickActions(nominal)" on-tap="viewAndMarkAttendanceNominal(nominal)">
 			<a class="item item-button-right">
-				<!-- <button class="button button-balanced" on-tap="editNominal(nominal)" >
-	      			Add Sewadar
-	    		</button> -->
-				<!-- <h4>
-					<label>Nominal Roll Name:</label>
-					<span ng-bind="nominal.name"></span>
-					<span ng-if="nominal.status=='draft'" class="badge badge-assertive" ng-bind="nominal.status"></span>
-				</h4> -->
-				<!--  -->
 				<div class="row nominal-list-on-tab">	
 					<div class="col col-90">
 						<div class="row">   
 							<div class="col col-50">                            
 								<h4>
 									<label>Date From:</label>
-									<span ng-bind="nominal.date_from"></span>
+									<span ng-bind="nominal.date_from | date: 'dd-MM-yyyy'"></span>
 								</h4> 
 								<h4>
 									<label>Sewa Place:</label>
@@ -84,7 +75,7 @@
 							<div class="col col-50 driver-data margin-bt-data">
 								<h4>
 									<label>Date To:</label>
-									<span ng-bind="nominal.date_to"></span>                  
+									<span ng-bind="nominal.date_to | date: 'dd-MM-yyyy'"></span>                  
 								</h4>
 
 								<h4 ng-class="{'final-diable':nominal.new_sewa == 'null'}">
@@ -127,11 +118,11 @@
 				<div class="nominal-list-on-mob">
 					<h4>
 						<label>Date From:</label>
-						<span ng-bind="nominal.date_from"></span>
+						<span ng-bind="nominal.date_from | date: 'dd-MM-yyyy'"></span>
 					</h4>
 					<h4>
 						<label>Date To:</label>
-						<span ng-bind="nominal.date_to"></span>                  
+						<span ng-bind="nominal.date_to | date: 'dd-MM-yyyy'"></span>                  
 					</h4> 
 					<h4>
 						<label>Sewa Place:</label>
