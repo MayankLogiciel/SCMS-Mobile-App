@@ -10270,7 +10270,7 @@ a.button {
   top: 50%;
   width: 90%;
   margin: auto;
-  margin-top: -275px;
+  margin-top: -322px;
   left: 0;
   right: 0; }
   .info-wrapper label {
@@ -10282,6 +10282,9 @@ a.button {
     margin-bottom: 15px; }
     .info-wrapper .img-label img {
       width: 100%; }
+
+.disabled-input input:disabled {
+  background: #fff !important; }
 
 .list.list-padding.row {
   width: 100%;
@@ -10348,6 +10351,9 @@ a.button {
     @media (min-width: 1025px) {
       .list.list-padding.row button {
         right: -110px; } }
+
+.info-update-btn {
+  margin-top: 20px !important; }
 
 .item.item-avatar.input-radio {
   padding-top: 0;
@@ -10462,6 +10468,13 @@ a.button {
       .button.button-stable.ion-chevron-left:before {
         font-size: 21px; } }
 
+.edit-info {
+  width: 100px !important;
+  padding: 0 !important;
+  top: 13px !important;
+  right: 10px !important;
+  bottom: 13px !important; }
+
 .buttons-right.header-item h4 label {
   color: #fff;
   font-weight: bold; }
@@ -10469,10 +10482,11 @@ a.button {
 .custom-header-bar.bar-balanced {
   height: 65px; }
   .custom-header-bar.bar-balanced .title {
-    line-height: 65px;
+    line-height: 59px;
     text-align: center;
     font-size: 25px;
-    font-weight: bold; }
+    font-weight: bold;
+    top: 5px; }
   .custom-header-bar.bar-balanced .date {
     width: 50%; }
     .custom-header-bar.bar-balanced .date label {

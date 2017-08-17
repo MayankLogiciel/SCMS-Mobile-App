@@ -561,7 +561,7 @@
     top: 50%;
     width: 90%;
     margin: auto;
-    margin-top: -275px;
+    margin-top: -322px;
     left: 0;
     right: 0;
     label {
@@ -577,6 +577,9 @@
     		width: 100%;
     	}
     }
+}
+.disabled-input input:disabled{
+	background: #fff !important;
 }
 
 .list.list-padding.row {
@@ -653,6 +656,9 @@
 			right: -110px;
 		}
 	}
+}
+.info-update-btn {
+	margin-top: 20px !important;
 }
 
 .item.item-avatar.input-radio {
@@ -924,6 +930,13 @@
 	}
 
 }
+.edit-info {
+	width: 100px !important;
+	padding: 0 !important;
+	top: 13px !important;
+    right: 10px !important;
+    bottom: 13px !important;
+}
 .buttons-right.header-item {
 	h4 label {
 		color:#fff;
@@ -933,10 +946,11 @@
 .custom-header-bar.bar-balanced {
 	height: 65px;
 	.title {
-		line-height: 65px;
+		line-height: 59px;
 	    text-align: center;
 	    font-size: 25px;
 	    font-weight: bold;
+	    top: 5px;
 	}
 	.date {
 		width: 50%;		
