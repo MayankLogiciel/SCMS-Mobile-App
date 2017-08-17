@@ -9850,6 +9850,12 @@ a.button {
     .srch-width {
       width: 88%; } }
 
+.sewa-place-misc {
+  margin-left: 10px !important; }
+
+.other-nominal-info {
+  padding-top: 0 !important; }
+
 .swap-btn {
   position: absolute;
   right: 0;
@@ -10882,7 +10888,7 @@ a.button {
   color: #000; }
 
 .approve-checkbox label {
-  padding: 88px 0;
+  padding: 117px 0;
   border: 0; }
   .approve-checkbox label .checkbox {
     left: -4px;
@@ -11019,7 +11025,7 @@ a.button {
   display: block; }
   .list-nominal-add:before {
     font-size: 60px;
-    margin-top: 75px;
+    margin-top: 90px;
     color: #387; }
 
 .log-out {
@@ -11665,8 +11671,7 @@ a.button {
     display: none; }
   .sava-att {
     right: 5px !important;
-    margin-top: -4px !important;
-    /* background: transparent !important; */ }
+    margin-top: -4px !important; }
   .scan-button {
     margin-top: -4px !important;
     background: transparent;

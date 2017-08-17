@@ -73,6 +73,8 @@
                   }
                   $scope.nominal.vehicle_no = (nominalData.vehicle_no == 'null') ? 'N/A' : nominalData.vehicle_no;
                   $scope.nominal.driver_name = (nominalData.driver_name == 'null') ? 'N/A' : nominalData.driver_name;
+                  $scope.nominal.contact_no = (nominalData.contact_no == 'undefined' || nominalData.contact_no == '') ? 'N/A' : nominalData.contact_no;
+                  $scope.nominal.name = (nominalData.name == 'undefined' || nominalData.name == '') ? 'N/A' : nominalData.name;
             }
 
             $scope.selectedSchedule = function(data) {
@@ -146,15 +148,17 @@
                   }
             }
             $scope.addEditNominal = function(nominalData) {
-                  nominalData.new_sewa = (!angular.isDefined(nominalData.new_sewa)) ? null : nominalData.new_sewa;
+                  nominalData.new_sewa = (!angular.isDefined(nominalData.new_sewa) || nominalData.new_sewa == 'N/A') ? null : nominalData.new_sewa;
                   $scope.vehicleId = (!angular.isDefined($scope.vehicleId)) ? null : $scope.vehicleId;
                   nominalData.vehicle_no  = (!angular.isDefined(nominalData.vehicle_no) || nominalData.vehicle_no == '') ? null : nominalData.vehicle_no;
-                  nominalData.driver_name  = (!angular.isDefined(nominalData.driver_name)) ? null : nominalData.driver_name;                
-                  if(nominalData.contact_no.length < 10 || !angular.isDefined(nominalData) || !angular.isDefined(nominalData.contact_no)) {
-                        $scope.isNotValidNumber = true;
-                        return;
+                  nominalData.driver_name  = (!angular.isDefined(nominalData.driver_name) || nominalData.driver_name == '') ? null : nominalData.driver_name;                
+                  nominalData.name  = (!angular.isDefined(nominalData.name) || nominalData.name == '') ? 'N/A' : nominalData.name;                
+                  nominalData.contact_no  = (!angular.isDefined(nominalData.contact_no) || nominalData.contact_no == '') ? 'N/A' : nominalData.contact_no;                
+                  if(!angular.isDefined(nominalData) || !angular.isDefined(nominalData.contact_no) || nominalData.contact_no == 'N/A' || nominalData.contact_no == ''){
+                        $scope.isNotValidNumber = false;
                   }else {
-                       $scope.isNotValidNumber = false; 
+                      $scope.isNotValidNumber = true; 
+                      return; 
                   }
                   if(!$scope.newEntryDisabled && (!angular.isDefined(nominalData.new_sewa)|| nominalData.new_sewa == '')) {
                         $scope.isValidMiscSewa = false;
@@ -215,7 +219,8 @@
             var datePickedFrom = {
                   callback: function (val) {  //Mandatory
                        $scope.selectedDate = (val, new Date(val));
-                       $scope.nominal.date_from =  $filter('date')(($scope.selectedDate),'yyyy-MM-dd');
+                       //$scope.nominal.date_from =  $filter('date')(($scope.selectedDate),'yyyy-MM-dd');
+                       $scope.nominal.date_from =  $filter('date')(($scope.selectedDate),'dd-MM-yyyy');
                   },
                   disabledDates: [],
                   from: new Date(), //Optional
@@ -229,7 +234,8 @@
             var datePickedTo = {
                   callback: function (val) {  //Mandatory
                         $scope.selectedDate = (val, new Date(val));
-                        $scope.nominal.date_to =  $filter('date')(($scope.selectedDate),'yyyy-MM-dd');
+                        //$scope.nominal.date_to =  $filter('date')(($scope.selectedDate),'yyyy-MM-dd');
+                        $scope.nominal.date_to =  $filter('date')(($scope.selectedDate),'dd-MM-yyyy');
                   },
                   disabledDates: [],
                   from: new Date(), //Optional
