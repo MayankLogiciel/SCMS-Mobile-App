@@ -36,7 +36,7 @@
 							<label>Sewa Place:</label>
 							<span ng-bind="nominal.sewa_name" class="text-transform-capital"></span>
 						</h4>  
-						<h4 class="sewa-place-misc" ng-class="{'final-diable':nominal.new_sewa == 'null'}">
+						<h4 class="sewa-place-misc" ng-class="{'final-diable':nominal.new_sewa == 'null' || nominal.new_sewa == 'N/A'}">
 							<label>Misc Sewa Place:</label>
 							<span class="text-transform-capital">
 								{{nominal.new_sewa == 'null' ? 'N/A' : nominal.new_sewa}}

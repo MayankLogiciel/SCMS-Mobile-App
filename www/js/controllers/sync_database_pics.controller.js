@@ -313,21 +313,21 @@
             }
 
             var DeleteFromTables = function() {
-                  var deleteFromTempSewadar = "DELETE FROM temp_sewadars";
-                  $cordovaSQLite.execute($rootScope.db, deleteFromTempSewadar).then(function(res) {
-                  });
-                  var deleteFromNominalRolls = "DELETE FROM nominal_roles";
-                  $cordovaSQLite.execute($rootScope.db, deleteFromNominalRolls).then(function(res1) {
-                  });
+                  // var deleteFromTempSewadar = "DELETE FROM temp_sewadars";
+                  // $cordovaSQLite.execute($rootScope.db, deleteFromTempSewadar).then(function(res) {
+                  // });
+                  // var deleteFromNominalRolls = "DELETE FROM nominal_roles";
+                  // $cordovaSQLite.execute($rootScope.db, deleteFromNominalRolls).then(function(res1) {
+                  // });
                   var deleteFromAttendance = "delete from attendances where attendances.date <> '"+$scope.currentDate+"'";
                   $cordovaSQLite.execute($rootScope.db, deleteFromAttendance).then(function(res2) {
                   }, function(err){
 
                   });
-                  var deleteFromNominalAttendance = "delete from attendances where date = '"+$scope.currentDate+"' and nominal_roll_id != '"+null+"'";
-                  $cordovaSQLite.execute($rootScope.db, deleteFromNominalAttendance).then(function(res3) {
-                  }, function(err){
-                  });  
+                  // var deleteFromNominalAttendance = "delete from attendances where date = '"+$scope.currentDate+"' and nominal_roll_id != '"+null+"'";
+                  // $cordovaSQLite.execute($rootScope.db, deleteFromNominalAttendance).then(function(res3) {
+                  // }, function(err){
+                  // });  
                   $timeout(function() {
                         $scope.cancelLoading();
                   }, 1000);

@@ -33,8 +33,6 @@
 			</div>
       	</h2>
     </a>
-
-
     <a class="item item-avatar listing-attend" ng-if="!isCurrentDate || isAttendaceClosed" ng-repeat="sewadar in sewadarAttendance | filter: searchQuery">
       	<img class="list-avtar" ng-if='sewadar.photo && sewadar.isImageFound' ng-src="{{imagePath + sewadar.photo}}?{{timeStampPhoto}}"/>
 		<img class="list-avtar" ng-if='!sewadar.photo || !sewadar.isImageFound' ng-src="{{defaultImage}}"/>
@@ -53,24 +51,7 @@
 					<span ng-if="sewadar.department_name"> | </span>
 					<span ng-bind="sewadar.department_name" class="text-transform-capital" ></span>			
 				</h2>
-				<!-- <h2 ng-if="!sewadar.batch_no" class="list-content-avtar">
-					<span ng-bind="sewadar.name" class="text-transform-capital" ></span>
-				</h2>
-				<h2 ng-if="!sewadar.batch_no" class="list-content-avtar-content" >
-					<span ng-bind="sewadar.guardian" class="text-transform-capital" ></span>
-					<span> | </span>
-					<span ng-bind="(sewadar.gender=='M')?'Male':'Female'"></span>
-					<span> | </span>
-					<span ng-bind="sewadar.address"></span>					
-				</h2> -->
       		</div>
-	      	
       	</h2>
     </a>
-
-	<!-- <ion-item class="load-more" ng-if="totalRows >=20" on-tap="loadMore()">
-		LOAD MORE
-	</ion-item> -->
-	<!-- <ion-infinite-scroll ng-if="totalRows >= 20" on-infinite="loadMore()" distance="1%" immediate-check="false">
-	</ion-infinite-scroll> -->
 </div>
