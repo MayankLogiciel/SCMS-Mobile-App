@@ -252,13 +252,13 @@
             * syncDatabase function used to sync database
             **/
             var SychImageOnlyOrBoth = function(path) {
-                  if($scope.pictures.length > 0) {
-                        syncLoader($scope.p);
-                        $scope.dbPath = path;
-                        uploadPics('database');                        
-                  }else {
+                  // if($scope.pictures.length > 0) {
+                  //       syncLoader($scope.p);
+                  //       $scope.dbPath = path;
+                  //       uploadPics('database');                        
+                  // }else {
                         copyDBToExportFolder(path);
-                  }                  
+                  //}                  
             }
 
             var copyDBToExportFolder = function(path) {
