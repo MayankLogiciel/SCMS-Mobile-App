@@ -8,7 +8,6 @@
                   $log.debug("Nominal Rolls Controller");
                   $scope.nominals = [];
                   $scope.nominalCompleteData = [];
-                  $scope.getListForNominalRolls();
                   $scope.nominal = {};
                   $scope.nominaldate = {};
                   $scope.currentDate =  $filter('date')(new Date(), 'yyyy-MM-dd');
@@ -17,6 +16,10 @@
                   $rootScope.isDateFilterPopupOpened = true;
                   $scope.isDatePopupOpend = false; 
             };
+            $scope.$on('$ionicView.enter', function() {
+                  $scope.getListForNominalRolls();
+                  cfpLoadingBar.start(); 
+            });  
             $scope.goBack = function() {
                   $ionicHistory.goBack();
             };
@@ -34,6 +37,7 @@
                               }  
                               nominalRollsService.setnominalRollsCompleteData($scope.nominals);                               
                         }
+                        cfpLoadingBar.complete();
                   }, function (err) { 
                   });
             };

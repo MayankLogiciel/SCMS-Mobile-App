@@ -31,6 +31,7 @@
             };      
 
             $scope.$on('$ionicView.enter', function() {
+                  cfpLoadingBar.start(); 
                   $scope.getMaleMembers();
                   $scope.getFemaleMembers();
             }); 
@@ -251,7 +252,7 @@
             };
 
             $scope.getMaleMembers = function () {
-                  cfpLoadingBar.start(); 
+                 
                   $scope.nominalRollsData = nominalRollsService.getNominalRollsData();                  
                   var getmaleQuery = "select * from sewadars where sewadars.gender = 'M' AND sewadars.department_name = '"+$scope.nominalRollsData.jatha_name+"'";
                   $cordovaSQLite.execute($rootScope.db,getmaleQuery).then(function(res) {

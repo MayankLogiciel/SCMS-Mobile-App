@@ -39,7 +39,6 @@
                         $scope.startDate = new Date($scope.nominalRollsData.date_from);
                         var endDate = new Date($scope.nominalRollsData.date_to);
                         $scope.diffDays = Math.round(Math.abs(($scope.startDate.getTime() - endDate.getTime())/(oneDay)));
-                        $scope.getListFromSewadarsForAttendance(); 
                         if($scope.nominalRollsData.status == 'pending') {
                               $scope.isCurrentDate = false; 
                         } else {
@@ -57,6 +56,11 @@
                   $scope.refId = (new Date())/1000|0;
                   $scope.isBatchNumber = true;
             };
+
+            $scope.$on('$ionicView.enter', function() {
+                  $scope.getListFromSewadarsForAttendance();
+                  cfpLoadingBar.start();
+            }); 
             $scope.goBack = function() {
                   $ionicHistory.goBack();
             };
@@ -138,7 +142,7 @@
             }
 
             var getSewadarData = function(query) { 
-                  cfpLoadingBar.start();
+                  
                   $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
                         //$scope.totalRows = res.rows.length;
                         $scope.sewadarPrintList = [];

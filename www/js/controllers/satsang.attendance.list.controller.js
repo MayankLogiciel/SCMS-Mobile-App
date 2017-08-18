@@ -7,13 +7,18 @@
             var setup = function() {
                   $log.debug("Satsang Attendance List Controller");
                   $scope.dateWiseAttendanceList = [];                  
-                  $scope.getDateWiseListFromAttendance();
                   $scope.isTodaysData = true; 
                   $scope.currentDate =  $filter('date')(new Date(), 'EEEE, d MMMM, y');
                   $scope.todayDate =  $filter('date')(new Date(), 'yyyy-MM-dd'); 
                   $scope.count = 0;
                   $scope.editRequired = satsangDayAttendanceService.getAttendaceClosedForDay();
             }; 
+
+            $scope.$on('$ionicView.enter', function() {
+                 $$scope.getDateWiseListFromAttendance(); 
+                 cfpLoadingBar.start();
+            });                   
+
 
             $scope.goBack = function() {
                   $ionicHistory.goBack();
@@ -48,6 +53,7 @@
                               } 
                               $scope.getTotalAttendeesOnPerticularDate($scope.dateWiseAttendanceList);
                         }
+                  cfpLoadingBar.complete()
                   }, function (err) { 
                   });
             }; 

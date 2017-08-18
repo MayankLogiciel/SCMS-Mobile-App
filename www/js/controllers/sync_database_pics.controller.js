@@ -7,10 +7,7 @@
             var setup = function() {
                   $log.debug("Sync DB Controller");
                   $scope.pictures = [];
-                  getPicturesCount();
-                  getNominalCount();
-                  getPicturesAndId();
-                  getSatsangAttendanceCount();
+                  
                   $scope.userData = authService.getLoggedInUserData(); 
                   $scope.getToken = authService.getToken();
                   $scope.serverURlPrefix = authService.getSansangPlaceInfo();
@@ -23,6 +20,13 @@
                   $scope.syncDateAndTime = picAndDatabaseTransferService.getLastImagesDownloadedTime();
 
             }; 
+
+            $scope.$on('$ionicView.enter', function() {
+                  getPicturesCount();
+                  getNominalCount();
+                  getPicturesAndId();
+                  getSatsangAttendanceCount();
+            }); 
             $scope.goBack = function() {
                   $ionicHistory.goBack();
             };

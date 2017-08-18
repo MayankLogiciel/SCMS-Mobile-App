@@ -13,9 +13,6 @@
                   $scope.curDate =  $filter('date')(new Date(), 'yyyy-MM-dd');
                   $scope.today =  $filter('date')(($scope.getDate),'EEEE, d MMMM, y');
                   $scope.dirCrtl = {};
-                  //$scope.limit = 20;
-                  //$scope.offset = 0;
-                 // $scope.getListFromSewadarsForAttendance(); 
                   $scope.isBatchNumber = true; 
                   $scope.stateName = $state.current.name;
                   $scope.searchQueryByQR = '';
@@ -39,10 +36,10 @@
                   }else {
                         $scope.isAttendaceClosed = false; 
                   }
-            };
-                 
+            };                
 
             $scope.$on('$ionicView.enter', function() {
+                 cfpLoadingBar.start();
                  $scope.getListFromSewadarsForAttendance(); 
             });  
             var showDayAttedanceClosedPopup = function() {
@@ -125,7 +122,7 @@
                   $rootScope.$broadcast('refreshPage');
             }
             var getSewadarData = function(query) {                   
-                  cfpLoadingBar.start();                  
+                                    
                   $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
                         //$scope.totalRows = res.rows.length;
                         if(res.rows.length > 0) {
