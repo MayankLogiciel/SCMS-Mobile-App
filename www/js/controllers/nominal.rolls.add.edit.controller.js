@@ -59,6 +59,7 @@
             };
            
             $scope.getNominalDataForEdit = function(nominalData) {
+                  console.log(nominalData);
                   var dateFrom =nominalData.date_from.split('-');
                   var stringToDateFrom = dateFrom[0] +'-'+ dateFrom[1] + '-' + dateFrom[2];
                   var fromDate = new Date(stringToDateFrom);
@@ -68,15 +69,9 @@
                   var stringToDateTo = dateTo[0] +'-'+ dateTo[1] + '-' + dateTo[2];
                   var toDate = new Date(stringToDateTo);
                   var eDate = $filter('date')((toDate),'dd-MM-yyyy');
-                  $timeout(function() {
-                        nominalData.date_from = sDate;
-                        nominalData.date_to = eDate;
-                        console.log(nominalData);
-                        $scope.nominal = nominalData;
-                  }, 100);
                   if(nominalData.sewa_name != "Misc Sewa"){
                         $scope.newEntryDisabled = true;
-                        $scope.nominal.new_sewa = 'N/A';
+                        nominalData.new_sewa = 'N/A';
                   }else {
                         $scope.newEntryDisabled = false;
                   }
@@ -85,10 +80,16 @@
                   }else {
                         $scope.isVehicaltypeSected = false;
                   }
-                  $scope.nominal.vehicle_no = (nominalData.vehicle_no == 'null') ? 'N/A' : nominalData.vehicle_no;
-                  $scope.nominal.driver_name = (nominalData.driver_name == 'null') ? 'N/A' : nominalData.driver_name;
-                  $scope.nominal.contact_no = (nominalData.contact_no == 'undefined' || nominalData.contact_no == '') ? 'N/A' : nominalData.contact_no;
-                  $scope.nominal.name = (nominalData.name == 'undefined' || nominalData.name == '') ? 'N/A' : nominalData.name;
+                  $timeout(function() {
+                        nominalData.date_from = sDate;
+                        nominalData.date_to = eDate;
+                        nominalData.vehicle_no = (nominalData.vehicle_no == 'null') ? 'N/A' : nominalData.vehicle_no;
+                        nominalData.driver_name = (nominalData.driver_name == 'null') ? 'N/A' : nominalData.driver_name;
+                        nominalData.new_sewa = (nominalData.new_sewa == 'null') ? 'N/A' : nominalData.new_sewa;
+                        nominalData.contact_no = (nominalData.contact_no == 'undefined' || nominalData.contact_no == '') ? 'N/A' : nominalData.contact_no;
+                        nominalData.name = (nominalData.name == 'null' || nominalData.name == '') ? 'N/A' : nominalData.name;
+                        $scope.nominal = nominalData;
+                  }, 100);
             }
 
             $scope.selectedSchedule = function(data) {
@@ -175,12 +176,17 @@
                   $scope.vehicleId = (!angular.isDefined($scope.vehicleId)) ? null : $scope.vehicleId;
                   nominalData.vehicle_no  = (!angular.isDefined(nominalData.vehicle_no) || nominalData.vehicle_no == '') ? null : nominalData.vehicle_no;
                   nominalData.driver_name  = (!angular.isDefined(nominalData.driver_name) || nominalData.driver_name == '') ? null : nominalData.driver_name;                
-                  // if(!angular.isDefined(nominalData) || !angular.isDefined(nominalData.contact_no) || nominalData.contact_no == 'N/A' || nominalData.contact_no == ''){
-                  //       $scope.isNotValidNumber = false;
-                  // }else {
-                  //     $scope.isNotValidNumber = true; 
-                  //     return; 
-                  // }
+                  nominalData.name  = (!angular.isDefined(nominalData.name) || nominalData.name == '') ? null : nominalData.name;                
+                  if(nominalData.contact_no == 'N/A' || nominalData.contact_no == '' ||  !angular.isDefined(nominalData.contact_no)){
+                        $scope.isNotValidNumber = false;
+                  }else {
+                        if(nominalData.contact_no.length > 0 && nominalData.contact_no.length < 10) {
+                              $scope.isNotValidNumber = true;
+                              return;
+                        }else {
+                             $scope.isNotValidNumber = false; 
+                        }
+                  }
                   if(!$scope.newEntryDisabled && (!angular.isDefined(nominalData.new_sewa)|| nominalData.new_sewa == '')) {
                         $scope.isValidMiscSewa = false;
                         return;

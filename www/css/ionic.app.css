@@ -9984,7 +9984,7 @@ a.button {
       margin: auto !important; } }
 
 .all-img {
-  margin-top: 6%; }
+  margin-top: 0; }
 
 .sync-date {
   padding-right: 15px;
@@ -11112,8 +11112,7 @@ a.button {
   width: 80%;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 5%;
-  margin-bottom: 5%;
+  margin-top: 1%;
   text-align: center; }
   .sync-pic .satsang-day-sewadars-sync {
     font-size: 20px;
