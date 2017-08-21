@@ -254,7 +254,7 @@
             $scope.getMaleMembers = function () {
                  
                   $scope.nominalRollsData = nominalRollsService.getNominalRollsData();                  
-                  var getmaleQuery = "select * from sewadars where sewadars.gender = 'M' AND sewadars.department_name = '"+$scope.nominalRollsData.jatha_name+"'";
+                  var getmaleQuery = "select * from sewadars where sewadars.gender = 'M' AND sewadars.department_name = '"+$scope.nominalRollsData.jatha_name+"' ORDER BY CAST(sewadars.batch_no AS INTEGER) ASC";
                   $cordovaSQLite.execute($rootScope.db,getmaleQuery).then(function(res) {
                         if(res.rows.length > 0) {
                               for(var i= 0; i<res.rows.length; i++) {
@@ -283,7 +283,7 @@
             };            
             
             $scope.getFemaleMembers = function () {
-                  var getfemaleQuery = "SELECT * FROM sewadars where gender='F' AND sewadars.department_name = '"+$scope.nominalRollsData.jatha_name+"'";
+                  var getfemaleQuery = "SELECT * FROM sewadars where gender='F' AND sewadars.department_name = '"+$scope.nominalRollsData.jatha_name+"' ORDER BY CAST(sewadars.batch_no AS INTEGER) ASC ";
                   $cordovaSQLite.execute($rootScope.db,getfemaleQuery).then(function(res) {
                         if(res.rows.length > 0) {
                               for(var i= 0; i<res.rows.length; i++) { 
