@@ -124,6 +124,8 @@
                                                 $scope.nominalRollsData.incharge_id = sewadar.id; 
                                                 $scope.nominalRollsData.incharge_type = incharge_type;
                                           });
+                                          $scope.nominalRollsData.name = sewadar.name;
+                                          $scope.nominalRollsData.contact_no = sewadar.sewadar_contact;
                                           return true;   
 
                               }
