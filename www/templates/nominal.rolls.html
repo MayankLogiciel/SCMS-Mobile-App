@@ -61,7 +61,7 @@
 								<h4 >
 									<label>Jathedar Name:</label>
 									<span>
-										{{nominal.name == 'undefined'? 'N/A': nominal.name}}
+										{{nominal.name == 'null'? 'N/A': nominal.name}}
 									</span>
 								</h4>
 
@@ -148,11 +148,15 @@
 					</h4>
 					<h4 >
 						<label>Jathedar Name:</label>
-						<span ng-bind="nominal.name" class="text-transform-capital" ></span>
+						<span>
+							{{nominal.name == 'null'? 'N/A': nominal.name}}
+						</span>
 					</h4>
 					<h4>
 						<label>Contact No:</label>
-						<span ng-bind="nominal.contact_no"></span>
+						<span>
+							{{nominal.contact_no == 'undefined'? 'N/A': nominal.contact_no}}
+						</span>
 					</h4>
 					<h4>
 						<label>Vehicle Type:</label>
