@@ -6,18 +6,14 @@
       var SatsangAttendanceListController = function($log, $scope, $rootScope, $ionicHistory, $state, $cordovaSQLite, $filter, cfpLoadingBar, satsangDayAttendanceListService, satsangDayAttendanceService) {
             var setup = function() {
                   $log.debug("Satsang Attendance List Controller");
-                  $scope.dateWiseAttendanceList = [];                  
+                  $scope.dateWiseAttendanceList = []; 
+                  $scope.getDateWiseListFromAttendance();                 
                   $scope.isTodaysData = true; 
                   $scope.currentDate =  $filter('date')(new Date(), 'EEEE, d MMMM, y');
                   $scope.todayDate =  $filter('date')(new Date(), 'yyyy-MM-dd'); 
                   $scope.count = 0;
                   $scope.editRequired = satsangDayAttendanceService.getAttendaceClosedForDay();
             }; 
-
-            $scope.$on('$ionicView.enter', function() {
-                 $$scope.getDateWiseListFromAttendance(); 
-                 cfpLoadingBar.start();
-            });                   
 
 
             $scope.goBack = function() {
@@ -38,7 +34,7 @@
             });
             
             $scope.getDateWiseListFromAttendance = function() {
-                  //cfpLoadingBar.start();
+                  cfpLoadingBar.start();
                   var query = "SELECT DISTINCT attendances.date from attendances where attendances.nominal_roll_id= '"+null+"'";
                   $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
                         if(res.rows.length > 0) {
@@ -65,7 +61,6 @@
                               for(var i= 0; i<res.rows.length; i++) { 
                                     val.attendeesCount = res.rows.item(i).count;
                               }
-                              //cfpLoadingBar.complete();  
                         });
                   });
             } 
