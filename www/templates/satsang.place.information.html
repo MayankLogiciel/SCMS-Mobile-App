@@ -1,42 +1,47 @@
 <ion-view class="login-home-body">
-    <ion-header-bar class="bar-balanced custom-header-bar">
-        <div class="buttons left-button row">
-            <button class="button button-icon button-stable ion-chevron-left col-10" on-tap="goBack()">
-            </button>
-            <span class='col col-90 header-title'>Satsang Place Information</span>
-        </div>
-    </ion-header-bar>
+    <div class="bar bar-balanced custom-header-bar">
+        <button class="button button-icon button-stable ion-chevron-left col-10" on-tap="goBack()">
+        </button>
+        <div class="h1 title satsang-info">Satsang Place Information</div>
+        <button class="button button-icon button-add edit-info" ng-if="!hideEdit" on-tap="editInfo()">
+            <i class="icon ion-edit plus-icon"></i> Edit
+        </button>
+    </div>
     <ion-content has-bouncing = "false" class="has-header">
         <div class="list info-wrapper">
             <label class="item item-input item-floating-label img-label">
                  <img src="img\logo.png" alt="">
             </label>
-            <label class="item item-input item-floating-label">
+            <label class="item item-input item-floating-label disabled-input" ng-class="{'final-diable':!hideEdit}">
                 <span class="input-label">Satsang Place</span>
-                <input type="text" ng-model="info.place" ng-change="placeInfo(info)" placeholder="Satsang Place" class="text-transform-capital" >
+                <input type="text" ng-model="info.place" placeholder="Satsang Place" class="text-transform-capital" ng-disabled="!hideEdit">
             </label>
-            <label class="item item-input item-floating-label">
+            <label class="item item-input item-floating-label disabled-input" ng-class="{'final-diable':!hideEdit}">
                 <span class="input-label">Area</span>
-                <input type="text" ng-model="info.area" ng-change="placeInfo(info)" placeholder="Area" class="text-transform-capital" >
+                <input type="text" ng-model="info.area" placeholder="Area" class="text-transform-capital" ng-disabled="!hideEdit">
             </label>
-            <label class="item item-input item-floating-label">
+            <label class="item item-input item-floating-label disabled-input" ng-class="{'final-diable':!hideEdit}">
                 <span class="input-label" class="text-transform-capital">Zone</span>
-                <input type="text" ng-model="info.zone" ng-change="placeInfo(info)" placeholder="Zone">
+                <input type="text" ng-model="info.zone" placeholder="Zone" ng-disabled="!hideEdit">
             </label>
-            <label class="item item-input item-floating-label">
+            <label class="item item-input item-floating-label disabled-input" ng-class="{'final-diable':!hideEdit}">
                 <span class="input-label">Phone Number 1</span>
-                <input type="tel" ng-model="info.mobile1" ng-change="placeInfo(info)" placeholder="Phone Number 1" maxlength="10"
-                                    pattern="[0-9]{10}">
+                <input type="tel" ng-model="info.mobile1" placeholder="Phone Number 1" maxlength="10"
+                                    pattern="[0-9]{10}" ng-disabled="!hideEdit">
             </label>
-             <label class="item item-input item-floating-label">
+             <label class="item item-input item-floating-label disabled-input" ng-class="{'final-diable':!hideEdit}">
                 <span class="input-label">Phone Number 2</span>
-                <input type="tel" ng-model="info.mobile2" ng-change="placeInfo(info)" placeholder="Phone Number 2" maxlength="10"
-                                    pattern="[0-9]{10}">
+                <input type="tel" ng-model="info.mobile2" placeholder="Phone Number 2" maxlength="10"
+                                    pattern="[0-9]{10}" ng-disabled="!hideEdit">
             </label>
-            <label class="item item-input item-floating-label">
+            <label class="item item-input item-floating-label disabled-input" ng-class="{'final-diable':!hideEdit}">
                 <span class="input-label" class="text-transform-capital">Server Url</span>
-                <input type="text" ng-model="info.serverURL" ng-change="placeInfo(info)" placeholder="Server Url">
+                <input type="text" ng-model="info.serverURL" placeholder="Server Url" ng-disabled="!hideEdit">
             </label>
+             <button class="button button-block button-assertive btn-padding info-update-btn"  
+            on-tap="placeInfo(info)" ng-disabled="!hideEdit">
+                Save
+            </button>
         </div>
     </ion-content>
 </ion-view>

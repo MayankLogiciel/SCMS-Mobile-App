@@ -23,6 +23,7 @@
                   $scope.syncDateAndTime = picAndDatabaseTransferService.getLastImagesDownloadedTime();
 
             }; 
+ 
             $scope.goBack = function() {
                   $ionicHistory.goBack();
             };
@@ -169,7 +170,7 @@
                               changePictureUpdateStatus(params.id);
                               $scope.picturesCount = --$scope.pictures.length;
                               if($scope.picturesCount <=0 && str === 'database') {
-                                   $scope.syncingDatabase('Syncing database');
+                                   $scope.syncingDatabase('Syncing database (0%)');
                                    copyDBToExportFolder($scope.dbPath);
                               }else {
                                     $scope.cancelLoading();
@@ -211,14 +212,14 @@
                         $cordovaToast.show('Please enter valid server url', 'short', 'center');
                         return;
                   }else if($scope.getToken == null) {
-                        $scope.syncingDatabase('Syncing database');
+                        $scope.syncingDatabase('Syncing database (0%)');
                         getToken('database');
                   }else
                   if($scope.attendanceCount <=0 && $scope.nominalCount <= 0) {
                         $cordovaToast.show('No data available to sync', 'short', 'center');
                         return;
                   }else {
-                        $scope.syncingDatabase('Syncing database');
+                        $scope.syncingDatabase('Syncing database (0%)');
                         $scope.createExportFolder();                       
                   }
             };
@@ -252,13 +253,13 @@
             * syncDatabase function used to sync database
             **/
             var SychImageOnlyOrBoth = function(path) {
-                  if($scope.pictures.length > 0) {
-                        syncLoader($scope.p);
-                        $scope.dbPath = path;
-                        uploadPics('database');                        
-                  }else {
+                  // if($scope.pictures.length > 0) {
+                  //       syncLoader($scope.p);
+                  //       $scope.dbPath = path;
+                  //       uploadPics('database');                        
+                  // }else {
                         copyDBToExportFolder(path);
-                  }                  
+                  //}                  
             }
 
             var copyDBToExportFolder = function(path) {
@@ -305,7 +306,9 @@
                               }, 500);                                   
                         }, function (progress) {
                               $timeout(function () {
-                                    $scope.downloadProgress = (progress.loaded / progress.total) * 100;
+                                    $scope.downloadProgress = Math.floor((progress.loaded / progress.total) * 100);
+                                    $ionicLoading.show({ scope: $scope, template: '<div class="btn-animation-sync" style="color: #FFFFFF;"><ion-spinner icon="lines" class="spinner-calm"></ion-spinner><br><span style="vertical-align: middle;">&nbsp;&nbsp;Syncing database ('+$scope.downloadProgress+'%)</span><br><br><br><button class ="button button-clear cancel-btn" ng-click="cancelLoading()"><i class="icon ion-close"></i>&nbsp;&nbsp;Cancel</button></div>'});
+
                               })
                         });
                   }, function(err) {
@@ -313,21 +316,21 @@
             }
 
             var DeleteFromTables = function() {
-                  var deleteFromTempSewadar = "DELETE FROM temp_sewadars";
-                  $cordovaSQLite.execute($rootScope.db, deleteFromTempSewadar).then(function(res) {
-                  });
-                  var deleteFromNominalRolls = "DELETE FROM nominal_roles";
-                  $cordovaSQLite.execute($rootScope.db, deleteFromNominalRolls).then(function(res1) {
-                  });
+                  // var deleteFromTempSewadar = "DELETE FROM temp_sewadars";
+                  // $cordovaSQLite.execute($rootScope.db, deleteFromTempSewadar).then(function(res) {
+                  // });
+                  // var deleteFromNominalRolls = "DELETE FROM nominal_roles";
+                  // $cordovaSQLite.execute($rootScope.db, deleteFromNominalRolls).then(function(res1) {
+                  // });
                   var deleteFromAttendance = "delete from attendances where attendances.date <> '"+$scope.currentDate+"'";
                   $cordovaSQLite.execute($rootScope.db, deleteFromAttendance).then(function(res2) {
                   }, function(err){
 
                   });
-                  var deleteFromNominalAttendance = "delete from attendances where date = '"+$scope.currentDate+"' and nominal_roll_id != '"+null+"'";
-                  $cordovaSQLite.execute($rootScope.db, deleteFromNominalAttendance).then(function(res3) {
-                  }, function(err){
-                  });  
+                  // var deleteFromNominalAttendance = "delete from attendances where date = '"+$scope.currentDate+"' and nominal_roll_id != '"+null+"'";
+                  // $cordovaSQLite.execute($rootScope.db, deleteFromNominalAttendance).then(function(res3) {
+                  // }, function(err){
+                  // });  
                   $timeout(function() {
                         $scope.cancelLoading();
                   }, 1000);
@@ -351,8 +354,10 @@
                         }else {
                               params.date = picAndDatabaseTransferService.getLastImagesDownloadedTime().date;
                               params.time =  picAndDatabaseTransferService.getLastImagesDownloadedTime().time;
-                              var url = $scope.serverURlPrefix.serverURL + SCMS_SERVER_IMAGE_DOWNLOAD_URL + "date=" + params.date +"&" +"time=" + params.time;
-                              //var url = $scope.serverURlPrefix.serverURL + SCMS_SERVER_IMAGE_DOWNLOAD_URL + "date=2017/07/20&time=05:03";
+                              console.log(params);
+                             // var url = $scope.serverURlPrefix.serverURL + SCMS_SERVER_IMAGE_DOWNLOAD_URL + "date=" + params.date +"&" +"time=" + params.time;
+                              var url = $scope.serverURlPrefix.serverURL + SCMS_SERVER_IMAGE_DOWNLOAD_URL + "date=2017/07/20&time=05:03";
+                              console.log(url);
 
                         }   
                         var trustHosts = true;
@@ -365,7 +370,9 @@
                              unzip();
                         }, function(err){
                         }, function (progress){
-                              $scope.downloadProgress = (progress.loaded / progress.total) * 100;
+                              $scope.downloadProgress = Math.floor((progress.loaded / progress.total) * 100);
+                              $ionicLoading.show({ scope: $scope, template: '<button class="button button-clear btn-animation" style="color: #FFFFFF;"><ion-spinner icon="lines" class="spinner-calm"></ion-spinner><br><span style="vertical-align: middle;">&nbsp;&nbsp; Importing Images ('+$scope.downloadProgress+'%)</span></button>'});
+
                         });
                   }
 
@@ -397,6 +404,7 @@
 
                         }, function (progressEvent) {
                               $scope.unZipProgress = (progressEvent.loaded / progressEvent.total) * 100;
+
                         });                
                   }
 
@@ -445,7 +453,7 @@
 
             }
             $scope.importImagesProcessing = function() {
-            $ionicLoading.show({ scope: $scope, template: '<button class="button button-clear btn-animation" style="color: #FFFFFF;"><ion-spinner icon="lines" class="spinner-calm"></ion-spinner><br><span style="vertical-align: middle;">&nbsp;&nbsp; Importing Images</span></button>'});
+            $ionicLoading.show({ scope: $scope, template: '<button class="button button-clear btn-animation" style="color: #FFFFFF;"><ion-spinner icon="lines" class="spinner-calm"></ion-spinner><br><span style="vertical-align: middle;">&nbsp;&nbsp; Importing Images (0%)</span></button>'});
             }
             setup();
       };

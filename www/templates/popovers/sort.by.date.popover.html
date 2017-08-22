@@ -7,7 +7,7 @@
     			<input 
     			type="text" 
     			autocomplete="off"
-    			ng-model="nominaldate.from_date"
+    			ng-model="nominaldate.from_date | date: 'dd-MM-yyyy'"
     			name="Date From" 
     			placeholder="Date From"
     			ng-click="openDatePicker('from')"
@@ -20,7 +20,7 @@
     			<input 
     			type="text" 
     			autocomplete="off"
-    			ng-model="nominaldate.to_date"
+    			ng-model="nominaldate.to_date | date: 'dd-MM-yyyy'"
     			name="Date To" 
     			placeholder="Date To"
     			ng-click="openDatePicker('to')"

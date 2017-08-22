@@ -17,8 +17,6 @@
                   $scope.sewadar ={}; 
                   $scope.start = 10;
                   $scope.end = $scope.start+10;
-                  // $scope.limit = 20;
-                  // $scope.offset = 0;
                   $scope.currentDate =  $filter('date')(new Date(), 'yyyy-MM-dd'); 
                   $scope.LetterNumber =  $filter('date')(new Date(), 'yyyy/M');                 
                   if($scope.nominal_id) {                      
@@ -41,7 +39,6 @@
                         $scope.startDate = new Date($scope.nominalRollsData.date_from);
                         var endDate = new Date($scope.nominalRollsData.date_to);
                         $scope.diffDays = Math.round(Math.abs(($scope.startDate.getTime() - endDate.getTime())/(oneDay)));
-                        $scope.getListFromSewadarsForAttendance(); 
                         if($scope.nominalRollsData.status == 'pending') {
                               $scope.isCurrentDate = false; 
                         } else {
@@ -59,6 +56,11 @@
                   $scope.refId = (new Date())/1000|0;
                   $scope.isBatchNumber = true;
             };
+
+            $scope.$on('$ionicView.enter', function() {
+                  $scope.getListFromSewadarsForAttendance();
+                  cfpLoadingBar.start();
+            }); 
             $scope.goBack = function() {
                   $ionicHistory.goBack();
             };
@@ -73,7 +75,6 @@
             $scope.openNameOrBadgePopover = function($event) {
                   $ionicPopover.fromTemplateUrl('templates/popovers/nameorbadgebutton.popover.html', {
                         scope: $scope,
-                        //backdropClickToClose: false                  
                   }).then(function(popover) {
                         $scope.popover = popover; 
                         $scope.popover.show($event);
@@ -88,26 +89,13 @@
                   $scope.popover.hide();
             }
 
-            // $scope.openHeaderPopover = function($event) {
-            //       $ionicPopover.fromTemplateUrl('templates/popovers/btnlist.popover.html', {
-            //             scope: $scope,
-            //             //backdropClickToClose: false                  
-            //       }).then(function(popover) {
-            //             $scope.popover = popover; 
-            //             $scope.popover.show($event);
-            //       });
-            // };
-
-            // $scope.closeButtonListPopover = function() {
-            //       $scope.popover.hide();  
-            // }
-
             //refreshing page 
             $rootScope.$on('refreshPage',function(event, data){
                   $scope.nominalRollsData.incharge_id = null;
             });
 
             $scope.markAsIncharge = function(sewadar) {
+                  console.log(sewadar);
                   if(!angular.isDefined(sewadar.batch_no) || sewadar.batch_no == null) {
                         var incharge_type = 't';
                   }else {
@@ -130,12 +118,14 @@
                         buttonClicked: function(index) {
                               switch (index){
                                     case 0 :
-                                          var query = "UPDATE nominal_roles SET incharge_id = "+sewadar.id+", incharge_type = '"+incharge_type+"' WHERE id = '"+$scope.nominal_id+"'";
+                                          var query = "UPDATE nominal_roles SET name = '"+sewadar.name+"', contact_no = "+sewadar.sewadar_contact+", incharge_id = "+sewadar.id+", incharge_type = '"+incharge_type+"' WHERE id = '"+$scope.nominal_id+"'";
                                           $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
                                                 $cordovaToast.show(sewadar.name +' is the incharge of this nominal roll', 'short', 'center');
                                                 $scope.nominalRollsData.incharge_id = sewadar.id; 
                                                 $scope.nominalRollsData.incharge_type = incharge_type;
                                           });
+                                          $scope.nominalRollsData.name = sewadar.name;
+                                          $scope.nominalRollsData.contact_no = sewadar.sewadar_contact;
                                           return true;   
 
                               }
@@ -154,7 +144,7 @@
             }
 
             var getSewadarData = function(query) { 
-                  cfpLoadingBar.start();
+                  
                   $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
                         //$scope.totalRows = res.rows.length;
                         $scope.sewadarPrintList = [];
@@ -181,11 +171,7 @@
                         });  
                   });
             }
-            // $scope.loadMore = function() {
-            //       $scope.offset = $scope.offset + 20;
-            //       $scope.getListFromSewadarsForAttendance();
-            // }
-
+            
             $scope.SaveDataToAttandanceTable = function(sewadar) {                  
                   var CheckQuery = "SELECT sewadar_id FROM attendances where sewadar_id ='"+sewadar.id+"' AND nominal_roll_id ='"+$scope.nominal_id+"'";
                   $cordovaSQLite.execute($rootScope.db, CheckQuery).then(function(res) {
@@ -284,7 +270,6 @@
                   });      
             }
             $scope.getListFromSewadarsForAttendance = function(){
-                  //var query = "SELECT DISTINCT sewadars.id, sewadars.name, sewadars.gender,sewadars.address, sewadars.batch_no, sewadars.guardian, sewadars.age, sewadars.photo, sewadars.designation_name, sewadars.department_name, sewadars.dob, sewadars.sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, attendances.nominal_roll_id FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where attendances.nominal_roll_id = '"+$scope.nominal_id+"' AND attendances.sewadar_type = 'permanent' UNION SELECT DISTINCT temp_sewadars.id, temp_sewadars.name,temp_sewadars.gender,temp_sewadars.address, NULL as batch_no,  temp_sewadars.guardian,  temp_sewadars.age, NULL as photo, NULL as designation_name, NULL as department_name, NULL as dob, NULL as sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, attendances.nominal_roll_id FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where attendances.nominal_roll_id = '"+$scope.nominal_id+"' group by att_id ORDER BY att_created_at DESC LIMIT "+$scope.limit+" offset "+$scope.offset ;
                   var query = "SELECT DISTINCT sewadars.id, sewadars.name, sewadars.gender,sewadars.address, sewadars.batch_no, sewadars.guardian, sewadars.age, sewadars.photo, sewadars.designation_name, sewadars.department_name, sewadars.dob, sewadars.sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, attendances.nominal_roll_id FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where attendances.nominal_roll_id = '"+$scope.nominal_id+"' AND attendances.sewadar_type = 'permanent' UNION SELECT DISTINCT temp_sewadars.id, temp_sewadars.name,temp_sewadars.gender,temp_sewadars.address, NULL as batch_no,  temp_sewadars.guardian,  temp_sewadars.age, NULL as photo, NULL as designation_name, NULL as department_name, NULL as dob, NULL as sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, attendances.nominal_roll_id FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where attendances.nominal_roll_id = '"+$scope.nominal_id+"' group by att_id ORDER BY att_created_at DESC";
                   getSewadarData(query);
             }; 
@@ -432,8 +417,10 @@
                               var tableEnd = '</table>';
                               var tableRows = []; 
                               var tableRowsContinue = [];                              
-                              var fixedFooter = '<table style="width: 99%; margin: auto; position:fixed; bottom:0px; left:0; right:0;  margin-bottom:0px;"><br><br><br><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;"><span style="border-top:1px solid #000; padding-right: 30px; padding-left: 30px;">(Signature of Jathedar)</span></td><td colspan="2" style="width: 25%; text-align:right; margin-right: 100px"></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: bottom  ; text-align: left;">Letter No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.LetterNumber+'</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: right;"><span style="padding-right: 36px; padding-left: 36px;"><img style="margin-right: 70px" src="'+$scope.signature+'" " width="70"></span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;">Jatha : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.nominalRollsData.jatha_name+'</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: right;"><span style="border-top:1px solid #000; padding-right: 36px; padding-left: 36px;">(Signature of Functionary)</span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;">Issue Date : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.nominalRollsData.date_from+'</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: right;"><span style="padding-right: 50px;">(Affix Rubber Stamp)</span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: ;">Contact No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.nominalRollsData.contact_no+'</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: center;">Contact No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.placeInfo.mobile1+''+$scope.placeInfo.mobile2+'</span></td></tr></table>';    
-                              var footer = '<br><br><table style="width: 99%; margin: auto;"><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;"><span style="border-top:1px solid #000; padding-right: 30px; padding-left: 30px;">(Signature of Jathedar)</span></td><td colspan="2" style="width: 25%;"></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: bottom  ; text-align: left;">Letter No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.LetterNumber+'</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: right;"><span style="padding-right: 36px; padding-left: 36px;"><img style="margin-right: 70px" src="'+$scope.signature+'" " width="70"></span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;">Jatha : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.nominalRollsData.jatha_name+'</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: right;"><span style="border-top:1px solid #000; padding-right: 36px; padding-left: 36px;">(Signature of Functionary)</span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;">Issue Date : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.nominalRollsData.date_from+'</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: right;"><span style="padding-right: 50px;">(Affix Rubber Stamp)</span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: ;">Contact No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.nominalRollsData.contact_no+'</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: center;">Contact No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.placeInfo.mobile1+' '+$scope.placeInfo.mobile2+'</span></td></tr></table>';    
+                              //var fixedFooter = '<table style="width: 99%; margin: auto; position:fixed; bottom:0px; left:0; right:0;  margin-bottom:0px;"><br><br><br><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;"><span style="border-top:1px solid #000; padding-right: 30px; padding-left: 30px;">(Signature of Jathedar)</span></td><td colspan="2" style="width: 25%; text-align:right; margin-right: 100px"></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: bottom  ; text-align: left;">Letter No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.LetterNumber+'</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: right;"><span style="padding-right: 36px; padding-left: 36px;"><img style="margin-right: 70px" src="'+$scope.signature+'" " width="70"></span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;">Jatha : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.nominalRollsData.jatha_name+'</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: right;"><span style="border-top:1px solid #000; padding-right: 36px; padding-left: 36px;">(Signature of Functionary)</span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;">Issue Date : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.nominalRollsData.date_from+'</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: right;"><span style="padding-right: 50px;">(Affix Rubber Stamp)</span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: ;">Contact No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.nominalRollsData.contact_no+'</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: center;">Contact No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.placeInfo.mobile1+''+$scope.placeInfo.mobile2+'</span></td></tr></table>';    
+                              var fixedFooter = '<table style="width: 99%; margin: auto; position:fixed; bottom:0px; left:0; right:0;  margin-bottom:0px;"><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;"></td><td colspan="2" style="width: 25%; text-align:right; vertical-align: top; margin-right: 100px"><span style="padding-right: 36px; padding-left: 36px;"><img style="margin-right: 70px" src="'+$scope.signature+'" " width="70"></span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;"><span style="border-top:1px solid #000; padding-right: 30px; padding-left: 30px;">(Signature of Jathedar)</span></td><td colspan="2" style="width: 25%; text-align:right; vertical-align: top; margin-right: 100px"></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: bottom  ; text-align: left;">Letter No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.LetterNumber+'</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: right;"></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;">Jatha : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.nominalRollsData.jatha_name+'</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: right;"><span style="border-top:1px solid #000; padding-right: 36px; padding-left: 36px;">(Signature of Functionary)</span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;">Issue Date : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.nominalRollsData.date_from+'</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: right;"><span style="padding-right: 50px;">(Affix Rubber Stamp)</span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: ;">Contact No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.nominalRollsData.contact_no+'</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: center;">Contact No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.placeInfo.mobile1+''+$scope.placeInfo.mobile2+'</span></td></tr></table>';    
+                              //var footer = '<br><br><table style="width: 99%; margin: auto;"><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;"><span style="border-top:1px solid #000; padding-right: 30px; padding-left: 30px;">(Signature of Jathedar)</span></td><td colspan="2" style="width: 25%;"></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: bottom  ; text-align: left;">Letter No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.LetterNumber+'</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: right;"><span style="padding-right: 36px; padding-left: 36px;"><img style="margin-right: 70px" src="'+$scope.signature+'" " width="70"></span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;">Jatha : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.nominalRollsData.jatha_name+'</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: right;"><span style="border-top:1px solid #000; padding-right: 36px; padding-left: 36px;">(Signature of Functionary)</span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;">Issue Date : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.nominalRollsData.date_from+'</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: right;"><span style="padding-right: 50px;">(Affix Rubber Stamp)</span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: ;">Contact No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.nominalRollsData.contact_no+'</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: center;">Contact No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.placeInfo.mobile1+' '+$scope.placeInfo.mobile2+'</span></td></tr></table>';    
+                              var footer = '<table style="width: 99%; margin: auto; margin-top: 15px;"><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;"></td><td colspan="2" style="width: 25%; text-align:right; vertical-align: top; margin-right: 100px"><span style="padding-right: 36px; padding-left: 36px;"><img style="margin-right: 70px" src="'+$scope.signature+'" " width="70"></span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;"><span style="border-top:1px solid #000; padding-right: 30px; padding-left: 30px;">(Signature of Jathedar)</span></td><td colspan="2" style="width: 25%; text-align:right; vertical-align: top; margin-right: 100px"></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: bottom  ; text-align: left;">Letter No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.LetterNumber+'</span></td><td colspan = "2"  style="width: 25%; text-align: right;"></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;">Jatha : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.nominalRollsData.jatha_name+'</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: right;"><span style="border-top:1px solid #000; padding-right: 36px; padding-left: 36px;">(Signature of Functionary)</span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;">Issue Date : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.nominalRollsData.date_from+'</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: right;"><span style="padding-right: 50px;">(Affix Rubber Stamp)</span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: ;">Contact No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.nominalRollsData.contact_no+'</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: center;">Contact No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000;">'+$scope.placeInfo.mobile1+' '+$scope.placeInfo.mobile2+'</span></td></tr></table>';    
                               setBlankRows(function() {
                                     for(var i=0; i<$scope.sewadarPrintList.length;i++) {
                                           if(!angular.isDefined($scope.sewadarPrintList[i].guardian) || $scope.sewadarPrintList[i].guardian == null) {

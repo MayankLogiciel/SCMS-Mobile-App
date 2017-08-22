@@ -5,13 +5,15 @@
       **/
       var AppController = function($log, $scope, $timeout, $ionicHistory, $state, $ionicPopup, $cordovaToast, $cordovaFile, $filter, authService, picAndDatabaseTransferService) {
             var setup = function() {
-                  $log.debug("App Controller");  
-                  $timeout(function(){
-                        $ionicHistory.clearCache();
-                        $ionicHistory.clearHistory();
-                  },500);                 
+                  $log.debug("App Controller");
+                  if($state.current.name == "app") {
+                        $timeout(function(){
+                              $ionicHistory.clearCache();
+                              $ionicHistory.clearHistory();
+                        },500);
+                  }  
             }; 
-
+            
             /**
             * Log out function
             * clearing all history and cache and clear Local Storage

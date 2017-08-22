@@ -32,7 +32,7 @@
 				</h4>
 				<h4 ng-if="sewadar.dob">
 					<label>DOB:</label>
-					<span ng-bind="sewadar.dob"></span>
+					<span ng-bind="sewadar.dob | date: 'dd-MM-yyyy'"></span>
 				</h4>
 				<h4 ng-if="sewadar.gender">
 					<label>Gender:</label>

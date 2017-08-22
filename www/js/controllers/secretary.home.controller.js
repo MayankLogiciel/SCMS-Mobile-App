@@ -23,7 +23,7 @@
                         if(res.rows.length > 0) {
                               for(var i= 0; i<res.rows.length; i++) { 
                                     $scope.nominals.push(res.rows.item(i)); 
-                                    if(res.rows.item(i).status == 'Approved') {
+                                    if(res.rows.item(i).status == 'Approved' || res.rows.item(i).status == 'dispatched') {
                                           $scope.nominalAprroveList.push(res.rows.item(i)); 
                                     }
                               }  
@@ -115,20 +115,27 @@
                   var msg = "All assigned sewadars will be deleted with this Nominal Roll. Confirm to Proceed.";
                   var approved_by_group_id = authService.getLoggedInUserData();
                   var txt = '';
-                  if(nominal.status == 'pending') {
-                        $scope.buttonText = [                   
-                            {text: '<i class="icon ion-checkmark-circled icon-space"></i>Mark As Approved'},
-                            {text : '<i class="icon ion-edit"></i> Edit Nominal Roll'},
-                            {text : '<i class="icon ion-trash-a del-nominal-on-tab"></i> Delete Nominal Roll'}
-                        ];
-                        txt = 'Approved';
-                  } else {
+                  if(nominal.status == 'Approved') {
                         $scope.buttonText = [
                               {text: '<i class="icon ion-ios-close icon-space"></i>Remove Approval'},
                               {text : '<i class="icon ion-edit"></i> Edit Nominal Roll'},
-                              {text : '<i class="icon ion-trash-a del-nominal-on-tab"></i> Delete Nominal Roll'}
+                              {text : '<i class="icon ion-trash-a del-nominal-on-tab"></i> Delete Nominal Roll'},
+                              {text : '<i class="icon ion-paper-airplane"></i> Mark As Dispatched'}
                         ];
                         txt = 'pending';
+                  }else if(nominal.status == 'dispatched') {
+                        $scope.buttonText = [
+                              {text : '<i class="icon ion-edit"></i> Edit Nominal Roll'},
+                              {text : '<i class="icon ion-trash-a del-nominal-on-tab"></i> Delete Nominal Roll'}
+                        ];
+
+                  }else {
+                        $scope.buttonText = [                   
+                              {text: '<i class="icon ion-checkmark-circled icon-space"></i>Mark As Approved'},
+                              {text : '<i class="icon ion-edit"></i> Edit Nominal Roll'},
+                              {text : '<i class="icon ion-trash-a del-nominal-on-tab"></i> Delete Nominal Roll'}
+                        ];
+                        txt = 'Approved';
                   }
 
                   var buttons = [];
@@ -143,8 +150,9 @@
                               $log.debug('CANCELLED');
                         },
                         buttonClicked: function(index) {
-                              switch (index){
-                                    case 0 :
+                              var actionText = buttons[index].text;
+                              switch (actionText){
+                                    case '<i class="icon ion-checkmark-circled icon-space"></i>Mark As Approved' :
                                           nominal.status = txt;
                                           if(txt=='Approved') {
                                                 nominal.isSelected = true;
@@ -155,14 +163,28 @@
                                           var query = "UPDATE nominal_roles SET status = '"+txt+"', approved_by = "+approved_by_group_id.group_id + " WHERE id = '"+nominal.id+"'";
                                           updateNominal(query, txt, nominal);
                                           return true;   
-                                    case 1 : 
+                                    case '<i class="icon ion-edit"></i> Edit Nominal Roll': 
                                           nominalRollsService.setNominalRollsData(nominal);
                                           $state.go('addedit-nominal_rolls', {action: 'edit',id: nominal.id, user: 'secretary'});
                                           return true;  
-                                    case 2 : 
+                                    case '<i class="icon ion-trash-a del-nominal-on-tab"></i> Delete Nominal Roll' : 
                                          showDeleteConfirm(msg, nominal.id);
-                                          return true;                                     
-                                    
+                                          return true; 
+                                    case '<i class="icon ion-paper-airplane"></i> Mark As Dispatched' :
+                                          nominal.status = 'dispatched';
+                                          nominal.isSelected = true;
+                                          var query = "UPDATE nominal_roles SET status = 'dispatched' WHERE id = '"+nominal.id+"'";
+                                          $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
+                                          }, function(err){
+                                          });
+                                          return true;
+                                    case '<i class="icon ion-ios-close icon-space"></i>Remove Approval' :
+                                          nominal.status = txt;
+                                          nominal.isSelected = false;
+                                          var query = "UPDATE nominal_roles SET status = '"+txt+"' WHERE id = '"+nominal.id+"'";
+                                          updateNominal(query, txt, nominal);
+                                          return true; 
+
                               }
                         }
                   });

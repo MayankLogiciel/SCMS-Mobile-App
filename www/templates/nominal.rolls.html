@@ -11,18 +11,17 @@
 	</ion-header-bar>
 
 	<div class="list search-wrapper">
-			<label class="item item-input">
-				<i class="icon ion-search placeholder-icon search-icon"></i>
-				<input 
-				type="search" 
-				placeholder="Search Name"
-				autocomplete="off"
-				ng-model="searchQuery"
-				spellcheck = "false"
-				>
-			</label>  		
-		</div>
-
+		<label class="item item-input">
+			<i class="icon ion-search placeholder-icon search-icon"></i>
+			<input 
+			type="search" 
+			placeholder="Search Name"
+			autocomplete="off"
+			ng-model="searchQuery"
+			spellcheck = "false"
+			>
+		</label>  		
+	</div>
 	
 	<ion-content has-bouncing = "false" scroll="true" class="stop-scroll">
 		
@@ -31,27 +30,26 @@
 			class="list nominal-list nominal-list-mob" 
 			ng-repeat="nominal in nominals | filter:searchQuery | orderBy: 'date_from': Desc" on-hold="quickActions(nominal)" on-tap="viewAndMarkAttendanceNominal(nominal)">
 			<a class="item item-button-right">
-				<!-- <button class="button button-balanced" on-tap="editNominal(nominal)" >
-	      			Add Sewadar
-	    		</button> -->
-				<!-- <h4>
-					<label>Nominal Roll Name:</label>
-					<span ng-bind="nominal.name"></span>
-					<span ng-if="nominal.status=='draft'" class="badge badge-assertive" ng-bind="nominal.status"></span>
-				</h4> -->
-				<!--  -->
 				<div class="row nominal-list-on-tab">	
 					<div class="col col-90">
-						<div class="row">   
+						<h4 class="sewa-place-misc">
+							<label>Sewa Place:</label>
+							<span ng-bind="nominal.sewa_name" class="text-transform-capital"></span>
+						</h4>  
+						<h4 class="sewa-place-misc" ng-class="{'final-diable':nominal.new_sewa == 'null' || nominal.new_sewa == 'N/A'}">
+							<label>Misc Sewa Place:</label>
+							<span class="text-transform-capital">
+								{{nominal.new_sewa == 'null' ? 'N/A' : nominal.new_sewa}}
+							</span>
+						</h4>
+						<div class="row other-nominal-info"> 
+
 							<div class="col col-50">                            
 								<h4>
 									<label>Date From:</label>
-									<span ng-bind="nominal.date_from"></span>
+									<span ng-bind="nominal.date_from | date: 'dd-MM-yyyy'"></span>
 								</h4> 
-								<h4>
-									<label>Sewa Place:</label>
-									<span ng-bind="nominal.sewa_name" class="text-transform-capital"></span>
-								</h4> 
+								 
 
 								<h4>
 									<label>Scheduled Status</label>
@@ -62,7 +60,9 @@
 
 								<h4 >
 									<label>Jathedar Name:</label>
-									<span ng-bind="nominal.name" class="text-transform-capital" ></span>
+									<span>
+										{{nominal.name == 'null'? 'N/A': nominal.name}}
+									</span>
 								</h4>
 
 								<h4>
@@ -84,16 +84,8 @@
 							<div class="col col-50 driver-data margin-bt-data">
 								<h4>
 									<label>Date To:</label>
-									<span ng-bind="nominal.date_to"></span>                  
+									<span ng-bind="nominal.date_to | date: 'dd-MM-yyyy'"></span>                  
 								</h4>
-
-								<h4 ng-class="{'final-diable':nominal.new_sewa == 'null'}">
-									<label>Misc Sewa Place:</label>
-									<span class="text-transform-capital">
-										{{nominal.new_sewa == 'null' ? 'N/A' : nominal.new_sewa}}
-									</span>
-								</h4> 
-
 
 								<h4>
 									<label>Jatha:</label>
@@ -102,7 +94,9 @@
 
 								<h4>
 									<label>Contact No:</label>
-									<span ng-bind="nominal.contact_no"></span>
+									<span>
+										{{nominal.contact_no == 'undefined'? 'N/A': nominal.contact_no}}
+									</span>
 								</h4>
 
 								<h4>
@@ -123,15 +117,14 @@
 					</div>
 				</div>   
 
-
 				<div class="nominal-list-on-mob">
 					<h4>
 						<label>Date From:</label>
-						<span ng-bind="nominal.date_from"></span>
+						<span ng-bind="nominal.date_from | date: 'dd-MM-yyyy'"></span>
 					</h4>
 					<h4>
 						<label>Date To:</label>
-						<span ng-bind="nominal.date_to"></span>                  
+						<span ng-bind="nominal.date_to | date: 'dd-MM-yyyy'"></span>                  
 					</h4> 
 					<h4>
 						<label>Sewa Place:</label>
@@ -155,11 +148,15 @@
 					</h4>
 					<h4 >
 						<label>Jathedar Name:</label>
-						<span ng-bind="nominal.name" class="text-transform-capital" ></span>
+						<span>
+							{{nominal.name == 'null'? 'N/A': nominal.name}}
+						</span>
 					</h4>
 					<h4>
 						<label>Contact No:</label>
-						<span ng-bind="nominal.contact_no"></span>
+						<span>
+							{{nominal.contact_no == 'undefined'? 'N/A': nominal.contact_no}}
+						</span>
 					</h4>
 					<h4>
 						<label>Vehicle Type:</label>

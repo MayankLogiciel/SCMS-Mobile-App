@@ -41,6 +41,12 @@
 		width: 88%;
 	}
 }
+.sewa-place-misc {
+	margin-left: 10px !important;
+}
+.other-nominal-info{
+	padding-top: 0 !important;
+}
 .swap-btn {
 	position: absolute;
     right: 0;
@@ -97,13 +103,11 @@
 	position: relative;
     top: 50%;
    	margin-top: -296px;
-   //margin-top: -198px;
 }
 .scms-import {
 	position: relative;
     top: 50%;
    	margin-top: -240px;
-   //margin-top: -198px;
 }
 .login-img {
 	text-align: center;
@@ -188,28 +192,6 @@
 		}
 	}
 	
-	// @media (min-width:1025px) {
-	// 	margin-top: -307px;
-	// 	.button.btn-padding.col {
-	// 		height: 291px;
-	// 	}
-	// }
-	// @media(max-width: 1024px) {
-	// 	margin-top: -336px;	
-	// 	.button.btn-padding.col {
-	// 	height: 320px;
-	// 	margin: 5px;
-	// 	font-size: 28px;
-	// 		.icon {
-	// 			display: block;
-	// 			&:before {
-	// 				font-size: 70px;
-	// 				line-height: 70px;
-	// 			}
-	// 		}
-	// 	}
-	// }
-
 }
 
 .download-images-from-db {
@@ -224,11 +206,9 @@
 
 }
 .all-img {
-	margin-top: 6%;
+	margin-top: 0;
 }
 .sync-date {
-	//padding-left: 43%;
-	//width: 100%;
 	padding-right: 15px;
 	margin-top: 0;
 	font-size: 16px;
@@ -561,7 +541,7 @@
     top: 50%;
     width: 90%;
     margin: auto;
-    margin-top: -275px;
+    margin-top: -322px;
     left: 0;
     right: 0;
     label {
@@ -577,6 +557,9 @@
     		width: 100%;
     	}
     }
+}
+.disabled-input input:disabled{
+	background: #fff !important;
 }
 
 .list.list-padding.row {
@@ -654,6 +637,9 @@
 		}
 	}
 }
+.info-update-btn {
+	margin-top: 20px !important;
+}
 
 .item.item-avatar.input-radio {
 	padding-top: 0;	
@@ -662,7 +648,6 @@
 }
 
 .option-sewa {
-	//padding: 0;	
 	select {
 		max-width: 100%;
 		width: 100%;
@@ -786,131 +771,7 @@
 		}
 	}
 }
-// .ionic_datepicker_popup.popup-container .popup {
-// 	width:	250px;
-// 	.popup-buttons {
-// 		padding: 0;
-// 		.button {
-// 			background-color: #009688;
-// 		}
-// 	}
-// }
 
-// .ionic_datepicker_popup.popup-container .popup {
-// 	.popup-body {
-// 		overflow: visible;
-// 	}
-// 	.month_select,
-// 	.year_select {
-// 		&:after {
-// 			border-top: 10px solid;
-// 		}
-// 	}
-// 	select {
-// 		font-size: 25px;
-// 		option {
-// 			width: 100% !important;
-// 		}
-// 	}
-// 	@media(max-width: 480px) {
-// 		width:	250px;
-// 		.popup-buttons {
-// 			padding: 0;
-// 			.button {
-// 			}
-// 		}
-// 	}
-// 	@media(min-width: 1025px) {
-// 		width:	85%;
-// 		height: 85%;
-// 		.popup-buttons {
-// 			padding: 0;
-// 			.button {
-// 				background-color: #eee;
-// 				font-weight: bold;
-// 				font-size: 18px; 
-// 			}
-// 		}
-// 		.date_selection {
-// 			height: 500px !important;
-// 		}
-// 		.col {
-// 			font-size: 25px;
-// 			font-weight: bold;
-// 			height: 70px;
-// 		}
-// 		.date_cell {
-// 			//@media(min-width: 1025px) {
-// 				padding: 30px 7px;
-// 			//}
-// 		}
-// 		.selected_date {
-// 			background: none;
-// 			border-radius: 0;
-// 			border: 0;
-// 			.date_cell {
-//     			border: 1px solid #009688;
-//     			border-radius: 50%;
-//     			color: #fff;
-//     			background: #009688;
-// 			}
-// 		}
-// 		.today {
-// 			border: none;
-// 			.date_cell {
-//     			border: 1px solid #009688;
-//     			border-radius: 50%;
-//     			//color: #000;
-// 			}			
-// 		}
-// 	}
-// 	width:	85%;
-// 	height: 60%;
-// 	.popup-buttons {
-// 		padding: 0;
-// 		.button {
-// 			background-color: #eee;
-// 			font-weight: bold;
-// 			font-size: 20px; 
-// 		}
-// 	}
-// 	.selected_date_full {
-// 		height: 65px;
-// 		line-height: 65px;
-// 		font-size: 25px;
-// 	}
-// 	.date_selection {
-// 		height: 614px;
-// 	}
-	
-// 	.date_col {
-// 		padding: 32px;
-// 	}
-// 	.col {
-// 		font-size: 25px;
-// 		font-weight: bold;
-// 		height: 82px;
-// 		@media(min-width: 1025px) {
-// 			height: 68px;
-// 		}
-// 	}
-// 	.item-select {
-// 		height: 40px;
-// 	}
-// }
-// .right-button {
-// 	float: right;
-// }
-// .left-button {
-// 	width: 100%;
-// 	span {
-// 		color: #fff;
-// 		font-size: 20px;
-// 		font-weight: bold;
-// 		text-align: center;
-// 		padding-top: 12px;
-// 	}
-// }
 .button.button-stable.ion-chevron-left {
 	color: #fff;
 	font-size: 20px;
@@ -924,6 +785,13 @@
 	}
 
 }
+.edit-info {
+	width: 100px !important;
+	padding: 0 !important;
+	top: 13px !important;
+    right: 10px !important;
+    bottom: 13px !important;
+}
 .buttons-right.header-item {
 	h4 label {
 		color:#fff;
@@ -933,10 +801,11 @@
 .custom-header-bar.bar-balanced {
 	height: 65px;
 	.title {
-		line-height: 65px;
+		line-height: 59px;
 	    text-align: center;
 	    font-size: 25px;
 	    font-weight: bold;
+	    top: 5px;
 	}
 	.date {
 		width: 50%;		
@@ -948,14 +817,12 @@
 	}
 }
 .col.header-title {
-	//@media (min-width:1025px) {
-		font-size: 25px;
-		font-weight: bold;
-		text-overflow: ellipsis;
-		display: block;
-		white-space: nowrap;
-		overflow: hidden;
-	//}
+	font-size: 25px;
+	font-weight: bold;
+	text-overflow: ellipsis;
+	display: block;
+	white-space: nowrap;
+	overflow: hidden;
 }
 .search-wrapper {
 	margin-bottom: 10px;
@@ -974,9 +841,7 @@
     top: 65px;
     width: 100%;
 }
-.common-search-wrapper {
-	//margin-top: 70px;
-}
+
 .stop-scroll {
 	top: 135px;
 	overflow: auto;
@@ -1053,8 +918,6 @@
 #loading-bar-spinner {
 	top: 50% !important;
     left: 42% !important; 
-	//background: #ccc;
-	//background-size: 100%;
 	.spinner-icon {
     	border: 4px solid transparent;
     	width: 50px !important;
@@ -1281,7 +1144,7 @@
 			right: 20%;
 			left: 0;	
 		}		
-		right: 25%;
+		right: 28%;
 		left: 0;
 		&:before {
 			font-size: 32px;
@@ -1307,11 +1170,6 @@
 			padding-left: 15px;
 		}
 		.button.button-assertive {
-			// padding: 10px 15px;
-			// font-size: 18px;
-			// font-weight: bold;
-			// top: 13px;
-			// left: 78%;
 			padding: 5px 11px;
     		font-size: 17px;
     		font-weight: bold;
@@ -1357,25 +1215,7 @@
 	    color: $homebtn;		
 	}
 }
-// .ionic_datepicker_popup {
-// 	.today {
-// 		border: none !important;
-// 	}
-// 	.popup-body {
-// 		.show_nav {
-// 			.prev_btn_section,
-// 			.next_btn_section {
-// 				button {
-// 					vertical-align: sub;
-//     				font-size: 35px;
-// 				}
-// 			}
-// 		}
-// 	}
-// 	.popup-buttons {
-// 		background: #fff;
-// 	}
-// }
+
 .sync-popup {
 	.popup-body {
 		background: #fff;
@@ -1405,18 +1245,6 @@
     	}
 	}
 }
-// body.nominal-rolls-popup-open {
-// 	.ionic_datepicker_popup {
-// 		.popup-buttons {
-// 			.button_today {
-// 				margin-right: 0;
-// 			}
-// 			.button_close {
-// 				display: none;
-// 			}
-// 		}
-// 	}
-// }
 
 .confirm-delete {
 	.popup-body {
@@ -1474,7 +1302,7 @@
 }
 .approve-checkbox {
 	label {
-		padding: 88px 0;
+		padding: 117px 0;
     	border: 0;
 
     		.checkbox {
@@ -1629,7 +1457,7 @@
 .list-nominal-add {
 	&:before {
 		font-size: 60px;
-    	margin-top: 75px;
+    	margin-top: 90px;
     	color: $assertive;
 	}
 	text-align: center;
@@ -1732,8 +1560,8 @@
 	width: 80%;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 5%;
-    margin-bottom: 5%;
+    margin-top: 1%;
+    // margin-bottom: 5%;
     text-align: center;
     .satsang-day-sewadars-sync {
     	font-size: 20px;
@@ -1774,7 +1602,7 @@
 }
 .btn-animation {
 	min-height: 123px !important;
-	min-width: 230px;
+	min-width: 300px;
 	span {
 		font-size: 20px !important;
 	}
@@ -2209,9 +2037,7 @@
 	.action-sheet-wrapper .action-sheet-has-icons .icon:before {
     	font-size: 25px;
 	}
-	// .camera-padding:before {
- //    	padding-right: 105px !important;
-	// }
+	
 	.action-sheet-wrapper .action-sheet-has-icons .icon {
 		right: 46% !important;
 	}
@@ -2494,7 +2320,6 @@
 	.sava-att {
 	    right: 5px !important;
 	    margin-top: -4px !important;
-	    /* background: transparent !important; */
 	}
 	.scan-button {
 		margin-top: -4px !important;
@@ -2530,7 +2355,6 @@
 	.nominal-list-mob h4 span {
 		font-size: 13px !important;
 		padding-left: 2px !important;
-		// display: block;
 		font-weight: 400;
 	}
 	.margin-bt-data {
@@ -2647,7 +2471,6 @@
 				.date_cell {
 	    			border: 1px solid #009688;
 	    			border-radius: 50%;
-	    			//color: #000;
 				}			
 			}
 		}

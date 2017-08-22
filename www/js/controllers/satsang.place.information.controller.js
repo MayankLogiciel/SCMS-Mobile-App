@@ -7,6 +7,11 @@
             var setup = function() {
                   $log.debug("Satsang Place Information Controller");
                   $scope.info = authService.getSansangPlaceInfo();
+                  if($scope.info == null) {
+                        $scope.hideEdit = true;
+                  }else {
+                        $scope.hideEdit = false;
+                  }
                  
             }; 
 
@@ -14,8 +19,13 @@
                   $ionicHistory.goBack();
             };
 
+            $scope.editInfo = function(){
+                  $scope.hideEdit = true;
+            }
+
             $scope.placeInfo = function(value) {                  
                   authService.setSansangPlaceInfo(value);
+                  $scope.hideEdit = false;
             };
             setup();
       };

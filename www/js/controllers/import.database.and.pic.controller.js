@@ -27,7 +27,7 @@
                   $ionicLoading.show({ scope: $scope, template: '<button class="button button-clear btn-animation" style="color: #FFFFFF;"><ion-spinner icon="lines" class="spinner-calm"></ion-spinner><br><span style="vertical-align: middle;">&nbsp;&nbsp;'+msg+'</span></button>'});
             }
             $scope.cancelLoading = function() {
-                  $ionicLoading.hide();
+                 $ionicLoading.hide();
             }
 
             $scope.serverURL = function(url) {
@@ -52,7 +52,7 @@
                               var accessToken = "bearer " + response.data.signature;
                               var headers = {'Authorization': accessToken};         
                               downloadOptions.headers = headers;
-                              $scope.importDatabase('Downloading Database');
+                              $scope.importDatabase('Downloading Database (0%)');
                               $cordovaFileTransfer.download(url, targetPath, downloadOptions, trustHosts)
                               .then(function(result) { 
                                     unzip();
@@ -61,7 +61,9 @@
                                     $scope.cancelLoading();
                               }, function (progress) {
                                     $timeout(function () {
-                                          $scope.downloadProgress = (progress.loaded / progress.total) * 100;
+                                          $scope.downloadProgress = Math.floor((progress.loaded / progress.total) * 100);
+                                          $ionicLoading.show({ scope: $scope, template: '<button class="button button-clear btn-animation" style="color: #FFFFFF;"><ion-spinner icon="lines" class="spinner-calm"></ion-spinner><br><span style="vertical-align: middle;">&nbsp;&nbsp;Downloading Database ('+$scope.downloadProgress+'%)</span></button>'});
+
                                     });
                               });
                               authService.setToken(accessToken);
