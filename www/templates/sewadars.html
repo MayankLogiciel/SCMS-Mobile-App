@@ -1,6 +1,6 @@
 <ion-view class="login-home-body"> 
 	<ion-header-bar class="bar-balanced custom-header-bar">
-		<div class="buttons left-button row">
+		<div class="buttons left-button row ios-header-css">
 			<button class="button button-icon button-stable ion-chevron-left col-10" on-tap="goBack()">
 			</button>
 			<span class='col col-80 header-title'>Sewadar Data</span>
@@ -47,7 +47,7 @@
 		</div>	
 		
 	<ion-content has-bouncing = "false" class="stop-scroll">
-		<div sewadar-detail-modal-diretive>
+		<div sewadar-detail-modal-diretive class="common-search-wrapper">
 			<a class="item item-avatar listing-attend" ng-repeat="sewadar in sewadars" on-hold="quickActions(sewadar)" on-tap="selectedSewadarDetail(sewadar,'viewSewadar')">
 	      		<img class="list-avtar" ng-if='sewadar.photo && sewadar.isImageFound' ng-src="{{imagePath + sewadar.photo}}?{{timeStampPhoto}}"/>
 				<img class="list-avtar" ng-if='!sewadar.photo || !sewadar.isImageFound' ng-src="{{defaultImage}}"/>

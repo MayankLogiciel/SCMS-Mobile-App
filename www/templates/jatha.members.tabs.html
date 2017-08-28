@@ -1,6 +1,6 @@
 <ion-view class="login-home-body">	    
 	<ion-header-bar class="bar-balanced custom-header-bar">
-		<div class="buttons left-button row">
+		<div class="buttons left-button row ios-header-css">
 			<button class="button button-icon button-stable ion-chevron-left col-20 btn-back-left" on-tap="goBack()">
 			</button>
 			<span class='col col-60 select-span header-title jatha-title jatha-filter' ng-init = "getListForJatha()">
@@ -27,7 +27,7 @@
 
 		<!--Male tab-->
 		<ion-tab title="Male Members ({{maleMembers.length}})" ng-click="tabClicked('male')">
-				<ion-content has-bouncing = "false" class="stop-scroll-top">
+				<ion-content has-bouncing = "false" class="stop-scroll-top ios-has-header-tab-page">
 					<div class="list list-padding row jatha-list" ng-repeat="member in maleMembers" ng-class="{'final-diable':member.isDisabled}">	
 						<div class="col col-90">
 							<a 
@@ -59,7 +59,7 @@
 		</ion-tab>
 		<!--Female  tab-->
 		<ion-tab title="Female Members ({{femaleMembers.length}})" ng-click="tabClicked('female')">
-				<ion-content has-bouncing = "false" class="stop-scroll-top">
+				<ion-content has-bouncing = "false" class="stop-scroll-top ios-has-header-tab-page">
 					<div class="list list-padding row jatha-list" ng-repeat="member in femaleMembers" ng-class="{'final-diable':member.isDisabled}">	
 						<div class="col col-90">
 							<a 
