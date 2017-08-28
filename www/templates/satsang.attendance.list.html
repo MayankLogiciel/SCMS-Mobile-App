@@ -1,6 +1,6 @@
 <ion-view class="login-home-body">    
 	<ion-header-bar class="bar-balanced custom-header-bar">
-		<div class="buttons left-button row">
+		<div class="buttons left-button row ios-header-css">
 			<div  on-tap="goBack()" class="col-80 row">				
 				<button class="button button-icon button-stable ion-chevron-left col-10 sat-att-list-back-width">
 				</button>
@@ -16,7 +16,7 @@
 		class="list nominal-list date-count" 
 		 ng-if="!isTodaysData || dateWiseAttendanceList.length==0" on-tap="viewAttendees(todayDate)">
 			<a class="item item-button-right">
-				<button class="button button-assertive" on-tap="viewAttendees(todayDate)" >
+				<button class="button button-assertive ios-attendees" on-tap="viewAttendees(todayDate)" >
 					<i class="icon ion-plus btn-icon-day-attendance"></i>Attendees
 				</button>
 				<h2>
@@ -32,7 +32,7 @@
 		class="list nominal-list date-count" 
 		ng-repeat="attendance in dateWiseAttendanceList | orderBy:'-date'" on-tap="viewAttendees(attendance.date)">
 		<a class="item item-button-right">			
-			<button class="button button-assertive" on-tap="viewAttendees(attendance.date)" >
+			<button class="button button-assertive ios-attendees" on-tap="viewAttendees(attendance.date)" >
       			<i class="icon ion-eye btn-icon-day-attendance"></i>Attendees
     		</button>
     		<h2>

@@ -130,7 +130,7 @@
                   authService.setLoggedInUserData(data);
             }
             $scope.databaseNotFoundPopup = function() {
-                  $scope.dataBasePath = cordova.file.externalApplicationStorageDirectory + 'import/';                  
+                  $scope.dataBasePath = $rootScope.baseAppDir + 'import/';                  
                   $scope.data = {};              
                   var myPopup = $ionicPopup.show({
                         templateUrl: 'templates/popups/database.not.found.popup.html',

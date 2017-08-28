@@ -57,7 +57,7 @@
 
             var checkDirectoryDate = function() {  
                   $scope.folderName = $filter('date')(new Date(), 'yyyy_MM_dd_h_mm_ss') + '/';  
-                  $scope.dataBasePath = cordova.file.externalApplicationStorageDirectory + 'export/'              
+                  $scope.dataBasePath = $rootScope.baseAppDir + 'export/'              
                   $cordovaFile.checkDir($scope.dataBasePath, $scope.folderName)
                   .then(function (success) {
                   }, function (error) {
@@ -71,7 +71,7 @@
             * syncDatabase function used to sync database
             **/
             var copyDBToExportFolder = function() {
-                  $scope.dataBasePath = cordova.file.externalApplicationStorageDirectory + 'export/' + $scope.folderName;                  
+                  $scope.dataBasePath = $rootScope.baseAppDir + 'export/' + $scope.folderName;                  
                   var dbName = 'database.sqlite';
                   window.plugins.sqlDB.copyDbToStorage(dbName, 0,$scope.dataBasePath, function(result) {
                   }, function(err) {

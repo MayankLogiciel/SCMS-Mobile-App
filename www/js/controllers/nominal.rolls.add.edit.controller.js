@@ -222,7 +222,7 @@
                                     $state.go("nominal_rolls");
                               }
                               $cordovaToast.show('Nominal roll updated successfully', 'short', 'center');
-                        }, (err) => {  
+                        }, function(err) {  
                         }); 
                   }else {                        
                         var status = 'pending'; 
@@ -234,7 +234,7 @@
                                     $rootScope.$broadcast('refreshPage',{vahicleId: $scope.vehicleId});
                                     $state.go("nominal_rolls");
                                     $cordovaToast.show('Nominal roll added successfully', 'short', 'center');
-                              }, (err) => { 
+                              }, function(err) { 
                         });
                         
                   };

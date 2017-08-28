@@ -10,6 +10,11 @@ angular.module('SCMS_ATTENDANCE', ['ionic', 'ngCordova', 'validation', 'validati
             }
             if(window.StatusBar) {
                   StatusBar.styleDefault();
+                  if(ionic.Platform.isIOS()){
+                        $rootScope.baseAppDir = cordova.file.dataDirectory;
+                  }else {
+                        $rootScope.baseAppDir = cordova.file.externalApplicationStorageDirectory;
+                  }
             }
             var hideSplashScreen = function (){
                   var user = authService.getLoggedInUserData();
@@ -33,7 +38,7 @@ angular.module('SCMS_ATTENDANCE', ['ionic', 'ngCordova', 'validation', 'validati
 
 
             var createFolder = function() {
-                  $cordovaFile.createDir(cordova.file.externalApplicationStorageDirectory, "import", false)
+                  $cordovaFile.createDir($rootScope.baseAppDir, "import", false)
                   .then(function (success) {
                         checkDBAndCopy();
                   }, function (error) {
@@ -45,28 +50,42 @@ angular.module('SCMS_ATTENDANCE', ['ionic', 'ngCordova', 'validation', 'validati
 
 
             var checkDBAndCopy = function () {
-                  var dataBasePath = cordova.file.externalApplicationStorageDirectory + 'import/';
-                  var dbName = 'database.sqlite'
+                  var dataBasePath = $rootScope.baseAppDir + 'import/';
+                  var dbName = 'database.sqlite';
                   var dataBaseFilePath = dataBasePath + dbName;
-                  window.plugins.sqlDB.checkDbOnStorage(dbName, dataBasePath, function() {
-                        window.plugins.sqlDB.copyDbFromStorage(dbName, 0, dataBaseFilePath, false, function(res) {
-                              $rootScope.db = $cordovaSQLite.openDB({name: dbName, location: 'default'});                              
-                        }, function(err) {
-                              $rootScope.db = $cordovaSQLite.openDB({name: dbName, location: 'default'});
-                        });
-                  }, function(err){
-                        if(err.code == 404) {
+                  if(ionic.Platform.isIOS()){
+                        $cordovaFile.checkFile(dataBasePath, dbName)
+                        .then(function (success) {
+                              window.plugins.sqlDB.copyDbFromStorage(dbName, 0, dataBaseFilePath, false, function(res) {
+                                    $rootScope.db = $cordovaSQLite.openDB({name: dbName, location: 'default'});                              
+                               }, function(err) {
+                                    $rootScope.db = $cordovaSQLite.openDB({name: dbName, location: 'default'});
+                              });
+                        }, function(error) {
                               authService.setDatabaseNotFound('error');
-                              // $timeout(function() {
-                              // }, 500); 
-                              //$rootScope.isDBNotFound = true;
-                              $rootScope.databaseNotFoundPopup();                
-                        }
-                  })
+                              $rootScope.databaseNotFoundPopup();
+                              return true;
+
+                        });      
+                  }else {
+                        window.plugins.sqlDB.checkDbOnStorage(dbName, dataBasePath, function(res) {
+                              window.plugins.sqlDB.copyDbFromStorage(dbName, 0, dataBaseFilePath, false, function(res) {
+                                    $rootScope.db = $cordovaSQLite.openDB({name: dbName, location: 'default'});                              
+                              }, function(err) {
+                                    $rootScope.db = $cordovaSQLite.openDB({name: dbName, location: 'default'});
+                              });
+                        }, function(err){
+                              if(err.code == 404) {
+                                    authService.setDatabaseNotFound('error');
+                                    $rootScope.databaseNotFoundPopup();                
+                              }
+
+                        });
+                  }
             }
 
             $rootScope.databaseNotFoundPopup = function() {
-                  $rootScope.dataBasePath = cordova.file.externalApplicationStorageDirectory + 'import/';                  
+                  $rootScope.dataBasePath = $rootScope.baseAppDir + 'import/';                  
                   $rootScope.data = {};              
                   var myPopup = $ionicPopup.show({
                         templateUrl: 'templates/popups/database.not.found.popup.html',
@@ -80,11 +99,6 @@ angular.module('SCMS_ATTENDANCE', ['ionic', 'ngCordova', 'validation', 'validati
                   });
             };
 
-            // $timeout(function() {
-            //       if($rootScope.isDBNotFound) {
-            //             $rootScope.databaseNotFoundPopup();                       
-            //       }
-            // }, 500);           
       });
 })
 
@@ -118,6 +132,10 @@ angular.module('SCMS_ATTENDANCE', ['ionic', 'ngCordova', 'validation', 'validati
 }])
 
 .config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+      if(ionic.Platform.isIOS()){
+            $ionicConfigProvider.views.swipeBackEnabled(false);
+            $ionicConfigProvider.tabs.position("top"); 
+      }
       $ionicConfigProvider.scrolling.jsScrolling(false);
       $stateProvider
       .state('login', {

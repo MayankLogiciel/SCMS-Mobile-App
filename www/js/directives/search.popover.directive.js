@@ -4,7 +4,7 @@
             return {
                   restrict: 'A',
                   controller: ['$scope', '$element', '$attrs', function($scope,$element, $attrs) {
-                        $scope.imagePath = cordova.file.externalApplicationStorageDirectory + 'import/sewadar_pics/'; 
+                        $scope.imagePath = $rootScope.baseAppDir + 'import/sewadar_pics/'; 
                         $scope.defaultImage = 'img/imgUnavailable.png'; 
                         $scope.sewadarLimit = 10;
                         var isPopoverOpen = false;
