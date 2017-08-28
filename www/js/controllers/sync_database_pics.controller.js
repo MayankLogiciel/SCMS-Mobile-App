@@ -354,11 +354,8 @@
                         }else {
                               params.date = picAndDatabaseTransferService.getLastImagesDownloadedTime().date;
                               params.time =  picAndDatabaseTransferService.getLastImagesDownloadedTime().time;
-                              console.log(params);
-                             // var url = $scope.serverURlPrefix.serverURL + SCMS_SERVER_IMAGE_DOWNLOAD_URL + "date=" + params.date +"&" +"time=" + params.time;
-                              var url = $scope.serverURlPrefix.serverURL + SCMS_SERVER_IMAGE_DOWNLOAD_URL + "date=2017/07/20&time=05:03";
-                              console.log(url);
-
+                              //var url = $scope.serverURlPrefix.serverURL + SCMS_SERVER_IMAGE_DOWNLOAD_URL + "date=" + params.date +"&" +"time=" + params.time;
+                             var url = $scope.serverURlPrefix.serverURL + SCMS_SERVER_IMAGE_DOWNLOAD_URL + "date=2017/07/20&time=05:03";
                         }   
                         var trustHosts = true;
                         var downloadOptions = {};

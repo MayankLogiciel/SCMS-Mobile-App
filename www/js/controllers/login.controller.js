@@ -26,7 +26,7 @@
 
             var checkCount = function() {
                   $timeout(function() {                        
-                        if($scope.attendanceCount > 0 || $scope.nominalCount > 0 || $scope.picturesCount){
+                        if($scope.attendanceCount > 0 || $scope.nominalCount > 0 || $scope.picturesCount > 0){
                               showImportConfirm();
                         }else {
                               $state.go('import-database');

@@ -12,6 +12,7 @@
                   $scope.currentDate =  $filter('date')(new Date(), 'yyyy-MM-dd');
                   $scope.curDate =  $filter('date')(new Date(), 'yyyy-MM-dd');
                   $scope.today =  $filter('date')(($scope.getDate),'EEEE, d MMMM, y');
+                  $scope.getListFromSewadarsForAttendance(); 
                   $scope.dirCrtl = {};
                   $scope.isBatchNumber = true; 
                   $scope.stateName = $state.current.name;
@@ -38,10 +39,7 @@
                   }
             };                
 
-            $scope.$on('$ionicView.enter', function() {
-                 cfpLoadingBar.start();
-                 $scope.getListFromSewadarsForAttendance(); 
-            });  
+            
             var showDayAttedanceClosedPopup = function() {
                   var myPopup = $ionicPopup.show({
                         scope: $scope,
@@ -112,6 +110,7 @@
 
             $scope.goBack = function() {
                   $ionicHistory.goBack();
+                  console.log($ionicHistory);
             };            
 
             // $scope.loadMore = function() {
@@ -190,7 +189,8 @@
                   }, (err) => {                  
                   });                 
             };
-            $scope.getListFromSewadarsForAttendance = function(){                  
+            $scope.getListFromSewadarsForAttendance = function(){ 
+                  cfpLoadingBar.start();                    
                   //var query = "SELECT sewadars.* FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where attendances.date= '"+$scope.getDate+"' AND attendances.nominal_roll_id= '"+null+"' ORDER BY attendances.created_at Desc LIMIT "+$scope.limit+" offset "+$scope.offset ;
                   var query = "SELECT sewadars.* FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where attendances.date= '"+$scope.getDate+"' AND attendances.nominal_roll_id= '"+null+"' ORDER BY attendances.created_at Desc";
                   getSewadarData(query);
