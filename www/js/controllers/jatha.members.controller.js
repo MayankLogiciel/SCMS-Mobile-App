@@ -15,7 +15,7 @@
                   }else {
                        $scope.timeStampPhoto =  profilePicService.getTimeOfPic();
                   }
-                  $scope.imagePath = cordova.file.externalApplicationStorageDirectory + 'import/sewadar_pics/';
+                  $scope.imagePath = $rootScope.baseAppDir + 'import/sewadar_pics/';
                   $scope.defaultImage = 'img/imgUnavailable.png';
                   $scope.maleSelectedCount = 0;
                   $scope.femaleSelectedCount = 0;
@@ -174,7 +174,7 @@
                         }else{
                               howManyTimeMaleSewadarAdd(i+1, $scope.days);
                         }
-                  }, (err) => {                  
+                  }, function(err) {                  
                   }); 
             };
 
@@ -225,7 +225,7 @@
                         }else{
                               howManyTimeFemaleSewadarAdd(i+1, $scope.days);
                         }
-                  }, (err) => {                  
+                  }, function(err) {                  
                   }); 
             };
 

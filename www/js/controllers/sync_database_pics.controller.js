@@ -148,7 +148,7 @@
             var uploadPicture = function(index, str) {
                   var trustAllHosts = true;
                   var url = encodeURI($scope.serverURlPrefix.serverURL + SCMS_SERVER_IMAGE_UPLOAD_URL);
-                  var targetPath = cordova.file.externalApplicationStorageDirectory + 'import/sewadar_pics/' + $scope.pictures[index].photo;
+                  var targetPath = $rootScope.baseAppDir + 'import/sewadar_pics/' + $scope.pictures[index].photo;
                   var filename = targetPath.split("/").pop();
                   var params = {};
                   var options = {
@@ -228,7 +228,7 @@
             **/
 
             $scope.createExportFolder = function() {
-                  $cordovaFile.createDir(cordova.file.externalApplicationStorageDirectory, "export", false)
+                  $cordovaFile.createDir($rootScope.baseAppDir, "export", false)
                   .then(function (success) {
                         checkDirectoryDate();
                   }, function (error) {
@@ -239,12 +239,13 @@
 
             var checkDirectoryDate = function() {  
                   $scope.folderName = $filter('date')(new Date(), 'yyyy_MM_dd_h_mm_ss') + '/';  
-                  $scope.dataBasePath = cordova.file.externalApplicationStorageDirectory + 'export/'              
+                  $scope.dataBasePath = $rootScope.baseAppDir + 'export/'              
                   $cordovaFile.checkDir($scope.dataBasePath, $scope.folderName)
                   .then(function (success) {
                   }, function (error) {
                         $cordovaFile.createDir($scope.dataBasePath, $scope.folderName, false).then(function (success) {
-                              SychImageOnlyOrBoth(success.nativeURL);                              
+                              //SychImageOnlyOrBoth(success.nativeURL);   
+                              copyDBToExportFolder(success.nativeURL);
                         });
                   });
             }
@@ -252,67 +253,76 @@
             /**
             * syncDatabase function used to sync database
             **/
-            var SychImageOnlyOrBoth = function(path) {
-                  // if($scope.pictures.length > 0) {
-                  //       syncLoader($scope.p);
-                  //       $scope.dbPath = path;
-                  //       uploadPics('database');                        
-                  // }else {
-                        copyDBToExportFolder(path);
-                  //}                  
-            }
+            // var SychImageOnlyOrBoth = function(path) {
+            //       // if($scope.pictures.length > 0) {
+            //       //       syncLoader($scope.p);
+            //       //       $scope.dbPath = path;
+            //       //       uploadPics('database');                        
+            //       // }else {
+
+            //             copyDBToExportFolder(path);
+            //       //}                  
+            // }
 
             var copyDBToExportFolder = function(path) {
-                  $scope.dataBasePath = cordova.file.externalApplicationStorageDirectory + 'export/' + $scope.folderName;                  
+                  $scope.dataBasePath = $rootScope.baseAppDir + 'export/' + $scope.folderName;                  
                   var dbName = 'database.sqlite';
                   window.plugins.sqlDB.copyDbToStorage(dbName, 0,$scope.dataBasePath, function(result) {
-                        var trustAllHosts = true;
-                        var url = encodeURI($scope.serverURlPrefix.serverURL + SCMS_SERVER_UPLOAD_URL);
-                        var targetPath = path + dbName;
-                        var filename = targetPath.split("/").pop();
-                        var options = {
-                              fileKey: "upload",
-                              fileName: filename,
-                              chunkedMode: false,
-                              mimeType: "application/x-sqlite3",
-                              httpMethod: "POST",
-                              ignoreLoadingBar: true
-                        };
-                        var headers={'Authorization': $scope.getToken};
-                        options.headers = headers;
-                        $cordovaFileTransfer.upload(url, targetPath, options, trustAllHosts).then(function(result) {
-                              DeleteFromTables();
-                        }, function(err) {
-                              $timeout(function() {
-                                    switch(err.http_status) {
-
-                                          case 500: 
-                                                $scope.cancelLoading();
-                                                $cordovaToast.show('Internal server Error', 'short', 'center');
-                                                return;
-                                          case 401:
-                                                localStorage.removeItem("SCMS_token");
-                                                getToken('database');
-                                                return;
-                                          case 400:
-                                                localStorage.removeItem("SCMS_token");
-                                                getToken('database');
-                                                return;
-                                          case null:
-                                                $scope.cancelLoading();
-                                                $cordovaToast.show('Please enter valid server url', 'short', 'center');
-                                                return; 
-                                    } 
-                              }, 500);                                   
-                        }, function (progress) {
-                              $timeout(function () {
-                                    $scope.downloadProgress = Math.floor((progress.loaded / progress.total) * 100);
-                                    $ionicLoading.show({ scope: $scope, template: '<div class="btn-animation-sync" style="color: #FFFFFF;"><ion-spinner icon="lines" class="spinner-calm"></ion-spinner><br><span style="vertical-align: middle;">&nbsp;&nbsp;Syncing database ('+$scope.downloadProgress+'%)</span><br><br><br><button class ="button button-clear cancel-btn" ng-click="cancelLoading()"><i class="icon ion-close"></i>&nbsp;&nbsp;Cancel</button></div>'});
-
-                              })
-                        });
+                        copiedDataInExport(path, dbName);
                   }, function(err) {
+                        if(ionic.Platform.isIOS()){
+                              copiedDataInExport(path, dbName);
+                        }
                   })
+            }
+
+            var copiedDataInExport = function(path,dbName) {
+                  var trustAllHosts = true;
+                  var url = encodeURI($scope.serverURlPrefix.serverURL + SCMS_SERVER_UPLOAD_URL);
+                  var targetPath = path + dbName;
+                  var filename = targetPath.split("/").pop();
+                  var options = {
+                        fileKey: "upload",
+                        fileName: filename,
+                        chunkedMode: false,
+                        mimeType: "application/x-sqlite3",
+                        httpMethod: "POST",
+                        ignoreLoadingBar: true
+                  };
+                  var headers={'Authorization': $scope.getToken};
+                  options.headers = headers;
+                  $cordovaFileTransfer.upload(url, targetPath, options, trustAllHosts).then(function(result) {
+                        DeleteFromTables();
+                  }, function(err) {
+
+                        $timeout(function() {
+                              switch(err.http_status) {
+
+                                    case 500: 
+                                          $scope.cancelLoading();
+                                          $cordovaToast.show('Internal server Error', 'short', 'center');
+                                          return;
+                                    case 401:
+                                          localStorage.removeItem("SCMS_token");
+                                          getToken('database');
+                                          return;
+                                    case 400:
+                                          localStorage.removeItem("SCMS_token");
+                                          getToken('database');
+                                          return;
+                                    case null:
+                                          $scope.cancelLoading();
+                                          $cordovaToast.show('Please enter valid server url', 'short', 'center');
+                                          return; 
+                              } 
+                        }, 500);                                   
+                  }, function (progress) {
+                        $timeout(function () {
+                              $scope.downloadProgress = Math.floor((progress.loaded / progress.total) * 100);
+                              $ionicLoading.show({ scope: $scope, template: '<div class="btn-animation-sync" style="color: #FFFFFF;"><ion-spinner icon="lines" class="spinner-calm"></ion-spinner><br><span style="vertical-align: middle;">&nbsp;&nbsp;Syncing database ('+$scope.downloadProgress+'%)</span><br><br><br><button class ="button button-clear cancel-btn" ng-click="cancelLoading()"><i class="icon ion-close"></i>&nbsp;&nbsp;Cancel</button></div>'});
+
+                        })
+                  });
             }
 
             var DeleteFromTables = function() {
@@ -354,15 +364,13 @@
                         }else {
                               params.date = picAndDatabaseTransferService.getLastImagesDownloadedTime().date;
                               params.time =  picAndDatabaseTransferService.getLastImagesDownloadedTime().time;
-                              console.log(params);
                              // var url = $scope.serverURlPrefix.serverURL + SCMS_SERVER_IMAGE_DOWNLOAD_URL + "date=" + params.date +"&" +"time=" + params.time;
                               var url = $scope.serverURlPrefix.serverURL + SCMS_SERVER_IMAGE_DOWNLOAD_URL + "date=2017/07/20&time=05:03";
-                              console.log(url);
 
                         }   
                         var trustHosts = true;
                         var downloadOptions = {};
-                        var targetPath = cordova.file.externalApplicationStorageDirectory + 'sewadar.zip';
+                        var targetPath = $rootScope.baseAppDir + 'sewadar.zip';
                         var headers={'Authorization': $scope.getToken};
                         downloadOptions.headers = headers;
                         $cordovaFileTransfer.download(url, targetPath, downloadOptions, trustHosts)
@@ -377,16 +385,16 @@
                   }
 
                   var unzip = function() {
-                  var path = cordova.file.externalApplicationStorageDirectory + 'sewadar.zip';
+                  var path = $rootScope.baseAppDir + 'sewadar.zip';
                   $cordovaZip
                   .unzip(
                         path, 
-                        cordova.file.externalApplicationStorageDirectory 
+                        $rootScope.baseAppDir 
                         ).then(function (res) {
                               if(requestType == 'all') {
                                     deletePictureDir('all');
                               }else{
-                                    var tempPath = cordova.file.externalApplicationStorageDirectory + 'sewadar_pics/';
+                                    var tempPath = $rootScope.baseAppDir + 'sewadar_pics/';
                                     window.resolveLocalFileSystemURL(tempPath,
                                     function (fileSystem) {
                                           var reader = fileSystem.createReader();
@@ -410,7 +418,7 @@
 
                   var deletePictureDir = function(str) {
                         if(str == 'all') {
-                              var path = cordova.file.externalApplicationStorageDirectory + 'import/';
+                              var path = $rootScope.baseAppDir + 'import/';
                               $cordovaFile.removeRecursively(path, "sewadar_pics")
                               .then(function (success) {
                                     copySewadarPicsToImport();
@@ -418,7 +426,7 @@
                                     copySewadarPicsToImport();
                               });
                         }else {
-                              var path = cordova.file.externalApplicationStorageDirectory;
+                              var path = $rootScope.baseAppDir;
                               $cordovaFile.removeRecursively(path, "sewadar_pics")
                               .then(function (success) {
                               }, function (error) {
@@ -428,14 +436,14 @@
 
                   var copySewadarPicsToImport = function(picArray) {  
                         if(!angular.isDefined(picArray)) {
-                              $cordovaFile.moveDir(cordova.file.externalApplicationStorageDirectory, "sewadar_pics", cordova.file.externalApplicationStorageDirectory + 'import/', "sewadar_pics")
+                              $cordovaFile.moveDir($rootScope.baseAppDir, "sewadar_pics", $rootScope.baseAppDir + 'import/', "sewadar_pics")
                               .then(function (success) {
                               }, function (error) {
                               });
 
                         } else {
                               for(var i=0; i<picArray.length; i++){
-                                    $cordovaFile.moveFile(cordova.file.externalApplicationStorageDirectory + 'sewadar_pics/', picArray[i].name, cordova.file.externalApplicationStorageDirectory + 'import/sewadar_pics/')
+                                    $cordovaFile.moveFile($rootScope.baseAppDir + 'sewadar_pics/', picArray[i].name, $rootScope.baseAppDir + 'import/sewadar_pics/')
                                     .then(function (success) {
                                     }, function (error) {
                                     });

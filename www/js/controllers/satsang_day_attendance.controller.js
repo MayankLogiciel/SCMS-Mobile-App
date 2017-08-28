@@ -22,7 +22,7 @@
                        $scope.timeStampPhoto =  profilePicService.getTimeOfPic();
                   }
                             
-                  $scope.imagePath = cordova.file.externalApplicationStorageDirectory + 'import/sewadar_pics/'; 
+                  $scope.imagePath = $rootScope.baseAppDir + 'import/sewadar_pics/'; 
                   if( $scope.getDate === $scope.currentDate) {
                         $scope.isCurrentDate = true;                        
                   } else {
@@ -176,7 +176,7 @@
                                                 $scope.dirCrtl.scanQRCode();
                                           }, 1000);
                                     }
-                              }, (err) => {  
+                              }, function(err) {  
                               }); 
 
                         } else {
@@ -187,7 +187,7 @@
                                     }, 1000);
                               }
                         }
-                  }, (err) => {                  
+                  }, function(err) {                  
                   });                 
             };
             $scope.getListFromSewadarsForAttendance = function(){                  

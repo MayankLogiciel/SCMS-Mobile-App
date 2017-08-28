@@ -50,7 +50,7 @@
                   }else {
                         $scope.timeStampPhoto =  profilePicService.getTimeOfPic();
                   }
-                  $scope.imagePath = cordova.file.externalApplicationStorageDirectory + 'import/sewadar_pics/'; 
+                  $scope.imagePath = $rootScope.baseAppDir + 'import/sewadar_pics/'; 
                   $scope.defaultImage = 'img/imgUnavailable.png';
                   $scope.TempSewadarData = {};
                   $scope.refId = (new Date())/1000|0;
@@ -180,7 +180,7 @@
                         } else {
                               $cordovaToast.show('Sewadar alredy exist', 'short', 'center');
                         }
-                  }, (err) => { 
+                  }, function(err) { 
                   });
             };
 
@@ -202,7 +202,7 @@
                         }else{
                               SaveDataToAttandanceTableNested(++index, sewadar);
                         }
-                  }, (err) => {                  
+                  }, function(err) {                  
                   }); 
             };
 
@@ -232,7 +232,7 @@
                   $cordovaSQLite.execute($rootScope.db, Insertquery).then(function(resTemp) {
                         $scope.tempID = resTemp.insertId
                         addTempSewadarNested(1, TempSewadarData);
-                  }, (err) =>{
+                  }, function(err){
 
                   });
                   setFocus();
@@ -265,7 +265,7 @@
                         }else{
                               addTempSewadarNested(++index, TempSewadarData, res);
                         }
-                  }, (err) => {
+                  }, function(err) {
 
                   });      
             }

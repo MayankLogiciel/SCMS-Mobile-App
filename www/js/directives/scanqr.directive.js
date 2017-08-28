@@ -50,7 +50,7 @@ angular.module('SCMS_ATTENDANCE')
 
             // Mark attendence of sewadar
             var markAttendenceOfSewadar = function(batch_no) {
-                var imagePath = cordova.file.externalApplicationStorageDirectory + 'import/sewadar_pics/'; 
+                var imagePath = $rootScope.baseAppDir + 'import/sewadar_pics/'; 
                 var query = "select * from sewadars INDEXED BY batch_index where batch_no = '"+ batch_no +"'";
                 $cordovaSQLite.execute($rootScope.db, query).then(function(res) { 
                     if(res.rows.length > 0) {

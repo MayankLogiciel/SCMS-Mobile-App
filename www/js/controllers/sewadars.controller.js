@@ -6,7 +6,7 @@
       var SewadarsController = function($log, $scope, $timeout, $ionicHistory, $state, $ionicPopup, $cordovaToast, $cordovaFile, $filter, $cordovaSQLite, $ionicActionSheet, profilePicService, $rootScope, $ionicPopover, cfpLoadingBar) {
             var setup = function() {
                   $log.debug("Sewadars Controller");  
-                  $scope.imagePath = cordova.file.externalApplicationStorageDirectory + 'import/sewadar_pics/'; 
+                  $scope.imagePath = $rootScope.baseAppDir + 'import/sewadar_pics/'; 
                   $scope.defaultImage = 'img/imgUnavailable.png'; 
                   $scope.sewadarLimit = 10;
                   $scope.isBatchNumber = true; 
