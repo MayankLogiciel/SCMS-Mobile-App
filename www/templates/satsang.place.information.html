@@ -14,15 +14,15 @@
             </label>
             <label class="item item-input item-floating-label disabled-input" ng-class="{'final-diable':!hideEdit}">
                 <span class="input-label">Satsang Place</span>
-                <input type="text" ng-model="info.place" placeholder="Satsang Place" class="text-transform-capital" ng-disabled="!hideEdit">
+                <input type="text" ng-model="info.place" placeholder="Satsang Place" maxlength="40" class="text-transform-capital" id="place" ng-disabled="!hideEdit" >
             </label>
             <label class="item item-input item-floating-label disabled-input" ng-class="{'final-diable':!hideEdit}">
                 <span class="input-label">Area</span>
-                <input type="text" ng-model="info.area" placeholder="Area" class="text-transform-capital" ng-disabled="!hideEdit">
+                <input type="text" ng-model="info.area" placeholder="Area" maxlength="20" class="text-transform-capital" ng-disabled="!hideEdit" >
             </label>
             <label class="item item-input item-floating-label disabled-input" ng-class="{'final-diable':!hideEdit}">
                 <span class="input-label" class="text-transform-capital">Zone</span>
-                <input type="text" ng-model="info.zone" placeholder="Zone" ng-disabled="!hideEdit">
+                <input type="text" ng-model="info.zone" placeholder="Zone" maxlength="10" ng-disabled="!hideEdit" >
             </label>
             <label class="item item-input item-floating-label disabled-input" ng-class="{'final-diable':!hideEdit}">
                 <span class="input-label">Phone Number 1</span>
