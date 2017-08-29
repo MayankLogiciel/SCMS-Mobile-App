@@ -166,10 +166,12 @@
                   var dateFrom =nominalData.date_from.split('-');
                   var stringToDateFrom = dateFrom[2] +'-'+ dateFrom[1] + '-' + dateFrom[0];
                   var fromDate = new Date(stringToDateFrom);
+                  var startDateForNominalRoll = new Date(stringToDateFrom).getTime();
                   var sDate = $filter('date')((fromDate),'yyyy-MM-dd');
                   var dateTo =nominalData.date_to.split('-');
                   var stringToDateTo = dateTo[2] +'-'+ dateTo[1] + '-' + dateTo[0];
                   var toDate = new Date(stringToDateTo);
+                  var endDateForNominalRoll = new Date(stringToDateTo).getTime();
                   var eDate = $filter('date')((toDate),'yyyy-MM-dd');
                   nominalData.new_sewa = (!angular.isDefined(nominalData.new_sewa) || nominalData.new_sewa == 'N/A') ? null : nominalData.new_sewa;
                   $scope.vehicleId = (!angular.isDefined($scope.vehicleId)) ? null : $scope.vehicleId;
@@ -197,7 +199,7 @@
                   }else {
                         $scope.schedule = ($scope.schedule=='Scheduled') ? 1 : 0;
                   }
-                  if(nominalData.date_from > nominalData.date_to) {
+                  if(startDateForNominalRoll > endDateForNominalRoll) {
                        $cordovaToast.show('End date should be greater or equal to start date ', 'short', 'center');
                        return;
                   }
