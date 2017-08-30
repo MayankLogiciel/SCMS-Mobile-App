@@ -1,0 +1,96 @@
+<ion-modal-view class="custom-model">	
+	<div class="bar bar-header bar-balanced">	
+		<h1 class="title">Nominal Rolls Detail</h1>
+	</div>
+	<ion-content class="has-header">
+		<ion-list>			
+			<div class='modal-padding'>				
+				<h4 class="g-name com-padding-modal">
+					<label>Sewa Place:</label>
+					<span ng-bind="nominalRolesData.sewa_name"></span>
+				</h4>
+				<h4 class="g-name com-padding-modal nominal-info-modal-misc"  ng-class="{'final-diable':nominalRolesData.new_sewa == 'null'}">
+					<label>Misc Sewa Place:</label>
+					<span>{{nominalRolesData.new_sewa == 'null' ? 'N/A' : nominalRolesData.new_sewa}}</span>
+				</h4>
+				<div class="row nominal-info-modal-other">
+					<div class="col col-50">
+						<h4 class="g-name">
+							<label>Date From:</label>
+							<span ng-bind="nominalRolesData.date_from | date: 'dd-MM-yyyy'"></span>
+						</h4>
+						<h4 class="g-name">
+							<label>Scheduled Status</label>
+							<span class="text-transform-capital">
+								{{nominalRolesData.is_scheduled == 0 ? 'Unscheduled' : 'Scheduled'}}
+							</span>							
+						</h4>
+						<h4 class="g-name">
+							<label>Jathedar Name:</label>
+							<span>
+								{{nominalRolesData.name == 'null'? 'N/A': nominalRolesData.name}}
+							</span>
+						</h4>
+						<h4 class="g-name">
+							<label>Vehicle Type:</label>
+							<span>
+								{{nominalRolesData.vehicle_type == 'null'? 'N/A': nominalRolesData.vehicle_type}}
+							</span>
+						</h4>
+						<h4 class="g-name">
+							<label>Driver Name:</label>
+							<span class="text-transform-capital" >
+								{{nominalRolesData.driver_name == 'null'? 'N/A': nominalRolesData.driver_name}}
+							</span> 
+						</h4>
+						<h4 class="g-name">
+							<label>Male:</label>
+							<span>{{sewadarsCount[nominalRolesData.id - 1].Male}}</span>
+						</h4>		
+					</div>
+					<div class="col col-50">
+						<h4 class="g-name">
+							<label>Date To:</label>
+							<span ng-bind="nominalRolesData.date_to | date: 'dd-MM-yyyy'"></span>
+						</h4>
+						<h4 class="g-name">
+							<label>Jatha:</label>
+							<span ng-bind="nominalRolesData.jatha_name" class="text-transform-capital" ></span>
+						</h4>
+						<h4 class="g-name">
+							<label>Contact No:</label>
+							<span>
+								{{nominalRolesData.contact_no == 'undefined'? 'N/A': nominalRolesData.contact_no}}
+							</span>
+						</h4>
+						<h4 class="g-name">
+							<label>Vehicle Number:</label>	
+							<span class = "text-transform-uppercase">
+								{{nominalRolesData.vehicle_no == 'null'? 'N/A': nominalRolesData.vehicle_no}}
+							</span>                 
+						</h4>
+						<h4 class="g-name">
+							<label>Status:</label>
+							<span ng-bind="nominalRolesData.status" class="text-transform-capital" ></span>                    
+						</h4>
+						<h4 class="g-name">
+							<label>Female:</label>
+							<span>{{sewadarsCount[nominalRolesData.id - 1].Female}}</span>
+						</h4>								
+					</div>
+				</div>
+				<h4 class="g-name com-padding-modal nominal-info-modal-total">
+					<label>Total Sewadars:</label>
+					<span>{{sewadarsCount[nominalRolesData.id - 1].Female + sewadarsCount[nominalRolesData.id - 1].Male}}</span>
+				</h4>
+			</div>					
+		</ion-list>
+	</ion-content>
+	<div class="bar bar-footer custom-footer">		
+		<div class="button-bar">
+			<a class="button button-assertive" ng-if="nominalRolesData.status =='Approved'" on-tap="viewAndMarkAttendanceNominal(nominalRolesData)">Add Sewadars</a>
+			<a class="button button-balanced" on-tap="editNominal(nominalRolesData)">Edit</a>
+			<a class="button button-stable" on-tap="closeModalForNominalDetail()">CANCEL</a>
+		</div>	
+	</div>
+</ion-modal-view>

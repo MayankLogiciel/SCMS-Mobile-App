@@ -14,7 +14,9 @@
                   $scope.showDateRange = false;
                   $scope.Desc = false;
                   $rootScope.isDateFilterPopupOpened = true;
-                  $scope.isDatePopupOpend = false; 
+                  $scope.isDatePopupOpend = false;
+                  $scope.sewadarsCount = [];
+                  sewadarsCount();
             };
             $scope.$on('$ionicView.enter', function() {
                   $scope.getListForNominalRolls();
@@ -27,13 +29,14 @@
             $rootScope.$on('refreshPage',function(event, data){
                   setup();
             });
-           
+
             var getNominalRollsData = function(query) {                  
                   $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
                         $scope.nominals = []; 
                         if(res.rows.length > 0) {
                               for(var i= 0; i<res.rows.length; i++) { 
-                                    $scope.nominals.push(res.rows.item(i));                                                                     
+                                    $scope.nominals.push(res.rows.item(i));
+                                                                                                         
                               }  
                               nominalRollsService.setnominalRollsCompleteData($scope.nominals);                               
                         }
@@ -41,6 +44,15 @@
                   }, function (err) { 
                   });
             };
+
+            var sewadarsCount = function() {
+                  var query = "select nominal_roll_id,sum(case when gender = 'M' then 1 else 0 end) Male,sum(case when gender = 'F' then 1 else 0 end) Female from ( SELECT DISTINCT sewadars.id, attendances.sewadar_type,sewadars.gender,attendances.nominal_roll_id FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where attendances.sewadar_type = 'permanent' UNION SELECT DISTINCT temp_sewadars.id, attendances.sewadar_type,temp_sewadars.gender,attendances.nominal_roll_id FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where attendances.sewadar_type = 'temporary' )group by nominal_roll_id";
+                  $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
+                        for(var i= 0; i<res.rows.length; i++) { 
+                             $scope.sewadarsCount.push(res.rows.item(i)); 
+                        }
+                  });
+            }
 
             $scope.getListForNominalRolls = function(){
                   var query =  "select nr.*, (CASE WHEN v.id NOTNULL THEN v.name ELSE 'null' END) AS vehicle_type, s.name as sewa_name, d.name as jatha_name from nominal_roles AS nr left join vehicles as v ON v.id = nr.vehicle_id left join sewas as s ON s.id = nr.sewa_id left join departments as d ON d.id = nr.department_id";

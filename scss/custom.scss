@@ -25,6 +25,18 @@
 	}
 
 }
+.com-padding-modal {
+	margin-left: 25px !important;
+}
+.nominal-info-modal-other {
+	padding: 0 5px !important;
+}
+.nominal-info-modal-misc {
+	margin-bottom: 0 !important;
+}
+.nominal-info-modal-total {
+	margin-top: 0 !important;
+}
 .del-nominal-on-tab {
 	right: 27% !important;
 }
@@ -860,6 +872,7 @@
 			font-weight: bold;
 			width: 170px;
     		display: inline-block;
+    		line-height: 0 !important;
 		}
 		span {
 			font-size: 20px;
@@ -1457,7 +1470,7 @@
 .list-nominal-add {
 	&:before {
 		font-size: 60px;
-    	margin-top: 90px;
+    	margin-top: 45px;
     	color: $assertive;
 	}
 	text-align: center;
@@ -2387,6 +2400,9 @@
 	.floating-btn-for-list {
 		display: none;	
 	}
+	.nominal-list-on-tab {
+		padding: 0 5px !important;
+	}
 	.nominal-list-on-mob {
 		display: none;
 	}
@@ -2560,6 +2576,9 @@
 			}
 		}
 	}	
+	.nominal-less-data {
+		padding: 7px 0 0 0 !important;
+	}
 }
 
 
