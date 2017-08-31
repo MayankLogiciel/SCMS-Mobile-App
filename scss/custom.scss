@@ -25,6 +25,10 @@
 	}
 
 }
+.sec-content-main {
+	padding: 0 !important;
+}
+
 .com-padding-modal {
 	margin-left: 25px !important;
 }
@@ -35,7 +39,7 @@
 	margin-bottom: 0 !important;
 }
 .nominal-info-modal-total {
-	margin-top: 0 !important;
+	margin-bottom: 0 !important;
 }
 .del-nominal-on-tab {
 	right: 27% !important;
@@ -57,7 +61,7 @@
 	margin-left: 10px !important;
 }
 .other-nominal-info{
-	padding-top: 0 !important;
+	padding-top: 5px 0 0 0 !important;
 }
 .swap-btn {
 	position: absolute;
@@ -1315,7 +1319,7 @@
 }
 .approve-checkbox {
 	label {
-		padding: 117px 0;
+		padding: 134px 0 0 0;
     	border: 0;
 
     		.checkbox {
@@ -2000,10 +2004,10 @@
 	}
 	.modal-padding h4 {
 		margin-top: 2px !important;
-    	margin-bottom: 3px !important;
+    	margin-bottom: 1px !important;
 	}
 	.g-name {
-		width: 60% !important;
+		width: 100% !important;
 	}
 	.modal-padding h4 img {
     	width: 100px;
@@ -2011,10 +2015,10 @@
    		margin-left: 37px;
 	}
 	.modal-padding h4 span {
-		font-size: 13px !important;
+		font-size: 11px !important;
 	}
 	.modal-padding h4 label {
- 	   font-size: 13px;
+ 	   font-size: 12px;
 	}
 	.custom-footer .button-bar > .button {
 	    line-height: 36px;
@@ -2306,7 +2310,7 @@
 		margin-bottom: 0 !important;
 	}
 	.approve-checkbox label {
-		padding: 141px 0 !important;
+		padding: 142px 0 0 0 !important;
 	}
 	.btn-sect-app {
 		margin-top: -5px !important;
@@ -2361,12 +2365,12 @@
 		display: none;
 	}
 	.nominal-list-mob h4 label {
-		font-size: 14px !important;
+		font-size: 12px !important;
 		padding-left: 15px !important;
 		width: auto;
 	}
 	.nominal-list-mob h4 span {
-		font-size: 13px !important;
+		font-size: 11px !important;
 		padding-left: 2px !important;
 		font-weight: 400;
 	}
@@ -2397,6 +2401,9 @@
 }
 
 @media(min-width: 480px) {
+	// .g-name {
+	// 	width: 60% !important;
+	// }
 	.floating-btn-for-list {
 		display: none;	
 	}

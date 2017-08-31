@@ -6,11 +6,12 @@ angular.module('SCMS_ATTENDANCE')
             nominalRolesData : '=', 
             onDone : '&onDone',
             sewadarsCount : "=",
+            isSecrectary : "="
         },
         link: function($scope, elem, attrs) {
             
             var showInfoModal = function() {
-                console.log($scope.sewadarsCount, $scope.nominalRolesData);
+                console.log($scope.isSecrectary);
                 $ionicModal.fromTemplateUrl('templates/modals/nominal.info.modal.html', {
                     scope: $scope,
                     animation: 'slide-in-up',
@@ -35,7 +36,11 @@ angular.module('SCMS_ATTENDANCE')
 
             $scope.editNominal = function(nominal) {
                 nominalRollsService.setNominalRollsData(nominal);
-                $state.go('addedit-nominal_rolls', {action: 'edit',id: nominal.id, user: ''});
+                if($scope.isSecrectary == true) {
+                    $state.go('addedit-nominal_rolls', {action: 'edit',id: nominal.id, user: 'secretary'});
+                }else {
+                    $state.go('addedit-nominal_rolls', {action: 'edit',id: nominal.id, user: ''});
+                }
                 $scope.closeModalForNominalDetail();
             } 
 

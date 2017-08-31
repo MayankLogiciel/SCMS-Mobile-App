@@ -31,7 +31,7 @@
 			ng-repeat="nominal in nominals | filter:searchQuery | orderBy: 'date_from': Desc" on-hold="quickActions(nominal)">
 			<a class="item item-button-right nominal-less-data">
 				<div class="row nominal-list-on-tab">	
-					<div class="col col-90" nominal-rolls-info-directive nominal-roles-data = "nominal" sewadars-count = "sewadarsCount">
+					<div class="col col-90" nominal-rolls-info-directive nominal-roles-data = "nominal" sewadars-count = "sewadarsCount" is-secrectary = false>
 						<h4 class="sewa-place-misc">
 							<label>Sewa Place:</label>
 							<span ng-bind="nominal.sewa_name" class="text-transform-capital"></span>
@@ -127,7 +127,7 @@
 					</div>
 				</div>   
 
-				<div class="nominal-list-on-mob">
+				<div class="nominal-list-on-mob" nominal-rolls-info-directive nominal-roles-data = "nominal" sewadars-count = "sewadarsCount" is-secrectary = false>
 					<h4>
 						<label>Date From:</label>
 						<span ng-bind="nominal.date_from | date: 'dd-MM-yyyy'"></span>
@@ -146,17 +146,17 @@
 							{{nominal.new_sewa == 'null' ? 'N/A' : nominal.new_sewa}}
 						</span>
 					</h4>
-					<h4>
+					<!-- <h4>
 						<label>Scheduled Status:</label>
 						<span class="text-transform-capital">
 							{{nominal.is_scheduled == 0 ? 'Unscheduled' : 'Scheduled'}}
 						</span>
-					</h4>
+					</h4> -->
 					<h4>
 						<label>Jatha:</label>
 						<span ng-bind="nominal.jatha_name" class="text-transform-capital" ></span>
 					</h4>
-					<h4 >
+					<!-- <h4 >
 						<label>Jathedar Name:</label>
 						<span>
 							{{nominal.name == 'null'? 'N/A': nominal.name}}
@@ -185,10 +185,18 @@
 						<span class="text-transform-capital" >
 							{{nominal.driver_name == 'null'? 'N/A': nominal.driver_name}}
 						</span>                     
-					</h4> 
+					</h4>  -->
 					<h4>
 						<label>Status:</label>
 						<span ng-bind="nominal.status" class="text-transform-capital" ></span>
+					</h4> 
+					<h4>
+						<label>Male:</label>
+						<span>{{sewadarsCount[nominal.id - 1].Male == undefined ? 0: sewadarsCount[nominal.id - 1].Male}}</span>
+					</h4>
+					<h4>
+						<label>Female:</label>
+						<span>{{sewadarsCount[nominal.id - 1].Female == undefined ? 0: sewadarsCount[nominal.id - 1].Female}}</span>
 					</h4> 
 				</div>     
 				   
