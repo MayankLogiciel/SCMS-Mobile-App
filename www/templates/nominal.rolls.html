@@ -31,7 +31,7 @@
 			ng-repeat="nominal in nominals | filter:searchQuery | orderBy: 'date_from': Desc" on-hold="quickActions(nominal)">
 			<a class="item item-button-right nominal-less-data">
 				<div class="row nominal-list-on-tab">	
-					<div class="col col-90" nominal-rolls-info-directive nominal-roles-data = "nominal" sewadars-count = "sewadarsCount" is-secrectary = false>
+					<div class="col col-90" nominal-rolls-info-directive nominal-roles-data = "nominal" is-secrectary = false>
 						<h4 class="sewa-place-misc">
 							<label>Sewa Place:</label>
 							<span ng-bind="nominal.sewa_name" class="text-transform-capital"></span>
@@ -127,7 +127,7 @@
 					</div>
 				</div>   
 
-				<div class="nominal-list-on-mob" nominal-rolls-info-directive nominal-roles-data = "nominal" sewadars-count = "sewadarsCount" is-secrectary = false>
+				<div class="nominal-list-on-mob" nominal-rolls-info-directive nominal-roles-data = "nominal" is-secrectary = false>
 					<h4>
 						<label>Date From:</label>
 						<span ng-bind="nominal.date_from | date: 'dd-MM-yyyy'"></span>

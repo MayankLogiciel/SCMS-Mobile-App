@@ -15,9 +15,7 @@
                   $scope.Desc = false;
                   $rootScope.isDateFilterPopupOpened = true;
                   $scope.isDatePopupOpend = false;
-                  $scope.sewadarsCount = [];
-                  $scope.hhh = {};
-
+                
             };
             $scope.$on('$ionicView.enter', function() {
                   cfpLoadingBar.start();                   
@@ -29,6 +27,8 @@
             };
             //refreshing page 
             $rootScope.$on('refreshPage',function(event, data){
+                  $scope.getListForNominalRolls();
+                  sewadarsCount();
                   setup();
             });
 
@@ -56,7 +56,7 @@
                                     if($scope.nominals[j].id == res.rows.item(i).nominal_roll_id) {
                                           $scope.nominals[j].MaleCounts = res.rows.item(i).Male;
                                           $scope.nominals[j].FemaleCounts = res.rows.item(i).Female;
-                                          return;
+                                          //return;
                                     }
                               }
                         }
