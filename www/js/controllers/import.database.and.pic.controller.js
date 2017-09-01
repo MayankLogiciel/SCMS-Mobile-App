@@ -110,11 +110,11 @@
                               if(ionic.Platform.isIOS()) {
                                     copyDatabaseToInternalMemory();
                               }else {
-                                    $rootScope.db.close(function() {
+                                    //$rootScope.db.close(function() {
                                           copyDatabaseToInternalMemory();
-                                    }, function(error) {
-                                          $log.debug('ERROR closing database');
-                                    }); 
+                                    // }, function(error) {
+                                    //       $log.debug('ERROR closing database');
+                                    // }); 
                               }
                                                                  
                         }, function(err) {

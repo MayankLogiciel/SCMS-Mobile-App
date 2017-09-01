@@ -21,11 +21,7 @@
             $scope.logOut = function() {
                   //localStorage.clear();
                   localStorage.removeItem("SCMS_user");
-                  localStorage.removeItem("SCMS_token");
-                  $timeout(function () {
-                        $ionicHistory.clearCache();
-                        $ionicHistory.clearHistory();
-                  },500);                  
+                  localStorage.removeItem("SCMS_token");                             
                   $cordovaToast.show('Logged out successfully', 'short', 'center');
                   $state.go("login");
             }

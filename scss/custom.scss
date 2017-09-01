@@ -25,6 +25,20 @@
 	}
 
 }
+.sync-nominal-roll {
+	text-align: center;
+	width: 100%;
+	font-size: 25px !important;
+	font-weight: bold; 
+
+}
+.sync-nominal-roll-btn {
+	text-align: right;
+	&:before{
+		color: #fff;
+		font-weight: bold;
+	}
+}
 .sec-content-main {
 	padding: 0 !important;
 }
@@ -323,6 +337,20 @@
     	left: 275px !important;
     	width: 195px;
     }
+}
+.sync-delete-popover {
+	top: 97px !important;
+    left: 724px !important;
+    width: 220px;
+    height: 109px;
+    @media(max-width: 480px) {
+    	top: 133px !important;
+    	left: 275px !important;
+    	width: 195px;
+    }
+}
+.sync-delete-popover.active {
+	opacity: 1 !important;
 }
 .name-badge-button-popover.active {
 	opacity: 1 !important;

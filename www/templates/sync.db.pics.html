@@ -16,17 +16,19 @@
         </div>
         <div class="sync-pic">
             <h4 class="profile-pic">Satsang Day attendance to sync: {{attendanceCount}}</h4>
+            <h4 class="profile-pic">Nominal Rolls to sync: {{nominalCount}}</h4>
             <button class="button button-assertive profile-pic-sync-btn" on-tap="uploadDatabase()">
                 <i class="icon ion-android-sync"></i>Sync Now
             </button>
         </div>
-        <div class="sync-pic">
+       <!--  <div class="sync-pic">
             <h4 class="profile-pic">Nominal Rolls to sync: {{nominalCount}}</h4>
-            <!-- <h4 class="satsang-day-sewadars-sync">Satsang Day attendance to sync: {{attendanceCount}}</h4> -->
-            <button class="button button-assertive profile-pic-sync-btn" on-tap ="uploadDatabase()">
+            <button class="button button-assertive profile-pic-sync-btn" on-tap="uploadDatabase()">
                 <i class="icon ion-android-sync"></i>Sync Now
             </button>
-        </div>
+         <button class="button button-assertive profile-pic-sync-btn" ui-sref="secretary-home({action: 'sync-or-delete'})">
+                <i class="icon ion-android-sync"></i>Sync Now
+            </button>-->
         <h3 class="download-img">DOWNLOAD DATA</h3>
         <span class="sync-date" ng-if = "syncDateAndTime != null">Last Sync On: {{syncDateAndTime.date +"-"+ syncDateAndTime.time}}</span>
         <div class="download-images-from-db all-img">

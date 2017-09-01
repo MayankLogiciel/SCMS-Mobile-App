@@ -5,13 +5,10 @@ angular.module('SCMS_ATTENDANCE')
         scope: {
             nominalRolesData : '=', 
             onDone : '&onDone',
-            sewadarsCount : "=",
-            isSecrectary : "="
         },
         link: function($scope, elem, attrs) {
             
             var showInfoModal = function() {
-                console.log($scope.isSecrectary);
                 $ionicModal.fromTemplateUrl('templates/modals/nominal.info.modal.html', {
                     scope: $scope,
                     animation: 'slide-in-up',

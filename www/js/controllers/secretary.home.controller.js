@@ -3,7 +3,7 @@
       /**
       * SecretaryHome Controller
       **/
-      var SecretaryHomeController = function($log,$scope, $state, $filter, $cordovaSQLite, $timeout, nominalRollsService, $cordovaToast, $ionicHistory, $ionicActionSheet, $rootScope, authService, $ionicPopup) {
+      var SecretaryHomeController = function($log,$scope, $state, $filter, $cordovaSQLite, $timeout, nominalRollsService, $cordovaToast, $ionicHistory, $ionicActionSheet, $rootScope, authService, $ionicPopup, $stateParams, $ionicPopover) {
             var setup = function() {
                   $log.debug("Nominal Rolls Controller");
                   $scope.nominals = [];   
@@ -11,12 +11,29 @@
                   $scope.nominal = {};              
                   $scope.getListForNominalRolls(); 
                   $scope.approvalCount = 0;
-                  $timeout(function(){
-                        $ionicHistory.clearCache();
-                        $ionicHistory.clearHistory();
-                  },500);
                   $scope.sewadarsCount = [];
-                  sewadarsCount();                  
+                  sewadarsCount(); 
+
+                  if($state.current.name == "app") {
+                        $timeout(function(){
+                              $ionicHistory.clearCache();
+                              $ionicHistory.clearHistory();
+                        },500);
+                  }  
+
+                  // if(!angular.isDefined($stateParams.action) || $stateParams.action =='') {
+                  //       $scope.isUserSecretary = true; 
+                  //       // $timeout(function(){
+                  //       //       $ionicHistory.clearCache();
+                  //       //       $ionicHistory.clearHistory();
+                  //       // },500);
+                  // }else {
+                  //      $scope.isUserSecretary = false;  
+                  // }                  
+            };
+
+            $scope.goBack = function() {
+                  $ionicHistory.goBack();
             };
 
             var sewadarsCount = function() {
@@ -26,6 +43,20 @@
                              $scope.sewadarsCount.push(res.rows.item(i)); 
                         }
                   });
+            }
+
+            $scope.openSyncNominalPopover = function($event) {
+                  $ionicPopover.fromTemplateUrl('templates/popovers/sync.delete.nominal.rolls.popover.html', {
+                        scope: $scope,
+                        //backdropClickToClose: false                  
+                  }).then(function(popover) {
+                        $scope.popover = popover; 
+                        $scope.popover.show($event);
+                  });
+            };
+
+            var closeSyncDeletePopOver = function(){
+                  $scope.popover.hide();                  
             }
            
             var getNominalRollsData = function(query) {
@@ -39,7 +70,9 @@
                                     }
                               }  
                         }
-                        $scope.checkedNominal(); 
+                       // if($scope.isUserSecretary) {
+                              $scope.checkedNominal(); 
+                        //}
                   }, function (err) { 
                   });
             };
@@ -61,25 +94,49 @@
                   }
             }
 
+
+            $scope.markForDelete = function () {
+                  if($scope.nominals.length <= 0) {
+                        $cordovaToast.show('There is no nominal roll to delete ', 'short', 'center'); 
+                        return;   
+                  }
+                  else if($scope.nominals.length > 0 && $scope.deleteCount <= 0) {
+                      $cordovaToast.show('Please select atleast one nominal roll ', 'short', 'center'); 
+                      return; 
+                  } else {   
+                        var msg = "All assigned sewadars will be deleted with this Nominal Roll. Confirm to Proceed.";
+                        showDeleteConfirm(msg);
+                  }
+            }
+
             $scope.logOut = function() {
                   localStorage.removeItem("SCMS_user");
                   localStorage.removeItem("SCMS_token");
                   //localStorage.clear();
-                  $timeout(function () {
-                        $ionicHistory.clearCache();
-                        $ionicHistory.clearHistory();
-                  },500);                  
+                  // $timeout(function () {
+                  //       $ionicHistory.clearCache();
+                  //       $ionicHistory.clearHistory();
+                  // },500);                  
                   $cordovaToast.show('Logged out successfully', 'short', 'center');
                   $state.go("login");
             }
 
-            $scope.markSelected = function (nominal) {                  
+            $scope.markSelected = function (nominal) { 
+                  //if($scope.isUserSecretary) {                        
                   if(nominal.isSelected == true) {                        
                         $scope.approvalCount =  $scope.approvalCount  + 1;
                   }
                   if(nominal.isSelected == false) {
                         $scope.approvalCount =  $scope.approvalCount  - 1;
                   }
+                  // }  else {
+                  //       if(nominal.isSelected == true) {                        
+                  //             $scope.deleteCount =  $scope.deleteCount  + 1;
+                  //       }
+                  //       if(nominal.isSelected == false) {
+                  //             $scope.deleteCount =  $scope.deleteCount  - 1;
+                  //       }
+                  // }               
             };
 
             //refreshing page 
@@ -131,16 +188,18 @@
                               {text: '<i class="icon ion-ios-close icon-space"></i>Remove Approval'},
                               {text : '<i class="icon ion-edit"></i> Edit Nominal Roll'},
                               {text : '<i class="icon ion-trash-a del-nominal-on-tab"></i> Delete Nominal Roll'},
-                              {text : '<i class="icon ion-paper-airplane"></i> Mark As Dispatched'}
+                              //{text : '<i class="icon ion-paper-airplane"></i> Mark As Dispatched'}
                         ];
                         txt = 'pending';
-                  }else if(nominal.status == 'dispatched') {
-                        $scope.buttonText = [
-                              {text : '<i class="icon ion-edit"></i> Edit Nominal Roll'},
-                              {text : '<i class="icon ion-trash-a del-nominal-on-tab"></i> Delete Nominal Roll'}
-                        ];
+                  }
+                  // else if(nominal.status == 'dispatched') {
+                  //       $scope.buttonText = [
+                  //             {text : '<i class="icon ion-edit"></i> Edit Nominal Roll'},
+                  //             {text : '<i class="icon ion-trash-a del-nominal-on-tab"></i> Delete Nominal Roll'}
+                  //       ];
 
-                  }else {
+                  // }
+                  else {
                         $scope.buttonText = [                   
                               {text: '<i class="icon ion-checkmark-circled icon-space"></i>Mark As Approved'},
                               {text : '<i class="icon ion-edit"></i> Edit Nominal Roll'},
@@ -181,14 +240,14 @@
                                     case '<i class="icon ion-trash-a del-nominal-on-tab"></i> Delete Nominal Roll' : 
                                          showDeleteConfirm(msg, nominal.id);
                                           return true; 
-                                    case '<i class="icon ion-paper-airplane"></i> Mark As Dispatched' :
-                                          nominal.status = 'dispatched';
-                                          nominal.isSelected = true;
-                                          var query = "UPDATE nominal_roles SET status = 'dispatched' WHERE id = '"+nominal.id+"'";
-                                          $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
-                                          }, function(err){
-                                          });
-                                          return true;
+                                    // case '<i class="icon ion-paper-airplane"></i> Mark As Dispatched' :
+                                    //       nominal.status = 'dispatched';
+                                    //       nominal.isSelected = true;
+                                    //       var query = "UPDATE nominal_roles SET status = 'dispatched' WHERE id = '"+nominal.id+"'";
+                                    //       $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
+                                    //       }, function(err){
+                                    //       });
+                                    //       return true;
                                     case '<i class="icon ion-ios-close icon-space"></i>Remove Approval' :
                                           nominal.status = txt;
                                           nominal.isSelected = false;
@@ -241,23 +300,49 @@
             }; 
 
             var deleteNominalRoll = function(n_id) {
-                  var deleteNominalRollQuery = " delete from nominal_roles where id =" + n_id;
-                  $cordovaSQLite.execute($rootScope.db, deleteNominalRollQuery).then(function(res) {
-                        for(var i=0; i <$scope.nominals.length; i++) {
-                              if($scope.nominals[i].id == n_id) {
-                                    deleteNominalRollAttendance(n_id);
-                                    $scope.nominals.splice(i,true);
+                  //if($scope.isUserSecretary) {
+                        var deleteNominalRollQuery = " delete from nominal_roles where id =" + n_id;
+                        $cordovaSQLite.execute($rootScope.db, deleteNominalRollQuery).then(function(res) {
+                              for(var i=0; i <$scope.nominals.length; i++) {
+                                    if($scope.nominals[i].id == n_id) {
+                                          deleteNominalRollAttendance(n_id);
+                                          $scope.nominals.splice(i,true);
+                                    }
                               }
-                        }
-                        $cordovaToast.show('Nominal Roll Delete successfully', 'short', 'center');         
-                  });
+                              $cordovaToast.show('Nominal Roll Delete successfully', 'short', 'center');         
+                        });
+                 // }
+                  // else {
+                  //        $scope.nominals.ids = $filter('nominalFilter')($scope.nominals,'isSelected');  
+                  //       for(var i = 0; i<$scope.nominals.ids.length; i++) {
+                  //             var deleteQuery = "delete from nominal_roles WHERE id = '"+$scope.nominals.ids[i]+"'";
+                  //             $cordovaSQLite.execute($rootScope.db, deleteQuery).then(function(res) {
+                  //                   deleteNominalRollAttendanceForMultiNominals();
+                  //                   $scope.nominals.splice(true);
+                  //             });
+                  //       }
+                  // }
             } 
 
             var deleteNominalRollAttendance = function(n_id) {
+                  console.log("hello");
                   var deleteNominalRollAttendanceQuery = " delete from attendances where nominal_roll_id =" + n_id;
-                  $cordovaSQLite.execute($rootScope.db, deleteNominalRollAttendanceQuery).then(function(res) {                               
+                  $cordovaSQLite.execute($rootScope.db, deleteNominalRollAttendanceQuery).then(function(res) {   
+                        console.log("success==>", res);                            
+                  }, function(err){
+                        console.log("error==>", err);
                   });
-            }     
+            }  
+
+            var deleteNominalRollAttendanceForMultiNominals = function() {
+                  $scope.nominals.ids = $filter('nominalFilter')($scope.nominals,'isSelected');
+                  for(var i = 0; i<$scope.nominals.ids.length; i++) {
+                        var deleteQuery = "delete from attendances where nominal_roll_id = '"+$scope.nominals.ids[i]+"'";
+                        $cordovaSQLite.execute($rootScope.db, deleteQuery).then(function(res) {
+                              $cordovaToast.show('nominal rolls deleted', 'short', 'center');
+                        });
+                  }
+            }   
 
             $scope.getListForNominalRolls = function(){
                   var dbName = 'database.sqlite';
@@ -268,7 +353,7 @@
             setup();
       };
 
-      SecretaryHomeController.$inject  = ['$log', '$scope', '$state', '$filter', '$cordovaSQLite', '$timeout', 'nominalRollsService', '$cordovaToast', '$ionicHistory', '$ionicActionSheet', '$rootScope', 'authService', '$ionicPopup'];
+      SecretaryHomeController.$inject  = ['$log', '$scope', '$state', '$filter', '$cordovaSQLite', '$timeout', 'nominalRollsService', '$cordovaToast', '$ionicHistory', '$ionicActionSheet', '$rootScope', 'authService', '$ionicPopup', '$stateParams', '$ionicPopover'];
 
       angular
       .module('SCMS_ATTENDANCE')

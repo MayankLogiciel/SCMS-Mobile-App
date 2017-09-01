@@ -4,11 +4,17 @@
    	/**
    	* Login Controller
    	**/
-      var LoginController = function($log, $scope, $cordovaSQLite, $state, authService, $cordovaToast, $ionicPopup, bcrypt, cfpLoadingBar, $rootScope, $timeout) {  
+      var LoginController = function($log, $scope, $cordovaSQLite, $state, authService, $cordovaToast, $ionicPopup, bcrypt, cfpLoadingBar, $rootScope, $timeout, $ionicHistory) {  
 
             var setup = function() {
                   $log.debug("Login Controller");                  
-                  $scope.loginData = { username: '', password: ''};                 
+                  $scope.loginData = { username: '', password: ''};    
+                  if($state.current.name == "login") {
+                        $timeout(function(){
+                              $ionicHistory.clearCache();
+                              $ionicHistory.clearHistory();
+                        },500);
+                  }               
             };
 
             $scope.importDatabase = function() {
@@ -147,7 +153,7 @@
       setup();
 };
 
-LoginController.$inject  = ['$log', '$scope', '$cordovaSQLite', '$state', 'authService', '$cordovaToast', '$ionicPopup', 'bcrypt', 'cfpLoadingBar', '$rootScope', '$timeout'];
+LoginController.$inject  = ['$log', '$scope', '$cordovaSQLite', '$state', 'authService', '$cordovaToast', '$ionicPopup', 'bcrypt', 'cfpLoadingBar', '$rootScope', '$timeout', '$ionicHistory'];
 
 angular
 .module('SCMS_ATTENDANCE')

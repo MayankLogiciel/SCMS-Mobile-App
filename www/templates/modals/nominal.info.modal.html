@@ -45,7 +45,7 @@
 						</h4>
 						<h4 class="g-name">
 							<label>Male Sewadars:</label>
-							<span>{{sewadarsCount[nominalRolesData.id - 1].Male== undefined ? 0 : sewadarsCount[nominalRolesData.id - 1].Male}}</span>
+							<span>{{nominalRolesData.MaleCounts==undefined ? 0 : nominalRolesData.MaleCounts}}</span>
 						</h4>		
 					</div>
 					<div class="col col-50">
@@ -75,13 +75,13 @@
 						</h4>
 						<h4 class="g-name">
 							<label>Female Sewadars:</label>
-							<span>{{sewadarsCount[nominalRolesData.id - 1].Female == undefined ? 0 : sewadarsCount[nominalRolesData.id - 1].Female}}</span>
+							<span>{{nominalRolesData.FemaleCounts==undefined ? 0 : nominalRolesData.FemaleCounts}}</span>
 						</h4>								
 					</div>
 				</div>
 				<h4 class="g-name com-padding-modal nominal-info-modal-total">
 					<label>Total Sewadars:</label>
-					<span>{{sewadarsCount[nominalRolesData.id - 1].Female + sewadarsCount[nominalRolesData.id - 1].Male}}</span>
+					<span>{{(nominalRolesData.MaleCounts==undefined ? 0 : nominalRolesData.MaleCounts) + (nominalRolesData.FemaleCounts==undefined ? 0 : nominalRolesData.FemaleCounts)}}</span>
 				</h4>
 			</div>	
 
@@ -149,15 +149,15 @@
 				</h4>
 				<h4 class="g-name">
 					<label>Male Sewadars:</label>
-					<span>{{sewadarsCount[nominalRolesData.id - 1].Male== undefined ? 0 : sewadarsCount[nominalRolesData.id - 1].Male}}</span>
+					<span>{{nominalRolesData.MaleCounts==undefined ? 0 : nominalRolesData.MaleCounts}}</span>
 				</h4>
 				<h4 class="g-name">
 					<label>Female Sewadars:</label>
-					<span>{{sewadarsCount[nominalRolesData.id - 1].Female == undefined ? 0 : sewadarsCount[nominalRolesData.id - 1].Female}}</span>
+					<span>{{nominalRolesData.FemaleCounts==undefined ? 0 : nominalRolesData.FemaleCounts}}</span>
 				</h4>		
 				<h4 class="g-name">
 					<label>Total Sewadars:</label>
-					<span>{{sewadarsCount[nominalRolesData.id - 1].Female == undefined ? 0 : sewadarsCount[nominalRolesData.id - 1].Female + sewadarsCount[nominalRolesData.id - 1].Male == undefined ? 0 : sewadarsCount[nominalRolesData.id - 1].Male}}</span>
+					<span>{{(nominalRolesData.MaleCounts==undefined ? 0 : nominalRolesData.MaleCounts) + (nominalRolesData.FemaleCounts==undefined ? 0 : nominalRolesData.FemaleCounts)}}</span>
 				</h4>
 			</div>					
 		</ion-list>

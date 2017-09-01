@@ -30,7 +30,8 @@
                                     quality: 50,
                                     destinationType: Camera.DestinationType.FILE_URI,
                                     correctOrientation: true,
-                                    targetWidth: 720,
+                                    targetWidth: 300,
+                                    targetHeight: 300,
                               });
                         }
 

@@ -16,11 +16,13 @@
                   $rootScope.isDateFilterPopupOpened = true;
                   $scope.isDatePopupOpend = false;
                   $scope.sewadarsCount = [];
-                  sewadarsCount();
+                  $scope.hhh = {};
+
             };
             $scope.$on('$ionicView.enter', function() {
+                  cfpLoadingBar.start();                   
                   $scope.getListForNominalRolls();
-                  cfpLoadingBar.start(); 
+                  sewadarsCount();
             });  
             $scope.goBack = function() {
                   $ionicHistory.goBack();
@@ -30,13 +32,12 @@
                   setup();
             });
 
-            var getNominalRollsData = function(query) {                  
+            var getNominalRollsData = function(query) {
                   $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
                         $scope.nominals = []; 
                         if(res.rows.length > 0) {
                               for(var i= 0; i<res.rows.length; i++) { 
-                                    $scope.nominals.push(res.rows.item(i));
-                                                                                                         
+                                    $scope.nominals.push(res.rows.item(i));                                                                                                         
                               }  
                               nominalRollsService.setnominalRollsCompleteData($scope.nominals);                               
                         }
@@ -49,8 +50,17 @@
                   var query = "select nominal_roll_id,sum(case when gender = 'M' then 1 else 0 end) Male,sum(case when gender = 'F' then 1 else 0 end) Female from ( SELECT DISTINCT sewadars.id, attendances.sewadar_type,sewadars.gender,attendances.nominal_roll_id FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where attendances.sewadar_type = 'permanent' UNION SELECT DISTINCT temp_sewadars.id, attendances.sewadar_type,temp_sewadars.gender,attendances.nominal_roll_id FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where attendances.sewadar_type = 'temporary' )group by nominal_roll_id";
                   $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
                         for(var i= 0; i<res.rows.length; i++) { 
-                             $scope.sewadarsCount.push(res.rows.item(i)); 
+                            // $scope.sewadarsCount.push(res.rows.item(i));
+                            for(var j= 0; j<$scope.nominals.length; j++) { 
+                            // $scope.sewadarsCount.push(res.rows.item(i));
+                                    if($scope.nominals[j].id == res.rows.item(i).nominal_roll_id) {
+                                          $scope.nominals[j].MaleCounts = res.rows.item(i).Male;
+                                          $scope.nominals[j].FemaleCounts = res.rows.item(i).Female;
+                                          return;
+                                    }
+                              }
                         }
+                        console.log($scope.nominals);
                   });
             }
 
@@ -64,9 +74,9 @@
                               nominalRollsService.setNominalRollsData(nominal);
                               $state.go('nominal_rolls-list', {id: nominal.id, status: nominal.status});
                               return true;
-                        case 'dispatched':
-                              $cordovaToast.show('Nominal Roll Already Dispatched ', 'short', 'center');                        
-                              return true;
+                        // case 'dispatched':
+                        //       $cordovaToast.show('Nominal Roll Already Dispatched ', 'short', 'center');                        
+                        //       return true;
                         default:
                               $cordovaToast.show('You cannot add sewadar until approved ', 'short', 'center');                        
                   }
@@ -203,7 +213,7 @@
                         $scope.buttonText = [                   
                               {text: '<i class="icon ion-plus-circled"></i> Add Sewadars'},
                               {text : '<i class="icon ion-edit"></i> Edit Nominal Roll '},
-                              {text : '<i class="icon ion-paper-airplane"></i> Mark As Dispatched'}
+                              //{text : '<i class="icon ion-paper-airplane"></i> Mark As Dispatched'}
                         ];
                   } else {
                         $scope.buttonText = [
@@ -233,12 +243,12 @@
                                           nominalRollsService.setNominalRollsData(nominal);
                                           $state.go('addedit-nominal_rolls', {action: 'edit',id: nominal.id, user: ''});
                                           return true;
-                                    case '<i class="icon ion-paper-airplane"></i> Mark As Dispatched' :
-                                          nominal.status = 'dispatched';
-                                          var query = "UPDATE nominal_roles SET status = 'dispatched' WHERE id = '"+nominal.id+"'";
-                                          updateNominal(query);
-                                          nominalRollsService.setNominalRollsData(nominal);
-                                          return true;
+                                    // case '<i class="icon ion-paper-airplane"></i> Mark As Dispatched' :
+                                    //       nominal.status = 'dispatched';
+                                    //       var query = "UPDATE nominal_roles SET status = 'dispatched' WHERE id = '"+nominal.id+"'";
+                                    //       updateNominal(query);
+                                    //       nominalRollsService.setNominalRollsData(nominal);
+                                    //       return true;
                               }
                         }
                   });

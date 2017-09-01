@@ -36,7 +36,7 @@
 							<label>Sewa Place:</label>
 							<span ng-bind="nominal.sewa_name" class="text-transform-capital"></span>
 						</h4>  
-						<h4 class="sewa-place-misc" ng-class="{'final-diable':nominal.new_sewa == 'null' || nominal.new_sewa == 'N/A'}">
+						<h4 class="sewa-place-misc" ng-hide="nominal.new_sewa == 'null' || nominal.new_sewa == 'N/A'" ng-class="{'final-diable':nominal.new_sewa == 'null' || nominal.new_sewa == 'N/A'}">
 							<label>Misc Sewa Place:</label>
 							<span class="text-transform-capital">
 								{{nominal.new_sewa == 'null' ? 'N/A' : nominal.new_sewa}}
@@ -57,7 +57,7 @@
 								 
 								<h4>
 									<label>Male Sewadars:</label>
-									<span>{{sewadarsCount[nominal.id - 1].Male == undefined ? 0: sewadarsCount[nominal.id - 1].Male}}</span>
+									<span>{{nominal.MaleCounts==undefined ? 0 : nominal.MaleCounts}}</span>
 								</h4> 
 
 								<!-- <h4>
@@ -117,7 +117,7 @@
 								</h4> 
 								<h4>
 									<label>Female Sewadars:</label>
-									<span>{{sewadarsCount[nominal.id - 1].Female == undefined ? 0: sewadarsCount[nominal.id - 1].Female}}</span>
+									<span>{{nominal.FemaleCounts==undefined ? 0 : nominal.FemaleCounts}}</span>
 								</h4>                            
 							</div> 
 						</div>          
@@ -140,7 +140,7 @@
 						<label>Sewa Place:</label>
 						<span ng-bind="nominal.sewa_name" class="text-transform-capital"></span>
 					</h4> 
-					<h4 ng-class="{'final-diable':nominal.new_sewa == 'null'}">
+					<h4 ng-class="{'final-diable':nominal.new_sewa == 'null'}" ng-hide="nominal.new_sewa == 'null' || nominal.new_sewa == 'N/A'">
 						<label>Misc Sewa Place:</label>
 						<span class="text-transform-capital">
 							{{nominal.new_sewa == 'null' ? 'N/A' : nominal.new_sewa}}
@@ -192,11 +192,11 @@
 					</h4> 
 					<h4>
 						<label>Male Sewadars:</label>
-						<span>{{sewadarsCount[nominal.id - 1].Male == undefined ? 0: sewadarsCount[nominal.id - 1].Male}}</span>
+						<span>{{nominal.MaleCounts==undefined ? 0 : nominal.MaleCounts}}</span>
 					</h4>
 					<h4>
 						<label>Female Sewadars:</label>
-						<span>{{sewadarsCount[nominal.id - 1].Female == undefined ? 0: sewadarsCount[nominal.id - 1].Female}}</span>
+						<span>{{nominal.FemaleCounts==undefined ? 0 : nominal.FemaleCounts}}</span>
 					</h4> 
 				</div>     
 				   

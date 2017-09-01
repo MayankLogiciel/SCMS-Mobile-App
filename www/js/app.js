@@ -163,7 +163,7 @@ angular.module('SCMS_ATTENDANCE', ['ionic', 'ngCordova', 'validation', 'validati
       })
       .state('secretary-home', {
             cache: false,            
-            url: '/secretary-home',
+            url: '/secretary-home/:action',
             templateUrl: 'templates/secretary_home.html',
             controller: 'SecretaryHomeController'
       })
