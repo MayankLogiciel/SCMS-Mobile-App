@@ -505,7 +505,7 @@
                                     }                                  
                               } else {
                                     var emptyRows;
-                                    for(var r=$scope.sewadarPrintList.length+1; r<24; r++){  
+                                    for(var r=$scope.sewadarPrintList.length+1; r<60; r++){  
                                           emptyRows = '<tr height = "28" > <td style="border: 1px solid #000; font-size: 10px; text-align: center;">'+r+'</td> <td style="border: 1px solid #000; font-size: 10px; padding-left: 5px; width: 125px;"></td> <td style="border: 1px solid #000; font-size: 10px; padding-left: 5px; width: 125px;"></td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td> <td style="border: 1px solid #000; font-size: 10px; text-overflow:ellipsis; padding-left: 5px"></td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td> </tr>'                                         
                                           printedPage1 = printedPage1.concat(emptyRows);
                                     }
