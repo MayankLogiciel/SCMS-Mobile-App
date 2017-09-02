@@ -9834,6 +9834,33 @@ a.button {
   .button.button-icon.button-add .plus-icon:before {
     font-size: 22px; }
 
+.sync-nominal-roll {
+  text-align: center;
+  width: 100%;
+  font-size: 25px !important;
+  font-weight: bold; }
+
+.sync-nominal-roll-btn {
+  text-align: right; }
+  .sync-nominal-roll-btn:before {
+    color: #fff;
+    font-weight: bold; }
+
+.sec-content-main {
+  padding: 0 !important; }
+
+.com-padding-modal {
+  margin-left: 25px !important; }
+
+.nominal-info-modal-other {
+  padding: 0 5px !important; }
+
+.nominal-info-modal-misc {
+  margin-bottom: 0 !important; }
+
+.nominal-info-modal-total {
+  margin-top: 0 !important; }
+
 .del-nominal-on-tab {
   right: 27% !important; }
 
@@ -9854,7 +9881,7 @@ a.button {
   margin-left: 10px !important; }
 
 .other-nominal-info {
-  padding-top: 0 !important; }
+  padding-top: 5px 0 0 0 !important; }
 
 .swap-btn {
   position: absolute;
@@ -10075,6 +10102,20 @@ a.button {
       top: 133px !important;
       left: 275px !important;
       width: 195px; } }
+
+.sync-delete-popover {
+  top: 97px !important;
+  left: 724px !important;
+  width: 220px;
+  height: 109px; }
+  @media (max-width: 480px) {
+    .sync-delete-popover {
+      top: 133px !important;
+      left: 275px !important;
+      width: 195px; } }
+
+.sync-delete-popover.active {
+  opacity: 1 !important; }
 
 .name-badge-button-popover.active {
   opacity: 1 !important; }
@@ -10538,7 +10579,8 @@ a.button {
     font-size: 20px;
     font-weight: bold;
     width: 170px;
-    display: inline-block; }
+    display: inline-block;
+    line-height: 0 !important; }
   .nominal-list h4 span {
     font-size: 20px; }
   .nominal-list h4 .label-text-approve {
@@ -10888,7 +10930,7 @@ a.button {
   color: #000; }
 
 .approve-checkbox label {
-  padding: 117px 0;
+  padding: 134px 0 0 0;
   border: 0; }
   .approve-checkbox label .checkbox {
     left: -4px;
@@ -11025,7 +11067,7 @@ a.button {
   display: block; }
   .list-nominal-add:before {
     font-size: 60px;
-    margin-top: 90px;
+    margin-top: 45px;
     color: #387; }
 
 .log-out {
@@ -11440,17 +11482,17 @@ a.button {
     white-space: normal; }
   .modal-padding h4 {
     margin-top: 2px !important;
-    margin-bottom: 3px !important; }
+    margin-bottom: 1px !important; }
   .g-name {
-    width: 60% !important; }
+    width: 100% !important; }
   .modal-padding h4 img {
     width: 100px;
     height: 100px;
     margin-left: 37px; }
   .modal-padding h4 span {
-    font-size: 13px !important; }
+    font-size: 11px !important; }
   .modal-padding h4 label {
-    font-size: 13px; }
+    font-size: 12px; }
   .custom-footer .button-bar > .button {
     line-height: 36px;
     font-size: 11px;
@@ -11651,7 +11693,7 @@ a.button {
   .list-margin-sec {
     margin-bottom: 0 !important; }
   .approve-checkbox label {
-    padding: 141px 0 !important; }
+    padding: 142px 0 0 0 !important; }
   .btn-sect-app {
     margin-top: -5px !important;
     background: transparent !important;
@@ -11691,11 +11733,11 @@ a.button {
   .remove-add-btn-on-mob {
     display: none; }
   .nominal-list-mob h4 label {
-    font-size: 14px !important;
+    font-size: 12px !important;
     padding-left: 15px !important;
     width: auto; }
   .nominal-list-mob h4 span {
-    font-size: 13px !important;
+    font-size: 11px !important;
     padding-left: 2px !important;
     font-weight: 400; }
   .margin-bt-data {
@@ -11719,6 +11761,8 @@ a.button {
 @media (min-width: 480px) {
   .floating-btn-for-list {
     display: none; }
+  .nominal-list-on-tab {
+    padding: 0 5px !important; }
   .nominal-list-on-mob {
     display: none; }
   .for-mob {
@@ -11835,7 +11879,68 @@ a.button {
   body.nominal-rolls-popup-open .ionic_datepicker_popup .popup-buttons .button_today {
     margin-right: 0; }
   body.nominal-rolls-popup-open .ionic_datepicker_popup .popup-buttons .button_close {
-    display: none; } }
+    display: none; }
+  .nominal-less-data {
+    padding: 7px 0 0 0 !important; } }
+
+@media (max-width: 480px) {
+  .platform-ios .search-wrapper {
+    top: 65px; }
+  .platform-ios .common-search-wrapper {
+    margin-top: 60px; }
+  .platform-ios .ios-attendees {
+    right: 2% !important; }
+  .platform-ios .name-badge-button-popover {
+    margin-top: 0; }
+  .platform-ios .info-wrapper {
+    margin-top: -270px; }
+  .platform-ios .ios-info-header {
+    height: 65px; }
+    .platform-ios .ios-info-header .h1 {
+      text-align: left;
+      font-size: 15px;
+      line-height: 60px;
+      margin-left: 20px;
+      margin-top: 2px !important; }
+    .platform-ios .ios-info-header .edit-info {
+      font-size: 0;
+      margin-top: 10px !important; }
+    .platform-ios .ios-info-header .back-btn-info {
+      line-height: 0;
+      margin-top: 10px; } }
+
+@media (min-width: 480px) {
+  .platform-ios .ios-header-css {
+    margin-top: 9px !important; }
+    .platform-ios .ios-header-css .sat-att-list-title {
+      font-size: 25px;
+      font-weight: bold; }
+  .platform-ios .search-wrapper {
+    top: 65px; }
+  .platform-ios .common-search-wrapper {
+    margin-top: 70px; }
+  .platform-ios .ios-info-header .h1 {
+    margin-top: 3px !important; }
+  .platform-ios .ios-info-header .edit-info {
+    margin-top: 12px !important; }
+  .platform-ios .ios-info-header .back-btn-info {
+    margin-top: 15px; }
+  .platform-ios .header-title {
+    padding-top: 8px !important; }
+  .platform-ios .jatha-member .icon.icon-before span {
+    width: 300px; }
+  .platform-ios .jatha-member .button {
+    min-height: 25px !important; }
+  .platform-ios .sewa-name {
+    margin-top: 8px !important; }
+  .platform-ios .rt-buttons {
+    margin-top: 8px !important; }
+  .platform-ios .ios-has-header-tab-page {
+    top: 0 !important; }
+  .platform-ios .ios-nom-att-list {
+    top: 65px !important; }
+  .platform-ios .name-badge-button-popover {
+    top: 130px !important; } }
 
 #loading-bar, #loading-bar-spinner {
   pointer-events: none;
