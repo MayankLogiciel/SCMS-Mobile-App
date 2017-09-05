@@ -18,80 +18,9 @@
             };
 
             $scope.importDatabase = function() {
-                  $scope.DBErr = authService.getDatabaseNotFound();                 
-                  if($scope.DBErr != 'error') {
-                        getPicturesCount();
-                        getNominalCount();
-                        getSatsangAttendanceCount();
-                        checkCount();
-                  }else {
-                        $state.go('import-database');
-                  }
-                  
-            } 
-
-            var checkCount = function() {
-                  $timeout(function() {                        
-                        if($scope.attendanceCount > 0 || $scope.nominalCount > 0 || $scope.picturesCount > 0){
-                              showImportConfirm();
-                        }else {
-                              $state.go('import-database');
-                        }
-                  }, 500);
+                  $state.go('import-database');
             }
-
-            var getPicturesCount = function() {
-                  var query = "SELECT COUNT(id) as count FROM sewadars WHERE sewadars.photo_update_status = 1";
-                  $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
-                        for(var i= 0; i<res.rows.length; i++) { 
-                              $scope.picturesCount = res.rows.item(i).count;                                                          
-                        }                              
-                  });
-            }
-
-            var getNominalCount = function() {
-                  var query = "SELECT COUNT(id) as count FROM nominal_roles";
-                  $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
-                        for(var i= 0; i<res.rows.length; i++) { 
-                              $scope.nominalCount = res.rows.item(i).count;
-                        }                              
-                  });
-            }
-
-            var getSatsangAttendanceCount = function() {
-                  var query = "SELECT COUNT(id) as count FROM attendances";
-                  $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
-                        for(var i= 0; i<res.rows.length; i++) { 
-                              $scope.attendanceCount = res.rows.item(i).count;
-                        }                              
-                  });
-            }
-
-            var showImportConfirm = function() {
-                  var myPopup = $ionicPopup.show({
-                        scope: $scope,
-                        templateUrl: 'templates/popups/confirm.before.import.html',
-                        title: 'Unsynced Changes!',
-                        cssClass: 'confirm-import',
-                        buttons:[    
-                        {
-                              text: "Cancel",
-                              type: 'button-balanced',
-                              onTap: function(){
-                                    return;
-                              }
-                        },
-                        {
-                              text: "Continue",
-                              type: 'button-positive',
-                              onTap: function(){
-                                    $state.go('import-database');      
-                              }
-                        }]
-                  });       
-            };      
-            
-
+           
             $scope.login = function(loginData) {                  
                   $scope.DBErr = authService.getDatabaseNotFound();
                   if($scope.DBErr == 'error') {

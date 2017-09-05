@@ -4,7 +4,7 @@
    	/**
    	* ImportDatabaseAndPicController Controller
    	**/
-      var ImportDatabaseAndPicController = function($log, $scope, $cordovaSQLite, $state, authService, $cordovaToast, $ionicPopup, bcrypt, cfpLoadingBar, $ionicHistory, picAndDatabaseTransferService, $cordovaZip, $cordovaFileTransfer, $timeout, $cordovaFile, $rootScope, $cordovaNetwork, SCMS_SERVER_DOWNLOAD_URL, $ionicLoading) {  
+      var ImportDatabaseAndPicController = function($log, $scope, $cordovaSQLite, $state, authService, $cordovaToast, $ionicPopup, bcrypt, cfpLoadingBar, $ionicHistory, picAndDatabaseTransferService, $cordovaZip, $cordovaFileTransfer, $timeout, $cordovaFile, $rootScope, $cordovaNetwork, SCMS_SERVER_DOWNLOAD_URL, $ionicLoading, $filter, SCMS_SERVER_UPLOAD_URL) {  
             var setup = function() {
                   $log.debug("ImportDatabaseAndPicController Controller");
                   $scope.importData = { 
@@ -15,9 +15,42 @@
                   if(authService.getSansangPlaceInfo() != null) {
                         $scope.importData.server_url = authService.getSansangPlaceInfo().serverURL; 
                         $scope.serverURlPrefix = $scope.importData.server_url;
-                  }
+                  }                  
                   
-            };            
+            };  
+
+             $scope.syncingDatabase = function(msg) {
+                  $ionicLoading.show({ scope: $scope, template: '<button class="button button-clear btn-animation" style="color: #FFFFFF;"><ion-spinner icon="lines" class="spinner-calm"></ion-spinner><br><span style="vertical-align: middle;">&nbsp;&nbsp;'+msg+'</span></button>'});
+
+                 // $ionicLoading.show({ scope: $scope, template: '<div class="btn-animation-sync" style="color: #FFFFFF;"><ion-spinner icon="lines" class="spinner-calm"></ion-spinner><br><span style="vertical-align: middle;">&nbsp;&nbsp;'+msg+'</span><br><br><br><button class ="button button-clear cancel-btn" ng-click="cancelLoading()"><i class="icon ion-close"></i>&nbsp;&nbsp;Cancel</button></div>'});
+            }
+
+            var getPicturesCount = function() {
+                  var query = "SELECT COUNT(id) as count FROM sewadars WHERE sewadars.photo_update_status = 1";
+                  $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
+                        for(var i= 0; i<res.rows.length; i++) { 
+                              $scope.picturesCount = res.rows.item(i).count;                                                          
+                        }                              
+                  });
+            }
+
+            var getNominalCount = function() {
+                  var query = "SELECT COUNT(id) as count FROM nominal_roles";
+                  $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
+                        for(var i= 0; i<res.rows.length; i++) { 
+                              $scope.nominalCount = res.rows.item(i).count;
+                        }                              
+                  });
+            }
+
+            var getSatsangAttendanceCount = function() {
+                  var query = "SELECT COUNT(id) as count FROM attendances";
+                  $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
+                        for(var i= 0; i<res.rows.length; i++) { 
+                              $scope.attendanceCount = res.rows.item(i).count;
+                        }                              
+                  });
+            }          
 
             $scope.goBack = function() {
                   $ionicHistory.goBack();
@@ -34,38 +67,151 @@
                   var serverURL = {serverURL: url}
                   $scope.serverURlPrefix = url;
                   authService.setSansangPlaceInfo(serverURL);
-            }          
+            }    
+
+
+            var downloadDB = function(url,targetPath,downloadOptions,trustHosts, accessToken) {
+                  console.log(accessToken);
+                  $scope.importDatabase('Preparing Database');
+                  $cordovaFileTransfer.download(url, targetPath, downloadOptions, trustHosts)
+                  .then(function(result) { 
+                        //unzip();
+                        CopyPicturesandDatabaseToImport();
+                  }, function(err) {
+                        $scope.cancelLoading();
+                  }, function (progress) {
+                        $timeout(function () {
+                              $scope.downloadProgress = Math.floor((progress.loaded / progress.total) * 100);
+                              $ionicLoading.show({ scope: $scope, template: '<button class="button button-clear btn-animation" style="color: #FFFFFF;"><ion-spinner icon="lines" class="spinner-calm"></ion-spinner><br><span style="vertical-align: middle;">&nbsp;&nbsp;Downloading Database ('+$scope.downloadProgress+'%)</span></button>'});
+
+                        });
+                  });
+                  authService.setToken(accessToken);
+            } 
+
+            var syncDB = function(accessToken) { 
+                  $scope.syncingDatabase('Syncing database (0%)');
+                  $scope.createExportFolder(accessToken);                  
+            }   
+
+            /**
+            * creating export folder 
+            **/
+
+            $scope.createExportFolder = function(accessToken) {
+                  $cordovaFile.createDir($rootScope.baseAppDir, "export", false)
+                  .then(function (success) {
+                        checkDirectoryDate(accessToken);
+                  }, function (error) {
+                        checkDirectoryDate(accessToken);
+                  });
+            }
+
+            var checkDirectoryDate = function(accessToken) {  
+                  $scope.folderName = $filter('date')(new Date(), 'yyyy_MM_dd_h_mm_ss') + '/';  
+                  $scope.dataBasePath = $rootScope.baseAppDir + 'export/'              
+                  $cordovaFile.checkDir($scope.dataBasePath, $scope.folderName)
+                  .then(function (success) {
+                  }, function (error) {
+                        $cordovaFile.createDir($scope.dataBasePath, $scope.folderName, false).then(function (success) {
+                              //SychImageOnlyOrBoth(success.nativeURL);   
+                              copyDBToExportFolder(success.nativeURL, accessToken);
+                        });
+                  });
+            }
+
+            var copyDBToExportFolder = function(path, accessToken) {
+                  $scope.dataBasePath = $rootScope.baseAppDir + 'export/' + $scope.folderName;                  
+                  var dbName = 'database.sqlite';
+                  window.plugins.sqlDB.copyDbToStorage(dbName, 0,$scope.dataBasePath, function(result) {
+                        copiedDataInExport(path, dbName, accessToken);
+                  }, function(err) {
+                        if(ionic.Platform.isIOS()){
+                              copiedDataInExport(path, dbName, accessToken);
+                        }
+                  })
+            }
+
+            var copiedDataInExport = function(path,dbName, accessToken) {
+                 // console.log(path,dbName,accessToken);
+                  var trustAllHosts = true;
+                  var url = encodeURI($scope.serverURlPrefix + SCMS_SERVER_UPLOAD_URL);
+                  console.log(url);
+                  var targetPath = path + dbName;
+                  console.log(targetPath);
+                  var filename = targetPath.split("/").pop();
+                  var options = {
+                        fileKey: "upload",
+                        fileName: filename,
+                        chunkedMode: false,
+                        mimeType: "application/x-sqlite3",
+                        httpMethod: "POST",
+                        ignoreLoadingBar: true
+                  };
+                  var headers={'Authorization': accessToken};
+                  options.headers = headers;
+                  $cordovaFileTransfer.upload(url, targetPath, options, trustAllHosts).then(function(result) {
+                        downloadDB($scope.url,$scope.targetPath,$scope.downloadOptions,$scope.trustHosts, accessToken);
+                  }, function(err) {
+                        console.log(err);
+                        $scope.cancelLoading();
+                        $timeout(function() {
+                              switch(err.http_status) {
+                                   case 500: 
+                                          $scope.cancelLoading();
+                                          $cordovaToast.show('Internal server Error', 'short', 'center');
+                                          return;
+                                    case 401:
+                                          $scope.cancelLoading();
+                                          localStorage.removeItem("SCMS_token");
+                                          return;
+                                    case 400:
+                                          $scope.cancelLoading();
+                                          localStorage.removeItem("SCMS_token");
+                                          return;
+                                    case null:
+                                          $scope.cancelLoading();
+                                          $cordovaToast.show('Please enter valid server url', 'short', 'center');
+                                          return;  
+                              } 
+                        }, 500);                                   
+                  }, function (progress) {
+                        $timeout(function () {
+                              $scope.downloadProgress = Math.floor((progress.loaded / progress.total) * 100);
+                              //$ionicLoading.show({ scope: $scope, template: '<div class="btn-animation-sync" style="color: #FFFFFF;"><ion-spinner icon="lines" class="spinner-calm"></ion-spinner><br><span style="vertical-align: middle;">&nbsp;&nbsp;Syncing database ('+$scope.downloadProgress+'%)</span><br><br><br><button class ="button button-clear cancel-btn" ng-click="cancelLoading()"><i class="icon ion-close"></i>&nbsp;&nbsp;Cancel</button></div>'});
+                              $ionicLoading.show({ scope: $scope, template: '<button class="button button-clear btn-animation" style="color: #FFFFFF;"><ion-spinner icon="lines" class="spinner-calm"></ion-spinner><br><span style="vertical-align: middle;">&nbsp;&nbsp;Syncing database ('+$scope.downloadProgress+'%)</span></button>'});
+
+                        })
+                  });
+            }
 
             $scope.import = function(importData) { 
                   if($cordovaNetwork.isOffline()){
                         $cordovaToast.show('Please Check your network connection', 'short', 'center');
                         return;
                   }else {
+                        getPicturesCount();
+                        getNominalCount();
+                        getSatsangAttendanceCount();
                         $scope.importDatabase('Connecting To Server');
-                        var trustHosts = true;
-                        var downloadOptions = {};
-                        var targetPath = $rootScope.baseAppDir + 'download.zip';
-                        var url = $scope.serverURlPrefix + SCMS_SERVER_DOWNLOAD_URL;
+                        $scope.trustHosts = true;
+                        $scope.downloadOptions = {};
+                        $scope.targetPath = $rootScope.baseAppDir + 'database.sqlite';
+                        $scope.url = $scope.serverURlPrefix + SCMS_SERVER_DOWNLOAD_URL;
                         var serverUrl = importData.server_url;
                         var config = 1;
                         picAndDatabaseTransferService.getTokenFromServer(importData.username, importData.password, config, serverUrl).then(function(response) {
                               var accessToken = "bearer " + response.data.signature;
                               var headers = {'Authorization': accessToken};         
-                              downloadOptions.headers = headers;
-                              $scope.importDatabase('Downloading Database (0%)');
-                              $cordovaFileTransfer.download(url, targetPath, downloadOptions, trustHosts)
-                              .then(function(result) { 
-                                    unzip();
-                              }, function(err) {
-                                    $scope.cancelLoading();
-                              }, function (progress) {
-                                    $timeout(function () {
-                                          $scope.downloadProgress = Math.floor((progress.loaded / progress.total) * 100);
-                                          $ionicLoading.show({ scope: $scope, template: '<button class="button button-clear btn-animation" style="color: #FFFFFF;"><ion-spinner icon="lines" class="spinner-calm"></ion-spinner><br><span style="vertical-align: middle;">&nbsp;&nbsp;Downloading Database ('+$scope.downloadProgress+'%)</span></button>'});
-
-                                    });
-                              });
-                              authService.setToken(accessToken);
+                              $scope.downloadOptions.headers = headers;
+                              $timeout(function() {                        
+                                    if($scope.attendanceCount > 0 || $scope.nominalCount > 0 || $scope.picturesCount > 0){
+                                          syncDB(accessToken);
+                                    }else {
+                                          downloadDB($scope.url,$scope.targetPath,$scope.downloadOptions,$scope.trustHosts, accessToken);
+                                    }
+                              }, 500);
+                              
                         }, function(err) {
                               $timeout(function() {
                                     switch (err.status) {
@@ -87,21 +233,10 @@
                   }                 
             }
 
-            var unzip = function() {
-                  var path = $rootScope.baseAppDir + 'download.zip';
-                  $cordovaZip
-                  .unzip(
-                        path, 
-                        $rootScope.baseAppDir 
-                        ).then(function (res) {
-                             CopyPicturesandDatabaseToImport();
-                        }, function (err) {
-                        }, function (progressEvent) {
-                        });                
-            }
+            
 
             var CopyPicturesandDatabaseToImport = function() {
-                  $cordovaFile.moveFile($rootScope.baseAppDir + 'database/', "database.sqlite", $rootScope.baseAppDir + 'import/')
+                  $cordovaFile.moveFile($rootScope.baseAppDir, "database.sqlite", $rootScope.baseAppDir + 'import/')
                   .then(function (success) {
                         var dataBasePath = $rootScope.baseAppDir + 'import/';
                         var dbName = 'database.sqlite';
@@ -110,11 +245,7 @@
                               if(ionic.Platform.isIOS()) {
                                     copyDatabaseToInternalMemory();
                               }else {
-                                    //$rootScope.db.close(function() {
-                                          copyDatabaseToInternalMemory();
-                                    // }, function(error) {
-                                    //       $log.debug('ERROR closing database');
-                                    // }); 
+                                    copyDatabaseToInternalMemory();                                   
                               }
                                                                  
                         }, function(err) {
@@ -124,15 +255,6 @@
 
                   });
             } 
-
-            var deleteDatabaseFolder = function() {
-                  var path = $rootScope.baseAppDir;
-                  $cordovaFile.removeRecursively(path, "database")
-                  .then(function (success) {
-                  }, function (error) {
-                  });
-            }
-
             var copyDatabaseToInternalMemory = function() {
                   var dataBasePath = $rootScope.baseAppDir + 'import/';
                   var dbName = 'database.sqlite';
@@ -156,7 +278,6 @@
                                     }else {
                                           authService.setDatabaseNotFound('no-error');
                                           $state.go('app');
-                                          deleteDatabaseFolder();
                                     }
                               }, 1000);
                         });
@@ -167,7 +288,7 @@
       setup();
 };
 
-ImportDatabaseAndPicController.$inject  = ['$log', '$scope', '$cordovaSQLite', '$state', 'authService', '$cordovaToast', '$ionicPopup', 'bcrypt', 'cfpLoadingBar', '$ionicHistory', 'picAndDatabaseTransferService', '$cordovaZip', '$cordovaFileTransfer', '$timeout', '$cordovaFile', '$rootScope', '$cordovaNetwork', 'SCMS_SERVER_DOWNLOAD_URL', '$ionicLoading'];
+ImportDatabaseAndPicController.$inject  = ['$log', '$scope', '$cordovaSQLite', '$state', 'authService', '$cordovaToast', '$ionicPopup', 'bcrypt', 'cfpLoadingBar', '$ionicHistory', 'picAndDatabaseTransferService', '$cordovaZip', '$cordovaFileTransfer', '$timeout', '$cordovaFile', '$rootScope', '$cordovaNetwork', 'SCMS_SERVER_DOWNLOAD_URL', '$ionicLoading', '$filter', 'SCMS_SERVER_UPLOAD_URL'];
 
 angular
 .module('SCMS_ATTENDANCE')
