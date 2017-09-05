@@ -3,7 +3,7 @@
       /**
       * Satsang_Day_Attendance Controller
       **/
-      var NominalRollsController = function($log, $timeout, $scope, $state, $ionicHistory, $cordovaSQLite, $ionicPopover, $ionicModal, $filter, ionicDatePicker, $rootScope, nominalRollsService, $cordovaToast, $ionicActionSheet, cfpLoadingBar) {
+      var NominalRollsController = function($log, $timeout, $scope, $state, $ionicHistory, $cordovaSQLite, $ionicPopover, $ionicModal, $filter, ionicDatePicker, $rootScope, nominalRollsService, $cordovaToast, $ionicActionSheet, cfpLoadingBar, $ionicPopup) {
             var setup = function() {
                   $log.debug("Nominal Rolls Controller");
                   $scope.nominals = [];
@@ -65,7 +65,7 @@
             }
 
             $scope.getListForNominalRolls = function(){
-                  var query =  "select nr.*, (CASE WHEN v.id NOTNULL THEN v.name ELSE 'null' END) AS vehicle_type, s.name as sewa_name, d.name as jatha_name from nominal_roles AS nr left join vehicles as v ON v.id = nr.vehicle_id left join sewas as s ON s.id = nr.sewa_id left join departments as d ON d.id = nr.department_id";
+                  var query =  "select nr.*, (CASE WHEN v.id NOTNULL THEN v.name ELSE 'null' END) AS vehicle_type, s.name as sewa_name, d.name as jatha_name from nominal_roles AS nr left join vehicles as v ON v.id = nr.vehicle_id left join sewas as s ON s.id = nr.sewa_id left join departments as d ON d.id = nr.department_id  where nr.status <> 'deleted'";
                   getNominalRollsData(query); 
             };
             $scope.viewAndMarkAttendanceNominal = function(nominal) {
@@ -74,9 +74,9 @@
                               nominalRollsService.setNominalRollsData(nominal);
                               $state.go('nominal_rolls-list', {id: nominal.id, status: nominal.status});
                               return true;
-                        // case 'dispatched':
-                        //       $cordovaToast.show('Nominal Roll Already Dispatched ', 'short', 'center');                        
-                        //       return true;
+                        case 'dispatched':
+                              $cordovaToast.show('Nominal Roll Already Dispatched ', 'short', 'center');                        
+                              return true;
                         default:
                               $cordovaToast.show('You cannot add sewadar until approved ', 'short', 'center');                        
                   }
@@ -213,7 +213,7 @@
                         $scope.buttonText = [                   
                               {text: '<i class="icon ion-plus-circled"></i> Add Sewadars'},
                               {text : '<i class="icon ion-edit"></i> Edit Nominal Roll '},
-                              //{text : '<i class="icon ion-paper-airplane"></i> Mark As Dispatched'}
+                              {text : '<i class="icon ion-paper-airplane"></i> Mark As Dispatched'}
                         ];
                   } else {
                         $scope.buttonText = [
@@ -243,14 +243,44 @@
                                           nominalRollsService.setNominalRollsData(nominal);
                                           $state.go('addedit-nominal_rolls', {action: 'edit',id: nominal.id, user: ''});
                                           return true;
-                                    // case '<i class="icon ion-paper-airplane"></i> Mark As Dispatched' :
-                                    //       nominal.status = 'dispatched';
-                                    //       var query = "UPDATE nominal_roles SET status = 'dispatched' WHERE id = '"+nominal.id+"'";
-                                    //       updateNominal(query);
-                                    //       nominalRollsService.setNominalRollsData(nominal);
-                                    //       return true;
+                                    case '<i class="icon ion-paper-airplane"></i> Mark As Dispatched' :
+                                          var msgDispatched = "After dispached you will not able to add more sewadars or modify this nominal roll. Confirm to Proceed. ";
+                                          showConfirm(msgDispatched, nominal);
+                                          return true;
                               }
                         }
+                  });
+            }
+
+
+            var showConfirm = function(str, nominal) { 
+                  $ionicPopup.confirm({
+                        title: 'Please Confirm',
+                        template: str,
+                        cssClass: 'confirm-delete',
+                        buttons:[    
+                        {
+                              text: "Cancel",
+                              type: 'button-balanced',
+                              onTap: function(){                                              
+                              }
+                        },
+                        {
+                              text: 'OK',
+                              type: 'button-positive',
+                              onTap: function(){
+                                    markAsDispatched(nominal);
+                              }
+                        }]
+                  });                
+            }; 
+
+            var markAsDispatched = function(nominal) {
+                  nominal.status = 'dispatched';
+                  var query = "UPDATE nominal_roles SET status = 'dispatched' WHERE id ="+nominal.id;
+                  $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
+                        nominalRollsService.setNominalRollsData(nominal);
+                  }, function(err){
                   });
             }
 
@@ -264,7 +294,7 @@
             setup();
       };
 
-      NominalRollsController.$inject  = ['$log', '$timeout', '$scope', '$state', '$ionicHistory', '$cordovaSQLite', '$ionicPopover', '$ionicModal', '$filter', 'ionicDatePicker', '$rootScope', 'nominalRollsService', '$cordovaToast', '$ionicActionSheet', 'cfpLoadingBar'];
+      NominalRollsController.$inject  = ['$log', '$timeout', '$scope', '$state', '$ionicHistory', '$cordovaSQLite', '$ionicPopover', '$ionicModal', '$filter', 'ionicDatePicker', '$rootScope', 'nominalRollsService', '$cordovaToast', '$ionicActionSheet', 'cfpLoadingBar', '$ionicPopup'];
 
       angular
       .module('SCMS_ATTENDANCE')

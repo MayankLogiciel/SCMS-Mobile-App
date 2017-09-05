@@ -50,7 +50,6 @@
                                     }
                               }
                         }
-                        console.log($scope.nominals);
                   });
             }
 
@@ -114,7 +113,7 @@
                       return; 
                   } else {   
                         var msg = "All assigned sewadars will be deleted with this Nominal Roll. Confirm to Proceed.";
-                        showDeleteConfirm(msg);
+                        showConfirm(msg);
                   }
             }
 
@@ -190,6 +189,7 @@
 
             $scope.quickActions = function(nominal) {
                   var msg = "All assigned sewadars will be deleted with this Nominal Roll. Confirm to Proceed.";
+                  var msgDispatched = "After dispached you will not able to add more sewadars or modify this nominal roll. Confirm to Proceed. ";
                   var approved_by_group_id = authService.getLoggedInUserData();
                   var txt = '';
                   if(nominal.status == 'Approved') {
@@ -197,17 +197,16 @@
                               {text: '<i class="icon ion-ios-close icon-space"></i>Remove Approval'},
                               {text : '<i class="icon ion-edit"></i> Edit Nominal Roll'},
                               {text : '<i class="icon ion-trash-a del-nominal-on-tab"></i> Delete Nominal Roll'},
-                              //{text : '<i class="icon ion-paper-airplane"></i> Mark As Dispatched'}
+                              {text : '<i class="icon ion-paper-airplane"></i> Mark As Dispatched'}
                         ];
                         txt = 'pending';
                   }
-                  // else if(nominal.status == 'dispatched') {
-                  //       $scope.buttonText = [
-                  //             {text : '<i class="icon ion-edit"></i> Edit Nominal Roll'},
-                  //             {text : '<i class="icon ion-trash-a del-nominal-on-tab"></i> Delete Nominal Roll'}
-                  //       ];
-
-                  // }
+                  else if(nominal.status == 'dispatched') {
+                        $scope.buttonText = [
+                              {text : '<i class="icon ion-edit"></i> Edit Nominal Roll'},
+                              {text : '<i class="icon ion-trash-a del-nominal-on-tab"></i> Delete Nominal Roll'}
+                        ];
+                  }
                   else {
                         $scope.buttonText = [                   
                               {text: '<i class="icon ion-checkmark-circled icon-space"></i>Mark As Approved'},
@@ -247,16 +246,11 @@
                                           $state.go('addedit-nominal_rolls', {action: 'edit',id: nominal.id, user: 'secretary'});
                                           return true;  
                                     case '<i class="icon ion-trash-a del-nominal-on-tab"></i> Delete Nominal Roll' : 
-                                         showDeleteConfirm(msg, nominal.id);
+                                         showConfirm(msg, nominal.id, 'deleted');
                                           return true; 
-                                    // case '<i class="icon ion-paper-airplane"></i> Mark As Dispatched' :
-                                    //       nominal.status = 'dispatched';
-                                    //       nominal.isSelected = true;
-                                    //       var query = "UPDATE nominal_roles SET status = 'dispatched' WHERE id = '"+nominal.id+"'";
-                                    //       $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
-                                    //       }, function(err){
-                                    //       });
-                                    //       return true;
+                                    case '<i class="icon ion-paper-airplane"></i> Mark As Dispatched' :
+                                          showConfirm(msgDispatched, nominal, 'dispatched');                                          
+                                          return true;
                                     case '<i class="icon ion-ios-close icon-space"></i>Remove Approval' :
                                           nominal.status = txt;
                                           nominal.isSelected = false;
@@ -276,17 +270,17 @@
             //       var checkAttendanceInNominalRollQuery = "select * from attendances where nominal_roll_id = " + nominalId;
             //       $cordovaSQLite.execute($rootScope.db, checkAttendanceInNominalRollQuery).then(function(res) {
             //             // if(res.rows.length > 0) {
-            //             //       showDeleteConfirm(msgForNominalAndAttendace, nominalId, 'key')
+            //             //       showConfirm(msgForNominalAndAttendace, nominalId, 'key')
             //             // } else {
-            //             //       showDeleteConfirm(msgForNominal, nominalId)
+            //             //       showConfirm(msgForNominal, nominalId)
             //             // }
-            //             showDeleteConfirm(msg, nominalId);
+            //             showConfirm(msg, nominalId);
             //       }, function(err){
             //       });
             // }
 
 
-            var showDeleteConfirm = function(str, n_id, key) {                             
+            var showConfirm = function(str, n_id, key) { 
                   $ionicPopup.confirm({
                         title: 'Please Confirm',
                         template: str,
@@ -299,27 +293,53 @@
                               }
                         },
                         {
-                              text: "Delete",
+                              text: (key == 'deleted') ? 'Delete' : 'OK',
                               type: 'button-positive',
                               onTap: function(){
-                                    deleteNominalRoll(n_id);
+                                    switch(key) {
+                                          case 'deleted': 
+                                                deleteNominalRoll(n_id);
+                                                return true;
+                                          case 'dispatched': 
+                                                markAsDispatched(n_id);
+                                                return true;
+                                    }                                      
                               }
                         }]
                   });                
             }; 
 
+
+            var markAsDispatched = function(nominal) {
+                  nominal.status = 'dispatched';
+                  nominal.isSelected = true;
+                  var query = "UPDATE nominal_roles SET status = 'dispatched' WHERE id ="+nominal.id;
+                  $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
+                  }, function(err){
+                  });
+            }
+
             var deleteNominalRoll = function(n_id) {
-                  //if($scope.isUserSecretary) {
-                        var deleteNominalRollQuery = " delete from nominal_roles where id =" + n_id;
-                        $cordovaSQLite.execute($rootScope.db, deleteNominalRollQuery).then(function(res) {
-                              for(var i=0; i <$scope.nominals.length; i++) {
-                                    if($scope.nominals[i].id == n_id) {
-                                          deleteNominalRollAttendance(n_id);
-                                          $scope.nominals.splice(i,true);
-                                    }
+                  var query = "UPDATE nominal_roles SET status = 'deleted' WHERE id ="+n_id;
+                  $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
+                        for(var i=0; i <$scope.nominals.length; i++) {
+                              if($scope.nominals[i].id == n_id) {
+                                    $scope.nominals.splice(i,true);
                               }
-                              $cordovaToast.show('Nominal Roll Delete successfully', 'short', 'center');         
-                        });
+                        }                      
+                  }, function(err){
+                  });
+                  //if($scope.isUserSecretary) {
+                        // var deleteNominalRollQuery = " delete from nominal_roles where id =" + n_id;
+                        // $cordovaSQLite.execute($rootScope.db, deleteNominalRollQuery).then(function(res) {
+                        //       for(var i=0; i <$scope.nominals.length; i++) {
+                        //             if($scope.nominals[i].id == n_id) {
+                        //                   deleteNominalRollAttendance(n_id);
+                        //                   $scope.nominals.splice(i,true);
+                        //             }
+                        //       }
+                        //       $cordovaToast.show('Nominal Roll Delete successfully', 'short', 'center');         
+                        // });
                  // }
                   // else {
                   //        $scope.nominals.ids = $filter('nominalFilter')($scope.nominals,'isSelected');  
@@ -334,29 +354,33 @@
             } 
 
             var deleteNominalRollAttendance = function(n_id) {
-                  console.log("hello");
-                  var deleteNominalRollAttendanceQuery = " delete from attendances where nominal_roll_id =" + n_id;
-                  $cordovaSQLite.execute($rootScope.db, deleteNominalRollAttendanceQuery).then(function(res) {   
-                        console.log("success==>", res);                            
+                  var query = "UPDATE attendances SET status = 'deleted' WHERE nominal_roll_id =" + n_id;
+                  $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
                   }, function(err){
-                        console.log("error==>", err);
                   });
+                  // console.log("hello");
+                  // var deleteNominalRollAttendanceQuery = " delete from attendances where nominal_roll_id =" + n_id;
+                  // $cordovaSQLite.execute($rootScope.db, deleteNominalRollAttendanceQuery).then(function(res) {   
+                  //       console.log("success==>", res);                            
+                  // }, function(err){
+                  //       console.log("error==>", err);
+                  // });
             }  
 
-            var deleteNominalRollAttendanceForMultiNominals = function() {
-                  $scope.nominals.ids = $filter('nominalFilter')($scope.nominals,'isSelected');
-                  for(var i = 0; i<$scope.nominals.ids.length; i++) {
-                        var deleteQuery = "delete from attendances where nominal_roll_id = '"+$scope.nominals.ids[i]+"'";
-                        $cordovaSQLite.execute($rootScope.db, deleteQuery).then(function(res) {
-                              $cordovaToast.show('nominal rolls deleted', 'short', 'center');
-                        });
-                  }
-            }   
+            // var deleteNominalRollAttendanceForMultiNominals = function() {
+            //       $scope.nominals.ids = $filter('nominalFilter')($scope.nominals,'isSelected');
+            //       for(var i = 0; i<$scope.nominals.ids.length; i++) {
+            //             var deleteQuery = "delete from attendances where nominal_roll_id = '"+$scope.nominals.ids[i]+"'";
+            //             $cordovaSQLite.execute($rootScope.db, deleteQuery).then(function(res) {
+            //                   $cordovaToast.show('nominal rolls deleted', 'short', 'center');
+            //             });
+            //       }
+            // }   
 
             $scope.getListForNominalRolls = function(){
                   var dbName = 'database.sqlite';
                   $rootScope.db = $cordovaSQLite.openDB({name: dbName, location: 'default'}); 
-                  var query =  "select nr.*, (CASE WHEN v.id NOTNULL THEN v.name ELSE 'null' END) AS vehicle_type, s.name as sewa_name, d.name as jatha_name from nominal_roles AS nr left join vehicles as v ON v.id = nr.vehicle_id left join sewas as s ON s.id = nr.sewa_id left join departments as d ON d.id = nr.department_id";
+                  var query =  "select nr.*, (CASE WHEN v.id NOTNULL THEN v.name ELSE 'null' END) AS vehicle_type, s.name as sewa_name, d.name as jatha_name from nominal_roles AS nr left join vehicles as v ON v.id = nr.vehicle_id left join sewas as s ON s.id = nr.sewa_id left join departments as d ON d.id = nr.department_id where nr.status <> 'deleted'";
                   getNominalRollsData(query);
             };            
             setup();
