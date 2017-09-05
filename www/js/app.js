@@ -40,9 +40,19 @@ angular.module('SCMS_ATTENDANCE', ['ionic', 'ngCordova', 'validation', 'validati
             var createFolder = function() {
                   $cordovaFile.createDir($rootScope.baseAppDir, "import", false)
                   .then(function (success) {
+                        createFolderForPics();
                         checkDBAndCopy();
                   }, function (error) {
                         checkDBAndCopy();
+                  });
+            }
+
+
+            var createFolderForPics = function() {
+                  $cordovaFile.createDir($rootScope.baseAppDir + "import/", "sewadar_pics" , false)
+                  .then(function (success) {                       
+                  }, function (error) {                       
+                       
                   });
             }
 
