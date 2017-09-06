@@ -190,9 +190,12 @@
                         $cordovaToast.show('Please Check your network connection', 'short', 'center');
                         return;
                   }else {
-                        getPicturesCount();
-                        getNominalCount();
-                        getSatsangAttendanceCount();
+                        $scope.DBErr = authService.getDatabaseNotFound();                 
+                        if($scope.DBErr != 'error') {
+                              getPicturesCount();
+                              getNominalCount();
+                              getSatsangAttendanceCount();
+                        }
                         $scope.importDatabase('Connecting To Server');
                         $scope.trustHosts = true;
                         $scope.downloadOptions = {};
