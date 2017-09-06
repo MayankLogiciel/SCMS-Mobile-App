@@ -73,7 +73,7 @@
                         if(res.rows.length > 0) {
                               for(var i= 0; i<res.rows.length; i++) { 
                                     $scope.nominals.push(res.rows.item(i)); 
-                                    if(res.rows.item(i).status == 'Approved' || res.rows.item(i).status == 'dispatched') {
+                                    if(res.rows.item(i).status == 'Approved' || res.rows.item(i).status == 'approved' || res.rows.item(i).status == 'dispatched') {
                                           $scope.nominalAprroveList.push(res.rows.item(i)); 
                                     }
                               }  
