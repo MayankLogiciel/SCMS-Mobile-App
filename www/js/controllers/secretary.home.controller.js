@@ -103,19 +103,19 @@
             }
 
 
-            $scope.markForDelete = function () {
-                  if($scope.nominals.length <= 0) {
-                        $cordovaToast.show('There is no nominal roll to delete ', 'short', 'center'); 
-                        return;   
-                  }
-                  else if($scope.nominals.length > 0 && $scope.deleteCount <= 0) {
-                      $cordovaToast.show('Please select atleast one nominal roll ', 'short', 'center'); 
-                      return; 
-                  } else {   
-                        var msg = "All assigned sewadars will be deleted with this Nominal Roll. Confirm to Proceed.";
-                        showConfirm(msg);
-                  }
-            }
+            // $scope.markForDelete = function () {
+            //       if($scope.nominals.length <= 0) {
+            //             $cordovaToast.show('There is no nominal roll to delete ', 'short', 'center'); 
+            //             return;   
+            //       }
+            //       else if($scope.nominals.length > 0 && $scope.deleteCount <= 0) {
+            //           $cordovaToast.show('Please select atleast one nominal roll ', 'short', 'center'); 
+            //           return; 
+            //       } else {   
+            //             var msg = "All assigned sewadars will be deleted with this Nominal Roll. Confirm to Proceed.";
+            //             showConfirm(msg);
+            //       }
+            // }
 
             $scope.logOut = function() {
                   localStorage.removeItem("SCMS_user");
@@ -192,7 +192,7 @@
                   var msgDispatched = "After dispached you will not able to add more sewadars or modify this nominal roll. Confirm to Proceed. ";
                   var approved_by_group_id = authService.getLoggedInUserData();
                   var txt = '';
-                  if(nominal.status == 'Approved') {
+                  if(nominal.status == 'Approved' || nominal.status == 'approved') {
                         $scope.buttonText = [
                               {text: '<i class="icon ion-ios-close icon-space"></i>Remove Approval'},
                               {text : '<i class="icon ion-edit"></i> Edit Nominal Roll'},
@@ -203,9 +203,11 @@
                   }
                   else if(nominal.status == 'dispatched') {
                         $scope.buttonText = [
+                              {text: '<i class="icon ion-checkmark-circled icon-space"></i>Mark As Approved'},
                               {text : '<i class="icon ion-edit"></i> Edit Nominal Roll'},
                               {text : '<i class="icon ion-trash-a del-nominal-on-tab"></i> Delete Nominal Roll'}
                         ];
+                        txt = 'Approved';
                   }
                   else {
                         $scope.buttonText = [                   
