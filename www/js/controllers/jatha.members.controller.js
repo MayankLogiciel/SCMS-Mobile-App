@@ -130,105 +130,68 @@
                  
             }; 
             $scope.addMaleSewadars = function() {
+                  $scope.current = $filter('date')(new Date(), 'yyyy-MM-dd h:mm:ss');
+                  var type = 'nominal_roll';
+                  var batch_type = 'permanent';
+                  $scope.refId = (new Date())/1000|0; 
+                  var sewadar_type = 'permanent';
+                  var Insertquery;
+                  var date = new Date($scope.startDate); 
+                  var nominalAttendanceDate = date;  
                   if($scope.maleSelectedCount <= 0) {
                         $cordovaToast.show('There is no sewadar to add ', 'short', 'center'); 
                         return;   
                   }else {
                         $scope.initialValueMale = 0;
                         $scope.maleIdsLength = $scope.maleIds.length;
-                        $scope.days = $scope.diffDays + 1;
-                        numberOfMaleToAdd(0, $scope.maleIdsLength)
+                        console.log($scope.maleIdsLength);
+                        for(var i =0; i< $scope.maleIdsLength; i++) {
+                              var reference_id = $scope.refId+$scope.maleIds[i];
+                              Insertquery = "INSERT INTO attendances('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id') VALUES ('"+nominalAttendanceDate+"','"+$scope.maleIds[i]+"','"+$scope.nominalRollsData.sewa_id+"', '"+reference_id+"', '"+type+"', '"+batch_type+"','"+$scope.current+"','"+$scope.current+"', '"+sewadar_type+"','"+$scope.nominalRollsData.id+"')";
+                              $cordovaSQLite.execute($rootScope.db, Insertquery).then(function(res) {
+                                          $cordovaToast.show('Sewadar added', 'short', 'center'); 
+                                          $scope.maleSelectedCount = 0;
+                                          $state.go('nominal_rolls-list', {id: $scope.nominalRollsData.id, status: 'Approved'});
+                
+                              }, function(err) { 
+                                    console.log(err);                 
+                              }); 
+                        }
+
                   }                 
             };
-            var numberOfMaleToAdd = function(c, l) {
-                  if(c < l) {
-                        howManyTimeMaleSewadarAdd(0, $scope.days);
-                  }else {
-                        $cordovaToast.show('Sewadar added', 'short', 'center'); 
-                        $scope.maleSelectedCount = 0;
-                        $state.go('nominal_rolls-list', {id: $scope.nominalRollsData.id, status: 'Approved'}); 
-                  }
-            }
-            
-            var howManyTimeMaleSewadarAdd = function (c, l) {
-                  if(c < l) {
-                        addMaleSewadarsNested(c);
-                  }else {
-                       numberOfMaleToAdd(++$scope.initialValueMale, $scope.maleIdsLength);
-                  }
-            }
-            var addMaleSewadarsNested = function(i) { 
+
+
+            $scope.addFemaleSewadars = function() {
                   $scope.current = $filter('date')(new Date(), 'yyyy-MM-dd h:mm:ss');
                   var type = 'nominal_roll';
                   var batch_type = 'permanent';
                   $scope.refId = (new Date())/1000|0; 
-                  var reference_id = $scope.refId;
                   var sewadar_type = 'permanent';
                   var Insertquery;
-                  var date = new Date($scope.startDate);                 
-                  var nominalAttendanceDate= $filter('date')(new Date(date.setDate(date.getDate() + (i))), 'yyyy-MM-dd');
-                  Insertquery = "INSERT INTO attendances('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id') VALUES ('"+nominalAttendanceDate+"','"+$scope.maleIds[$scope.initialValueMale]+"','"+$scope.nominalRollsData.sewa_id+"', '"+reference_id+"', '"+type+"', '"+batch_type+"','"+$scope.current+"','"+$scope.current+"', '"+sewadar_type+"','"+$scope.nominalRollsData.id+"')";
-                  $cordovaSQLite.execute($rootScope.db, Insertquery).then(function(res) {
-                        if(i == 0) {                              
-                              howManyTimeMaleSewadarAdd(i+1, $scope.days);
-                        }else{
-                              howManyTimeMaleSewadarAdd(i+1, $scope.days);
-                        }
-                  }, function(err) {                  
-                  }); 
-            };
-
-            $scope.addFemaleSewadars = function() {
+                  var date = new Date($scope.startDate); 
+                  var nominalAttendanceDate = date;  
                   if($scope.femaleSelectedCount <= 0) {
                         $cordovaToast.show('There is no sewadar to add ', 'short', 'center'); 
                         return;   
                   }else {
                         $scope.initialValueFemale = 0;
                         $scope.femaleIdsLength = $scope.femaleIds.length;
-                        $scope.days = $scope.diffDays + 1;
-                        numberOfFemaleToAdd(0, $scope.femaleIdsLength)
+                        for(var i =0; i<$scope.femaleIdsLength; i++) {
+                              var reference_id = $scope.refId+$scope.femaleIds[i];
+                              Insertquery = "INSERT INTO attendances('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id') VALUES ('"+nominalAttendanceDate+"','"+$scope.femaleIds[i]+"','"+$scope.nominalRollsData.sewa_id+"', '"+reference_id+"', '"+type+"', '"+batch_type+"','"+$scope.current+"','"+$scope.current+"', '"+sewadar_type+"','"+$scope.nominalRollsData.id+"')";
+                              $cordovaSQLite.execute($rootScope.db, Insertquery).then(function(res) {
+                                          $cordovaToast.show('Sewadar added', 'short', 'center'); 
+                                          $scope.femaleSelectedCount = 0;
+                                          $state.go('nominal_rolls-list', {id: $scope.nominalRollsData.id, status: 'Approved'});
+                                   
+                              }, function(err) { 
+                              }); 
+                        }
+
                   }                 
             };
-            var numberOfFemaleToAdd = function(c, l) {
-                  if(c < l) {
-                        howManyTimeFemaleSewadarAdd(0, $scope.days);
-                  }else {
-                        $cordovaToast.show('Sewadar added', 'short', 'center'); 
-                        $scope.femaleSelectedCount = 0;
-                        $state.go('nominal_rolls-list', {id: $scope.nominalRollsData.id, status: 'Approved'}); 
-                  }
-            }
-            
-            var howManyTimeFemaleSewadarAdd = function (c, l) {
-                  if(c < l) {
-                        addFemaleSewadarsNested(c);
-                  }else {
-                       numberOfFemaleToAdd(++$scope.initialValueFemale, $scope.femaleIdsLength);
-                  }
-            }
-
-
-            var addFemaleSewadarsNested = function(i) {
-                  $scope.current = $filter('date')(new Date(), 'yyyy-MM-dd h:mm:ss');
-                  var type = 'nominal_roll';
-                  var batch_type = 'permanent';
-                  $scope.refId = (new Date())/1000|0; 
-                  var reference_id = $scope.refId;
-                  var sewadar_type = 'permanent';
-                  var Insertquery;
-                  var date = new Date($scope.startDate); 
-                  var nominalAttendanceDate= $filter('date')(new Date(date.setDate(date.getDate() + (i))), 'yyyy-MM-dd');
-                  Insertquery = "INSERT INTO attendances('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id') VALUES ('"+nominalAttendanceDate+"','"+$scope.femaleIds[$scope.initialValueFemale]+"','"+$scope.nominalRollsData.sewa_id+"', '"+reference_id+"', '"+type+"', '"+batch_type+"','"+$scope.current+"','"+$scope.current+"', '"+sewadar_type+"','"+$scope.nominalRollsData.id+"')";
-                  $cordovaSQLite.execute($rootScope.db, Insertquery).then(function(res) {
-                        if(i == 0) {                              
-                              howManyTimeFemaleSewadarAdd(i+1, $scope.days);
-                        }else{
-                              howManyTimeFemaleSewadarAdd(i+1, $scope.days);
-                        }
-                  }, function(err) {                  
-                  }); 
-            };
-
+           
             $scope.markSelected = function (member, type) { 
                  
                   if(member.isSelected == true && type == 'male') {                        
@@ -305,8 +268,7 @@
                               $scope.femaleMembers[i].isImageFound = false;
                         });  
                   });
-            }
-            
+            }           
 
             setup();
       };
