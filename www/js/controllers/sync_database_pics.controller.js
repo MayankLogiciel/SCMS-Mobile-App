@@ -380,11 +380,18 @@
                         var dbName = 'database.sqlite';
                         var dataBaseFilePath = dataBasePath + dbName;
                         window.plugins.sqlDB.remove(dbName, 0, function(res) {
-                              copyDatabaseToInternalMemory();                                   
+                              $rootScope.db.close(function() {
+                                    copyDatabaseToInternalMemory();
+                              }, function(error) {
+                                    $log.debug('ERROR closing database');
+                              });
+
                         }, function(err) {
+
                               copyDatabaseToInternalMemory();
                         });
                   }, function (error) {
+
                   });
 
             } 

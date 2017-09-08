@@ -71,7 +71,6 @@
 
 
             var downloadDB = function(url,targetPath,downloadOptions,trustHosts, accessToken) {
-                  console.log(accessToken);
                   $scope.importDatabase('Preparing Database');
                   $cordovaFileTransfer.download(url, targetPath, downloadOptions, trustHosts)
                   .then(function(result) { 
@@ -133,12 +132,9 @@
             }
 
             var copiedDataInExport = function(path,dbName, accessToken) {
-                 // console.log(path,dbName,accessToken);
                   var trustAllHosts = true;
                   var url = encodeURI($scope.serverURlPrefix + SCMS_SERVER_UPLOAD_URL);
-                  console.log(url);
                   var targetPath = path + dbName;
-                  console.log(targetPath);
                   var filename = targetPath.split("/").pop();
                   var options = {
                         fileKey: "upload",
@@ -153,7 +149,6 @@
                   $cordovaFileTransfer.upload(url, targetPath, options, trustAllHosts).then(function(result) {
                         downloadDB($scope.url,$scope.targetPath,$scope.downloadOptions,$scope.trustHosts, accessToken);
                   }, function(err) {
-                        console.log(err);
                         $scope.cancelLoading();
                         $timeout(function() {
                               switch(err.http_status) {
@@ -245,13 +240,14 @@
                         var dbName = 'database.sqlite';
                         var dataBaseFilePath = dataBasePath + dbName;
                         window.plugins.sqlDB.remove(dbName, 0, function(res) {
-                              if(ionic.Platform.isIOS()) {
+                              $rootScope.db.close(function() {
                                     copyDatabaseToInternalMemory();
-                              }else {
-                                    copyDatabaseToInternalMemory();                                   
-                              }
-                                                                 
+                              }, function(error) {
+                                    $log.debug('ERROR closing database');
+                              });
+
                         }, function(err) {
+
                               copyDatabaseToInternalMemory();
                         });
                   }, function (error) {
