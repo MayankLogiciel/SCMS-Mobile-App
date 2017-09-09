@@ -71,6 +71,7 @@
             $scope.$on('$ionicView.enter', function() {
                   $scope.getListFromSewadarsForAttendance();
                   cfpLoadingBar.start();
+                  
             }); 
             $scope.goBack = function() {
                   $ionicHistory.goBack();
@@ -166,6 +167,7 @@
                   $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
                         $scope.sewadarPrintList = [];
                         if(res.rows.length > 0) {
+
                               for(var i= 0; i<res.rows.length; i++) { 
                                     $scope.sewadarAttendance.push(res.rows.item(i));                                    
                               } 
@@ -475,7 +477,7 @@
                                           if($scope.incharge.gender == 'F') {
                                                 var tableRow = '<tr height = "28" > <td style="border: 1px solid #000; font-size: 10px; text-align: center;">'+(i+1+offset)+'</td> <td style="border: 1px solid #000; font-size: 10px; padding-left: 5px; width: 125px;">'+$scope.sewadarPrintList[i].name + '</td> <td style="border: 1px solid #000; font-size: 10px; padding-left: 5px; width: 125px;">'+$scope.sewadarPrintList[i].guardian+'</td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;">'+$scope.sewadarPrintList[i].gender+'</td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;">'+$scope.sewadarPrintList[i].age+'</td> <td style="border: 1px solid #000; font-size: 10px; text-overflow:ellipsis; padding-left: 5px">'+$scope.sewadarPrintList[i].address+'</td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;">'+$scope.sewadarPrintList[i].batch_no+'</td> </tr>';
                                                 if(i===22) {
-                                                      var footerRow = '<tr><td colspan = 7>'+footer+'</td></tr><tr height="15"><td colspan = 7></td></tr>';
+                                                      var footerRow = '<tr><td colspan = 7>'+footer+'</td></tr><tr height="20"><td colspan = 7></td></tr>';
                                                       tableRow = tableRow.concat(footerRow);
                                                 }
 

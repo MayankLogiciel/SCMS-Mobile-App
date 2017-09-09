@@ -384,6 +384,7 @@
                                     copyDatabaseToInternalMemory();
                               }, function(error) {
                                     $log.debug('ERROR closing database');
+                                    copyDatabaseToInternalMemory();
                               });
 
                         }, function(err) {

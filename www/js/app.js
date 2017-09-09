@@ -210,7 +210,7 @@ angular.module('SCMS_ATTENDANCE', ['ionic', 'ngCordova', 'validation', 'validati
 
       .state('jatha-members', {
             url: "/jatha-members",
-            cache: true,
+            cache: false,
             templateUrl: 'templates/jatha.members.tabs.html',
             controller: 'JathaMembersController'
                        
