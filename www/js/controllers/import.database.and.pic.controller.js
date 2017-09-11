@@ -19,10 +19,8 @@
                   
             };  
 
-             $scope.syncingDatabase = function(msg) {
+            $scope.syncingDatabase = function(msg) {
                   $ionicLoading.show({ scope: $scope, template: '<button class="button button-clear btn-animation" style="color: #FFFFFF;"><ion-spinner icon="lines" class="spinner-calm"></ion-spinner><br><span style="vertical-align: middle;">&nbsp;&nbsp;'+msg+'</span></button>'});
-
-                 // $ionicLoading.show({ scope: $scope, template: '<div class="btn-animation-sync" style="color: #FFFFFF;"><ion-spinner icon="lines" class="spinner-calm"></ion-spinner><br><span style="vertical-align: middle;">&nbsp;&nbsp;'+msg+'</span><br><br><br><button class ="button button-clear cancel-btn" ng-click="cancelLoading()"><i class="icon ion-close"></i>&nbsp;&nbsp;Cancel</button></div>'});
             }
 
             var getPicturesCount = function() {
@@ -74,7 +72,6 @@
                   $scope.importDatabase('Preparing Database');
                   $cordovaFileTransfer.download(url, targetPath, downloadOptions, trustHosts)
                   .then(function(result) { 
-                        //unzip();
                         CopyPicturesandDatabaseToImport();
                   }, function(err) {
                         $scope.cancelLoading();
@@ -82,14 +79,13 @@
                         $timeout(function () {
                               $scope.downloadProgress = Math.floor((progress.loaded / progress.total) * 100);
                               $ionicLoading.show({ scope: $scope, template: '<button class="button button-clear btn-animation" style="color: #FFFFFF;"><ion-spinner icon="lines" class="spinner-calm"></ion-spinner><br><span style="vertical-align: middle;">&nbsp;&nbsp;Downloading Database ('+$scope.downloadProgress+'%)</span></button>'});
-
                         });
                   });
                   authService.setToken(accessToken);
             } 
 
             var syncDB = function(accessToken) { 
-                  $scope.syncingDatabase('Syncing database (0%)');
+                  $scope.syncingDatabase('Uploading database (0%)');
                   $scope.createExportFolder(accessToken);                  
             }   
 
@@ -113,7 +109,6 @@
                   .then(function (success) {
                   }, function (error) {
                         $cordovaFile.createDir($scope.dataBasePath, $scope.folderName, false).then(function (success) {
-                              //SychImageOnlyOrBoth(success.nativeURL);   
                               copyDBToExportFolder(success.nativeURL, accessToken);
                         });
                   });
@@ -173,9 +168,7 @@
                   }, function (progress) {
                         $timeout(function () {
                               $scope.downloadProgress = Math.floor((progress.loaded / progress.total) * 100);
-                              //$ionicLoading.show({ scope: $scope, template: '<div class="btn-animation-sync" style="color: #FFFFFF;"><ion-spinner icon="lines" class="spinner-calm"></ion-spinner><br><span style="vertical-align: middle;">&nbsp;&nbsp;Syncing database ('+$scope.downloadProgress+'%)</span><br><br><br><button class ="button button-clear cancel-btn" ng-click="cancelLoading()"><i class="icon ion-close"></i>&nbsp;&nbsp;Cancel</button></div>'});
-                              $ionicLoading.show({ scope: $scope, template: '<button class="button button-clear btn-animation" style="color: #FFFFFF;"><ion-spinner icon="lines" class="spinner-calm"></ion-spinner><br><span style="vertical-align: middle;">&nbsp;&nbsp;Syncing database ('+$scope.downloadProgress+'%)</span></button>'});
-
+                              $ionicLoading.show({ scope: $scope, template: '<button class="button button-clear btn-animation" style="color: #FFFFFF;"><ion-spinner icon="lines" class="spinner-calm"></ion-spinner><br><span style="vertical-align: middle;">&nbsp;&nbsp;Uploading database ('+$scope.downloadProgress+'%)</span></button>'});
                         })
                   });
             }
@@ -229,9 +222,7 @@
                               }, 500);
                         });
                   }                 
-            }
-
-            
+            }  
 
             var CopyPicturesandDatabaseToImport = function() {
                   $cordovaFile.moveFile($rootScope.baseAppDir, "database.sqlite", $rootScope.baseAppDir + 'import/')
@@ -240,16 +231,8 @@
                         var dbName = 'database.sqlite';
                         var dataBaseFilePath = dataBasePath + dbName;
                         window.plugins.sqlDB.remove(dbName, 0, function(res) {
-                              $rootScope.db.close(function() {
-                                    copyDatabaseToInternalMemory();
-                              }, function(error) {
-                                    $log.debug('ERROR closing database');
-                                    copyDatabaseToInternalMemory();
-                                    
-                              });
-
+                              copyDatabaseToInternalMemory();                           
                         }, function(err) {
-
                               copyDatabaseToInternalMemory();
                         });
                   }, function (error) {
@@ -274,12 +257,11 @@
                               authService.setLoggedInUserData($scope.user[0]);
                               $timeout(function() {
                                     $scope.cancelLoading();
-                                    if($scope.user[0].group_name== 'Secretary') {
-                                          $state.go('secretary-home');
-                                    }else {
+                                    $rootScope.db.close(function() {
                                           authService.setDatabaseNotFound('no-error');
                                           $state.go('app');
-                                    }
+                                          $rootScope.db = $cordovaSQLite.openDB({name: dbName, location: 'default'}); 
+                                    });                                    
                               }, 1000);
                         });
                   }, function(err) {
