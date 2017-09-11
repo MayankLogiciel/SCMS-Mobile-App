@@ -75,7 +75,6 @@ angular.module('SCMS_ATTENDANCE', ['ionic', 'ngCordova', 'validation', 'validati
                               authService.setDatabaseNotFound('error');
                               $rootScope.databaseNotFoundPopup();
                               return true;
-
                         });      
                   }else {
                         window.plugins.sqlDB.checkDbOnStorage(dbName, dataBasePath, function(res) {
