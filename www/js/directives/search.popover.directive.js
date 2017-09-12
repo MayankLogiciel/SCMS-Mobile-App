@@ -14,61 +14,90 @@
                         }else {
                              $scope.timeStampPhoto =  profilePicService.getTimeOfPic();
                         }
-                        $scope.search = function(searchQuery) {
+                        $scope.search = function(searchQuery, type) {
                               if(temp == searchQuery && isPopoverOpen) {
                                     return;
                               }
                               temp = searchQuery;
                               if(!isPopoverOpen) {
-                                   getSewadarList('open', searchQuery); 
+                                   getSewadarList('open', searchQuery, type); 
                               }else {
-                                   getSewadarList('doNotopen', searchQuery); 
+                                   getSewadarList('doNotopen', searchQuery, type); 
                               }
                                                           
                         };   
 
-                        var getSewadarList = function (str, searchQuery) {
-                              if ( !isNaN(searchQuery) && angular.isNumber(+searchQuery)) {
-                                    if(searchQuery.length > 0) {
-                                          var createIndexForBatch = "CREATE INDEX batch_index ON sewadars(batch_no)";
-                                          $cordovaSQLite.execute($rootScope.db, createIndexForBatch).then(function(res1) {
-                                          },function(err) {
-                                          });
-                                          var query = "select * from sewadars INDEXED BY batch_index where batch_no LIKE '"+searchQuery+'%'+"' OR batch_no = '"+searchQuery+"' order by batch_no LIMIT "+$scope.sewadarLimit;
-                                          searchPopoverData(query, str);
-                                    }
-                              } else {
+                        var getSewadarList = function (str, searchQuery, type) {
+                              if(type === 'open-sewadar') {
                                     if(searchQuery.length > 1) {
-                                          var createIndexForName = "CREATE INDEX name_index ON sewadars(name)";
-                                          $cordovaSQLite.execute($rootScope.db, createIndexForName).then(function(res2) {
-                                                
-                                          });
-                                          var query = "select * from sewadars INDEXED BY name_index where name  LIKE '"+'%'+searchQuery+'%'+"' OR name='"+searchQuery+"' order by name LIMIT "+$scope.sewadarLimit;
-                                          searchPopoverData(query, str);
-                                    } else {
-                                          $cordovaToast.show('Please enter atleast 2 characters', 'short', 'center');
+                                          var query = "select * from temp_sewadars where name  LIKE '"+searchQuery+'%'+"' OR name='"+searchQuery+"' order by name LIMIT "+$scope.sewadarLimit;
+                                          searchPopoverData(query, str, type);
+                                    }
 
+                              }else {                                    
+                                    if ( !isNaN(searchQuery) && angular.isNumber(+searchQuery)) {
+                                          if(searchQuery.length > 0) {
+                                                var createIndexForBatch = "CREATE INDEX batch_index ON sewadars(batch_no)";
+                                                $cordovaSQLite.execute($rootScope.db, createIndexForBatch).then(function(res1) {
+                                                },function(err) {
+                                                });
+                                                var query = "select * from sewadars INDEXED BY batch_index where batch_no LIKE '"+searchQuery+'%'+"' OR batch_no = '"+searchQuery+"' order by batch_no LIMIT "+$scope.sewadarLimit;
+                                                searchPopoverData(query, str);
+                                          }
+                                    } else {
+                                          if(searchQuery.length > 1) {
+                                                var createIndexForName = "CREATE INDEX name_index ON sewadars(name)";
+                                                $cordovaSQLite.execute($rootScope.db, createIndexForName).then(function(res2) {
+                                                      
+                                                });
+                                                var query = "select * from sewadars INDEXED BY name_index where name  LIKE '"+'%'+searchQuery+'%'+"' OR name='"+searchQuery+"' order by name LIMIT "+$scope.sewadarLimit;
+                                                searchPopoverData(query, str);
+                                          } else {
+                                                $cordovaToast.show('Please enter atleast 2 characters', 'short', 'center');
+
+                                          }
                                     }
                               }
                         }
 
-                        var searchPopoverData = function(query, str) {                                    
-                              $cordovaSQLite.execute($rootScope.db, query).then(function(res) { 
-                                    $scope.sewadars = [];
-                                    if(res.rows.length > 0) {
-                                          for(var i= 0; i<res.rows.length; i++) { 
-                                                $scope.sewadars.push(res.rows.item(i)); 
+                        var searchPopoverData = function(query, str, type) {
+                              if(type == 'open-sewadar') {
+                                    $cordovaSQLite.execute($rootScope.db, query).then(function(res) { 
+                                          $scope.sewadars = [];
+                                          if(res.rows.length > 0) {
+                                                for(var i= 0; i<res.rows.length; i++) { 
+                                                      $scope.sewadars.push(res.rows.item(i)); 
+                                                } 
+                                                if(str=='open') {                                                
+                                                      $scope.openPopoverForSewadar();
+                                                }                                                                        
+                                          }else {
+                                                $scope.closePopoverForSewadar();
+                                                $cordovaToast.show('No suggestion found', 'short', 'center');
                                           } 
-                                          if(str=='open') {                                                
-                                                $scope.openPopoverForSewadar();
-                                          }  
-                                          findImage();                           
-                                    }else {
-                                          $scope.closePopoverForSewadar();
-                                          $cordovaToast.show('No result found', 'short', 'center');
-                                    } 
-                              }, function (err) { 
-                              });
+                                          //console.log("hello to test");
+                                    }, function (err) {
+                                    });
+
+                              } else {
+                                    $cordovaSQLite.execute($rootScope.db, query).then(function(res) { 
+                                          $scope.sewadars = [];
+                                          if(res.rows.length > 0) {
+                                                for(var i= 0; i<res.rows.length; i++) { 
+                                                      $scope.sewadars.push(res.rows.item(i)); 
+                                                } 
+                                                if(str=='open') {                                                
+                                                      $scope.openPopoverForSewadar();
+                                                }  
+                                                findImage();                           
+                                          }else {
+                                                $scope.closePopoverForSewadar();
+                                                $cordovaToast.show('No result found', 'short', 'center');
+                                          } 
+                                    }, function (err) { 
+                                    });
+                                    
+                              }                                   
                         }
 
                         var findImage = function() {

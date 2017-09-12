@@ -10,6 +10,7 @@
                         <div class="col col-90">
                               <a 
                                     class="item item-avatar item-margin row"
+                                    ng-if = "sewadar.batch_no"
                                     >
                                     <img ng-if='sewadar.photo && sewadar.isImageFound' ng-src="{{imagePath + sewadar.photo}}?{{timeStampPhoto}}" class = "profile-image-in-popover"/>
                                     <img ng-if='!sewadar.photo || !sewadar.isImageFound' ng-src="{{defaultImage}}" class = "profile-image-in-popover"/>
@@ -22,6 +23,23 @@
                                                 {{sewadar.guardian}}  | {{sewadar.batch_no}} 
                                                 <br> 
                                                 {{(sewadar.gender=='M')?'Male':'Female'}} | {{sewadar.department_name}}
+                                          </h2>
+                                    </ion-radio>           
+                              </a>
+                              <a 
+                                    class="item item-avatar item-margin row"
+                                    ng-if = "!sewadar.batch_no"
+                                    >                                    
+                                    <img ng-src="{{defaultImage}}" class = "profile-image-in-popover"/>
+                                    <ion-radio ng-model="selectedSewadar.name"  ng-change='selectedSewadarDetail(sewadar);' ng-value="sewadar.name" class="attendance-to-mark">
+                                          <h2 class="list-content name-on-mob-sewadar">{{sewadar.name}}</h2>
+                                          <h2 class="hide-dept-on-mob1">
+                                                {{sewadar.guardian}}  | {{(sewadar.gender=='M')?'Male':'Female'}} | {{sewadar.address}}
+                                          </h2> 
+                                          <h2 class ="display-block-dept-on-mob1">
+                                                {{sewadar.guardian}}  
+                                                <br> 
+                                                {{(sewadar.gender=='M')?'Male':'Female'}} | {{sewadar.address}}
                                           </h2>
                                     </ion-radio>           
                               </a>

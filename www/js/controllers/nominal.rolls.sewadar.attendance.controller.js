@@ -84,6 +84,7 @@
                   $scope.isDisabled = false; 
             });
 
+           
             $scope.openNameOrBadgePopover = function($event) {
                   $ionicPopover.fromTemplateUrl('templates/popovers/nameorbadgebutton.popover.html', {
                         scope: $scope,
@@ -191,28 +192,46 @@
                   });
             }
             
-            $scope.SaveDataToAttandanceTable = function(sewadar) {          
-                  $scope.current = $filter('date')(new Date(), 'yyyy-MM-dd h:mm:ss');
-                  var type = 'nominal_roll';
-                  var batch_type = 'permanent'; 
-                  var reference_id = $scope.refId+sewadar.id;
-                  var sewadar_type = 'permanent';
-                  var Insertquery;
-                  var date = new Date($scope.startDate);        
-                  var CheckQuery = "SELECT sewadar_id FROM attendances where sewadar_id ='"+sewadar.id+"' AND nominal_roll_id ='"+$scope.nominal_id+"'";
-                  $cordovaSQLite.execute($rootScope.db, CheckQuery).then(function(res) {
-                        if(res.rows.length==0) {
-                              Insertquery = "INSERT INTO attendances('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id') VALUES ('"+date+"','"+sewadar.id+"','"+$scope.nominalRollsData.sewa_id+"', '"+reference_id+"', '"+type+"', '"+batch_type+"','"+$scope.current+"','"+$scope.current+"', '"+sewadar_type+"','"+$scope.nominal_id+"')";
-                              $cordovaSQLite.execute($rootScope.db, Insertquery).then(function(res) {
-                                    $scope.sewadarAttendance.unshift(sewadar);                              
-                                    $cordovaToast.show('Sewadar added', 'short', 'center');
-                              }, function(err) {                  
-                              });                           
-                        } else {
-                              $cordovaToast.show('Sewadar alredy exist', 'short', 'center');
+            $scope.SaveDataToAttandanceTable = function(sewadar) {
+                  console.log(sewadar);       
+                  if(!sewadar.batch_no) {
+                        if(sewadar.id) {
+                              addTempSewadarNested(sewadar);
+                        }else {
+                              var Insertquery = "INSERT INTO temp_sewadars('name', 'guardian', 'gender', 'address', 'age', 'created_at', 'updated_at') VALUES ('"+sewadar.name+"','"+sewadar.guardian+"','"+sewadar.gender+"', '"+sewadar.address+"', '"+sewadar.age+"','"+$scope.current+"','"+$scope.current+"')";
+                              $cordovaSQLite.execute($rootScope.db, Insertquery).then(function(resTemp) {
+                                    $scope.tempID = resTemp.insertId
+                                    addTempSewadarNested(sewadar);
+                              }, function(err){
+
+                              }); 
                         }
-                  }, function(err) { 
-                  });
+                        $scope.closePopoverForTempSewadar();
+                        setFocus();  
+                  }else {
+                        $scope.current = $filter('date')(new Date(), 'yyyy-MM-dd h:mm:ss');
+                        var type = 'nominal_roll';
+                        var batch_type = 'permanent'; 
+                        var reference_id = $scope.refId+sewadar.id;
+                        var sewadar_type = 'permanent';
+                        var Insertquery;
+                        var date = new Date($scope.startDate);        
+                        var CheckQuery = "SELECT sewadar_id FROM attendances where sewadar_id ='"+sewadar.id+"' AND nominal_roll_id ='"+$scope.nominal_id+"'";
+                        $cordovaSQLite.execute($rootScope.db, CheckQuery).then(function(res) {
+                              if(res.rows.length==0) {
+                                    Insertquery = "INSERT INTO attendances('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id') VALUES ('"+date+"','"+sewadar.id+"','"+$scope.nominalRollsData.sewa_id+"', '"+reference_id+"', '"+type+"', '"+batch_type+"','"+$scope.current+"','"+$scope.current+"', '"+sewadar_type+"','"+$scope.nominal_id+"')";
+                                    $cordovaSQLite.execute($rootScope.db, Insertquery).then(function(res) {
+                                          $scope.sewadarAttendance.unshift(sewadar);                              
+                                          $cordovaToast.show('Sewadar added', 'short', 'center');
+                                    }, function(err) {                  
+                                    });                           
+                              } else {
+                                    $cordovaToast.show('Sewadar alredy exist', 'short', 'center');
+                              }
+                        }, function(err) { 
+                        });
+
+                  }
             };          
 
             $scope.CheckedGender =function(gender) {
@@ -253,7 +272,6 @@
                         });   
                   }
                   $scope.closePopoverForTempSewadar();
-                 
                   setFocus();
             };
 

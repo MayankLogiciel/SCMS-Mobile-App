@@ -16,6 +16,8 @@
                                     validator="required"
                                     message-id = 'name_id'
                                     ng-model="TempSewadarData.name"
+                                    search-popover-diretive
+                                    ng-change = "search(TempSewadarData.name, 'open-sewadar')"
                                     required-error-message="* enter name for open sewadar" 
                                     placeholder="Name"/>
                               </label>
