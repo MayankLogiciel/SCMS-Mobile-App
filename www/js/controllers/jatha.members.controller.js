@@ -97,7 +97,7 @@
 
             var idsFromAttedance = function () {
                   $scope.nominalRollsData = nominalRollsService.getNominalRollsData();
-                  var query = "select sewadar_id from attendances where nominal_roll_id = '"+$scope.nominalRollsData.id+"'";
+                  var query = "select sewadar_id from attendances where nominal_roll_id = '"+$scope.nominalRollsData.id+"' AND batch_type = 'permanent' AND sewadar_type = 'permanent'";
                   $cordovaSQLite.execute($rootScope.db, query).then(function(res) { 
                         for(var i= 0; i<res.rows.length; i++) {
                               $scope.alreadyPresentSewadars.push(res.rows.item(i));
@@ -109,7 +109,7 @@
             $scope.checkedMale = function() {
                   angular.forEach($scope.alreadyPresentSewadars, function(item) {
                         angular.forEach($scope.maleMembers, function(val, i) {
-                              if( val.id == item.sewadar_id ) {
+                              if(val.id == item.sewadar_id ) {
                                     $scope.maleMembers[i].isDisabled = true;
                                     $scope.maleMembers[i].isSelected = true;                                    
                               }else {
@@ -122,7 +122,7 @@
             $scope.checkedFemale = function() {
                   angular.forEach($scope.alreadyPresentSewadars, function(item) {
                         angular.forEach($scope.femaleMembers, function(val, i) {
-                              if( val.id == item.sewadar_id ) {   
+                              if(val.id == item.sewadar_id ) {   
                                     $scope.femaleMembers[i].isDisabled = true;                                                                     
                                     $scope.femaleMembers[i].isSelected = true;  
                               }
