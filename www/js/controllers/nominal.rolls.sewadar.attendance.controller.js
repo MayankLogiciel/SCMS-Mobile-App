@@ -109,7 +109,6 @@
             });
 
             $scope.markAsIncharge = function(sewadar) {
-                  console.log(sewadar);
                   if(!angular.isDefined(sewadar.batch_no) || sewadar.batch_no == null) {
                         var incharge_type = 't';
                         $scope.buttonText = [                   
@@ -194,19 +193,10 @@
             }
             
             $scope.SaveDataToAttandanceTable = function(sewadar) {
-                  console.log(sewadar);       
                   if(!sewadar.batch_no) {
                         if(sewadar.id) {
                              addTempSewadarNested(sewadar);
-                        }else {
-                              var Insertquery = "INSERT INTO temp_sewadars('name', 'guardian', 'gender', 'address', 'age', 'created_at', 'updated_at') VALUES ('"+sewadar.name+"','"+sewadar.guardian+"','"+sewadar.gender+"', '"+sewadar.address+"', '"+sewadar.age+"','"+$scope.current+"','"+$scope.current+"')";
-                              $cordovaSQLite.execute($rootScope.db, Insertquery).then(function(resTemp) {
-                                    $scope.tempID = resTemp.insertId
-                                    addTempSewadarNested(sewadar);
-                              }, function(err){
-
-                              }); 
-                        }
+                        }                       
                         $scope.closePopoverForTempSewadar();
                         setFocus();  
                   }else {
