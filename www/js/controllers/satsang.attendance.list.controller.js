@@ -21,11 +21,11 @@
             };
 
             $scope.viewAttendees= function(date, action) {
-                  if(action == 'edit') {
-                        localStorage.removeItem('SCMS_AttendaceClosedForDay');
-                  }
-                  satsangDayAttendanceListService.setSatsangAttendanceDate(date);
-                  $state.go('satsang_day_attendance');
+                  // if(action == 'edit') {
+                  //       localStorage.removeItem('SCMS_AttendaceClosedForDay');
+                  // }
+                  $state.go('satsang_day');
+                  // satsangDayAttendanceListService.setSatsangAttendanceDate(date);
             }
 
             //refreshing page 

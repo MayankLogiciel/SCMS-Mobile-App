@@ -139,6 +139,7 @@
             };
 
             $scope.search = function(searchQuery) {
+                  console.log(searchQuery);
                   $scope.searchQuery = searchQuery;
             }            
 

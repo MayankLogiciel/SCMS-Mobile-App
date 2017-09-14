@@ -188,6 +188,12 @@ angular.module('SCMS_ATTENDANCE', ['ionic', 'ngCordova', 'validation', 'validati
             templateUrl: 'templates/satsang_day_attendance.html',
             controller: 'SatsangDayAttendanceController'
       })
+      .state('satsang_day', {
+            cache: false,
+            url: '/satsang_day',
+            templateUrl: 'templates/satsang_day.html',
+            controller: 'SatsangDayController'
+      })
       .state('nominal_rolls', {
             cache: false,
             url: '/nominal_rolls',

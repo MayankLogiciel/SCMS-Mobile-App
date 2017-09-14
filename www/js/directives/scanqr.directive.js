@@ -77,7 +77,7 @@ angular.module('SCMS_ATTENDANCE')
                 $log.debug('****************destroyed qr code directive*******************');
                 elem.off();
             });
-            $scope.showScanner.scanQRCode = $scope.scanQRCode; 
+           $scope.showScanner.scanQRCode = $scope.scanQRCode; 
         }
 
     };
