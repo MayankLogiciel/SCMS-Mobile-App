@@ -9839,9 +9839,16 @@ a.button {
 
 .satsang-day-view-btn {
   margin-top: -386px !important; }
+  @media (max-width: 480px) {
+    .satsang-day-view-btn {
+      margin-top: -225px !important; } }
 
 .satsang-date-today {
   font-size: 25px !important; }
+  @media (max-width: 480px) {
+    .satsang-date-today {
+      font-size: 15px !important;
+      padding: 0 !important; } }
 
 .sync-nominal-roll {
   text-align: center;

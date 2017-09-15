@@ -30,9 +30,16 @@
 }
 .satsang-day-view-btn {
 	margin-top: -386px !important;
+	@media (max-width: 480px) { 
+		margin-top: -225px !important;
+	}
 }
 .satsang-date-today {
 	font-size: 25px !important;
+	@media (max-width: 480px) {
+		font-size: 15px !important;
+		padding: 0 !important;
+	}	
 }
 .sync-nominal-roll {
 	text-align: center;

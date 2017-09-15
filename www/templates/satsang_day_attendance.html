@@ -5,45 +5,7 @@
 			</button>
 			<span class='col col-90 satsang-date-today'>Satsang Day Attendance({{today}})</span>
 		</div>		
-	</ion-header-bar>  
-	<!-- <div ng-if="isCurrentDate && !isAttendaceClosed">		
-		<div class="list search-wrapper" ng-if="isBatchNumber">
-			<label class="item item-input search-box srch-width">
-				<i class="icon ion-search placeholder-icon search-icon"></i>
-				<input 
-					type="tel" 
-					placeholder="Search Sewadar by Badge No."
-					autocomplete="off"
-					class = "text-transform-capital placehoder-text-change att-search1" 
-					ng-model="searchQuery"
-					ng-model-options="{debounce : 500}"
-					spellcheck = "false"
-					ng-change = "search(searchQuery)"
-					search-popover-diretive
-					action-enter="search(searchQuery)"
-				>
-			</label>    		
-			<span class="button ion-arrow-swap swap-btn" on-tap="openNameOrBadgePopover()"></span>
-		</div>	
-		<div class="list search-wrapper" ng-if="!isBatchNumber">
-			<label class="item item-input srch-width">
-				<i class="icon ion-search placeholder-icon search-icon"></i>
-				<input 
-					type="search" 
-					placeholder="Search Sewadar by Name"
-					autocomplete="off"
-					class = "text-transform-capital placehoder-text-change att-search1" 
-					ng-model="searchQuery"
-					ng-model-options="{debounce : 500}"
-					spellcheck = "false"
-					ng-change = "search(searchQuery)"
-					search-popover-diretive
-					action-enter="search(searchQuery)"
-				>
-			</label>    		
-			<span class="button ion-arrow-swap swap-btn" on-tap="openNameOrBadgePopover()"></span>
-		</div>	
-	</div> -->
+	</ion-header-bar>  	
 	<div>		
 		<div class="list search-wrapper" ng-if="isBatchNumber">
 			<label class="item item-input srch-width">
@@ -87,11 +49,4 @@
 			<sewadars-listing-directive></sewadars-listing-directive>
 		</div>
 	</ion-content>
-	<!-- <div ng-if = "!isAttendaceClosed && isCurrentDate">
-		<span class="height-fix-scan-btn">
-            <a class="scan-btn-qr" scan-qr-directive on-update="SaveDataToAttandanceTable(sewadar,'QR')" show-scanner = "dirCrtl">
-                <i class="icon ion-qr-scanner scan-btn-bottom"> </i> 
-            </a>
-        </span>
-	</div> -->
 </ion-view>

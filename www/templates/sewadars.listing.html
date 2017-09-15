@@ -57,4 +57,6 @@
 			</div>
       	</h2>
     </a>
+	<ion-infinite-scroll ng-if="totalRows >= 20" on-infinite="loadMore()" distance="1" immediate-check="false">
+	</ion-infinite-scroll>
 </div>

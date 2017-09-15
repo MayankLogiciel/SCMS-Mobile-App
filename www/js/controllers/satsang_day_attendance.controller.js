@@ -9,14 +9,14 @@
                   $scope.sewadarAttendance = [];
                   $scope.sewadar ={}; 
                   $scope.getDate = satsangDayAttendanceListService.getSatsangAttendanceDate();
+                  $scope.limit = 20;
+                  $scope.offset = 0;
                   $scope.currentDate =  $filter('date')(new Date(), 'yyyy-MM-dd');
                   $scope.curDate =  $filter('date')(new Date(), 'yyyy-MM-dd');
-                  $scope.today =  $filter('date')(($scope.getDate),'EEEE, d MMMM, y');
-                  $scope.getListFromSewadarsForAttendance(); 
-                  $scope.dirCrtl = {};
+                  $scope.today =  $filter('date')(($scope.getDate),'EEE, d MMM, y');
+                  $scope.getListFromSewadarsForAttendance('load'); 
                   $scope.isBatchNumber = true; 
                   $scope.stateName = $state.current.name;
-                  $scope.searchQueryByQR = '';
                   if(profilePicService.getTimeOfPic()=='') {
                         $scope.timeStampPhoto = '';
                   }else {
@@ -37,42 +37,7 @@
                   }else {
                         $scope.isAttendaceClosed = false; 
                   }
-            };                
-
-            
-            var showDayAttedanceClosedPopup = function() {
-                  var myPopup = $ionicPopup.show({
-                        scope: $scope,
-                        templateUrl: 'templates/popups/day.attedance.closed.popup.html',
-                        title: 'Close Day Attendance!',
-                        cssClass: 'confirm-import',
-                        buttons:[    
-                        {
-                              text: "Cancel",
-                              type: 'button-balanced',
-                              onTap: function(){
-                                    return;
-                              }
-                        },
-                        {
-                              text: "Ok",
-                              type: 'button-positive',
-                              onTap: function(){
-                                    satsangDayAttendanceService.setAttendaceClosedForDay($scope.currentDate);                  
-                                    $state.go('app');      
-                              }
-                        }]
-                  });       
-            };      
-
-            $scope.closeDayAttendace = function() {
-                  if($scope.sewadarAttendance.length <=0) {
-                        $cordovaToast.show('There is no sewadar present today', 'short', 'center');
-                  }else {
-                        showDayAttedanceClosedPopup();
-                  }
-            }
-
+            }; 
             $scope.openNameOrBadgePopover = function($event) {
                   $ionicPopover.fromTemplateUrl('templates/popovers/nameorbadgebutton.popover.html', {
                         scope: $scope,
@@ -82,6 +47,11 @@
                         $scope.popover.show($event);
                   });
             };
+
+            $scope.loadMore = function() {
+                  $scope.offset = $scope.offset + 20;
+                  $scope.getListFromSewadarsForAttendance();
+            }
 
             $scope.closeNameBadgePopover = function() {
                   $scope.popover.hide();
@@ -110,27 +80,25 @@
 
             $scope.goBack = function() {
                   $ionicHistory.goBack();
-                  console.log($ionicHistory);
             };            
 
-            // $scope.loadMore = function() {
-            //       $scope.offset = $scope.offset + 20;
-            //       $scope.getListFromSewadarsForAttendance();
-            // }
+            $scope.loadMore = function() {
+                  $scope.offset = $scope.offset + 20;
+                  $scope.getListFromSewadarsForAttendance();
+            }
             var refreshListpage = function() {
                   $rootScope.$broadcast('refreshPage');
             }
             var getSewadarData = function(query) {                   
                                     
                   $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
-                        //$scope.totalRows = res.rows.length;
+                        $scope.totalRows = res.rows.length;
                         if(res.rows.length > 0) {
                               for(var i= 0; i<res.rows.length; i++) { 
                                     $scope.sewadarAttendance = $scope.sewadarAttendance.concat(res.rows.item(i));
                               } 
                         }
-                        findImage();
-                        refreshListpage(); 
+                        findImage();                       
                         cfpLoadingBar.complete();
                   }, function (err) { 
                   }).finally(function(){ 
@@ -139,7 +107,6 @@
             };
 
             $scope.search = function(searchQuery) {
-                  console.log(searchQuery);
                   $scope.searchQuery = searchQuery;
             }            
 
@@ -155,45 +122,11 @@
                   });
             }
 
-            $scope.SaveDataToAttandanceTable = function(sewadar, fromQR) {
-                  var CheckQuery = "SELECT sewadar_id FROM attendances where sewadar_id ='"+sewadar.id+"' AND date = '"+$scope.currentDate+"' AND nominal_roll_id = '"+null+"'";
-                  $cordovaSQLite.execute($rootScope.db, CheckQuery).then(function(res) {
-                        if(res.rows.length == 0) {
-                              var sewa_id = 6;
-                              $scope.current = $filter('date')(new Date(), 'yyyy-MM-dd h:mm:ss');
-                              var nominal_roll_id = null;
-                              var reference_id = null
-                              var type = 'satsang_day'; 
-                              var batch_type = 'permanent';  
-                              var sewadar_type = 'permanent';                                                            
-                              var Insertquery = "INSERT INTO attendances('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id') VALUES ('"+$scope.currentDate+"','"+sewadar.id+"','"+sewa_id+"', '"+reference_id+"', '"+type+"', '"+batch_type+"','"+$scope.current+"','"+$scope.current+"', '"+sewadar_type+"','"+nominal_roll_id+"')";
-                              $cordovaSQLite.execute($rootScope.db, Insertquery).then(function(res) {
-                                    $scope.sewadarAttendance.unshift(sewadar);
-                                    $cordovaToast.show('Attendance marked successfully', 'short', 'center');
-                                    refreshListpage();
-                                    if(fromQR == 'QR') {
-                                          $timeout(function() {
-                                                $scope.dirCrtl.scanQRCode();
-                                          }, 1000);
-                                    }
-                              }, function(err) {  
-                              }); 
-
-                        } else {
-                              $cordovaToast.show('Attendance already marked', 'short', 'center');
-                              if(fromQR == 'QR') {
-                                    $timeout(function() {
-                                                $scope.dirCrtl.scanQRCode();
-                                    }, 1000);
-                              }
-                        }
-                  }, function(err) {                  
-                  });                 
-            };
-            $scope.getListFromSewadarsForAttendance = function(){ 
-                  cfpLoadingBar.start();                    
-                  //var query = "SELECT sewadars.* FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where attendances.date= '"+$scope.getDate+"' AND attendances.nominal_roll_id= '"+null+"' ORDER BY attendances.created_at Desc LIMIT "+$scope.limit+" offset "+$scope.offset ;
-                  var query = "SELECT sewadars.* FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where attendances.date= '"+$scope.getDate+"' AND attendances.nominal_roll_id= '"+null+"' ORDER BY attendances.created_at Desc";
+            $scope.getListFromSewadarsForAttendance = function(action){
+                  if(angular.isDefined(action) || action == 'load'){
+                        cfpLoadingBar.start();
+                  } 
+                  var query = "SELECT sewadars.* FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where attendances.date= '"+$scope.getDate+"' AND attendances.nominal_roll_id= '"+null+"' ORDER BY attendances.created_at Desc LIMIT "+$scope.limit+" offset "+$scope.offset;
                   getSewadarData(query);
             };              
             setup();

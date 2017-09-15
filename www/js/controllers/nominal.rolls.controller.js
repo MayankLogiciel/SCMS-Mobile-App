@@ -60,9 +60,7 @@
                                     }
                               }
                         }
-                        console.log($scope.nominals);
                   }, function(err){
-                        console.log(err);
                   });
             }
 

@@ -3,7 +3,6 @@
       var sewadarDetailModalDiretive = function($cordovaSQLite, $ionicModal, $cordovaFile, $ionicPopup, $cordovaToast, $stateParams, $timeout, $state, $rootScope, profilePicService) {          
             return {
                   restrict: 'A',
-                  
                   controller: ['$scope', '$element', '$attrs', function($scope,$element, $attrs){
                         $scope.imagePath = $rootScope.baseAppDir + 'import/sewadar_pics/'; 
                         $scope.defaultImage = 'img/imgUnavailable.png'; 
@@ -93,7 +92,6 @@
                         });
 
                         $scope.deleteSewadar = function(sewadar) {
-                              console.log(sewadar);
                               if(isModalOpen) {
                                     $scope.modal.hide();
                               }
@@ -167,10 +165,8 @@
                                                             return;
                                                       }
                                                 }
-                                                console.log(res);
                                                 
                                           }, function(err) {
-                                                console.log(err);                  
                                           });  
 
 
