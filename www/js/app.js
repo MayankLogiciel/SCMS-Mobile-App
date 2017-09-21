@@ -135,9 +135,7 @@ angular.module('SCMS_ATTENDANCE', ['ionic', 'ngCordova', 'validation', 'validati
 
 .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
       cfpLoadingBarProvider.includeBar = false;
-      cfpLoadingBarProvider.parentSelector = '#loading-bar-container';
-      //cfpLoadingBarProvider.includeSpinner = false;
-      //cfpLoadingBarProvider.spinnerTemplate = '<div><span class="fa fa-spinner">Custom Loading Message...</div>';
+      cfpLoadingBarProvider.parentSelector = '#loading-bar-container';      
 }])
 
 .config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
@@ -188,6 +186,12 @@ angular.module('SCMS_ATTENDANCE', ['ionic', 'ngCordova', 'validation', 'validati
             templateUrl: 'templates/satsang_day_attendance.html',
             controller: 'SatsangDayAttendanceController'
       })
+      .state('satsang_day', {
+            cache: false,
+            url: '/satsang_day',
+            templateUrl: 'templates/satsang_day.html',
+            controller: 'SatsangDayController'
+      })
       .state('nominal_rolls', {
             cache: false,
             url: '/nominal_rolls',
@@ -205,8 +209,7 @@ angular.module('SCMS_ATTENDANCE', ['ionic', 'ngCordova', 'validation', 'validati
             url: "/nominal_rolls-list/:id/:status",
             templateUrl: 'templates/nominal.sewadar.attendance.list.html',
             controller: 'NominalRollsSewadarAttendanceController' 
-      })   
-
+      }) 
       .state('jatha-members', {
             url: "/jatha-members",
             cache: false,
@@ -214,15 +217,13 @@ angular.module('SCMS_ATTENDANCE', ['ionic', 'ngCordova', 'validation', 'validati
             controller: 'JathaMembersController'
                        
       })    
-
       .state('sewadars', {
             url: "/sewadars",
             cache: true,
             templateUrl: 'templates/sewadars.html',
             controller: 'SewadarsController'
                        
-      })     
-
+      })    
       .state('sync-database-or-pics', {
             url: "/sync-database-or-pics",
             cache: false,

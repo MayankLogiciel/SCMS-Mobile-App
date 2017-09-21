@@ -9,23 +9,28 @@
                   $scope.dateWiseAttendanceList = []; 
                   $scope.getDateWiseListFromAttendance();                 
                   $scope.isTodaysData = true; 
-                  $scope.currentDate =  $filter('date')(new Date(), 'EEEE, d MMMM, y');
+                  $scope.currentDate =  $filter('date')(new Date(), 'EEE, d MMM, y');
                   $scope.todayDate =  $filter('date')(new Date(), 'yyyy-MM-dd'); 
                   $scope.count = 0;
                   $scope.editRequired = satsangDayAttendanceService.getAttendaceClosedForDay();
             }; 
-
-
+            
             $scope.goBack = function() {
                   $ionicHistory.goBack();
             };
 
             $scope.viewAttendees= function(date, action) {
-                  if(action == 'edit') {
+                  if(date == $scope.todayDate && !angular.isDefined(action)){
+                        $state.go('satsang_day');                        
+                  }else if(date == $scope.todayDate && (angular.isDefined(action) || action == 'edit')){
                         localStorage.removeItem('SCMS_AttendaceClosedForDay');
+                        satsangDayAttendanceListService.setSatsangAttendanceDate(date);
+                        $state.go('satsang_day_attendance');
+                  }else{
+                        $state.go('satsang_day_attendance');
+                        satsangDayAttendanceListService.setSatsangAttendanceDate(date);
+
                   }
-                  satsangDayAttendanceListService.setSatsangAttendanceDate(date);
-                  $state.go('satsang_day_attendance');
             }
 
             //refreshing page 

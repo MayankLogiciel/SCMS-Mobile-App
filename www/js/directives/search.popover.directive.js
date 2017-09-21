@@ -75,7 +75,6 @@
                                                 $scope.closePopoverForSewadar();
                                                 $cordovaToast.show('No suggestion found', 'short', 'center');
                                           } 
-                                          //console.log("hello to test");
                                     }, function (err) {
                                     });
 

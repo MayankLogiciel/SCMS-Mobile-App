@@ -16,7 +16,7 @@
 		class="list nominal-list date-count" 
 		 ng-if="!isTodaysData || dateWiseAttendanceList.length==0" on-tap="viewAttendees(todayDate)">
 			<a class="item item-button-right">
-				<button class="button button-assertive ios-attendees" on-tap="viewAttendees(todayDate)" >
+				<button class="button button-assertive ios-attendees">
 					<i class="icon ion-plus btn-icon-day-attendance"></i>Attendees
 				</button>
 				<h2>
@@ -32,11 +32,11 @@
 		class="list nominal-list date-count" 
 		ng-repeat="attendance in dateWiseAttendanceList | orderBy:'-date'" on-tap="viewAttendees(attendance.date)">
 		<a class="item item-button-right">			
-			<button class="button button-assertive ios-attendees" on-tap="viewAttendees(attendance.date)" >
+			<button class="button button-assertive ios-attendees">
       			<i class="icon ion-eye btn-icon-day-attendance"></i>Attendees
     		</button>
     		<h2>
-    			<span ng-bind="attendance.date | date: 'EEEE, d MMMM, y' "></span>
+    			<span ng-bind="attendance.date | date: 'EEE, d MMM, y' "></span>
     		</h2>
     		<h3>
     			<span>Total Attendees: </span>
@@ -44,6 +44,5 @@
     		</h3>
     	</a>			
 	</div>
-
 </ion-content>	
 </ion-view>
