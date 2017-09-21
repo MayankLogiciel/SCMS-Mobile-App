@@ -8,6 +8,9 @@
 	}
 	overflow: hidden;
 }
+.url-space {
+	padding-left: 0 !important;
+}
 .placehoder-text-change {
 	&::-webkit-input-placeholder {
 		text-transform: capitalize !important;

@@ -9823,6 +9823,9 @@ a.button {
     .login-home-body .item-floating-label input {
       font-size: 20px; }
 
+.url-space {
+  padding-left: 0 !important; }
+
 .placehoder-text-change::-webkit-input-placeholder {
   text-transform: capitalize !important; }
 

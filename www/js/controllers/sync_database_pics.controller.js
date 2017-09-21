@@ -13,6 +13,7 @@
                   getSatsangAttendanceCount();
                   $scope.userData = authService.getLoggedInUserData(); 
                   $scope.getToken = authService.getToken();
+                  $scope.preServerUrl = 'http://';
                   $scope.serverURlPrefix = authService.getSansangPlaceInfo();
                   $scope.picturesCount = 0;
                   $scope.attendanceCount = 0;
@@ -98,7 +99,7 @@
 
             var getToken = function(str) {                  
                   var config = 1;
-                  var path = $scope.serverURlPrefix.serverURL;
+                  var path = $scope.preServerUrl + $scope.serverURlPrefix.serverURL;
                   var pass = $scope.userData.userPassword;
                   picAndDatabaseTransferService.getTokenFromServer($scope.userData.email, pass, config, path).then(function(result) {
                         $scope.getToken = 'bearer ' + result.data.signature;
@@ -147,7 +148,7 @@
 
             var uploadPicture = function(index, str) {
                   var trustAllHosts = true;
-                  var url = encodeURI($scope.serverURlPrefix.serverURL + SCMS_SERVER_IMAGE_UPLOAD_URL);
+                  var url = encodeURI($scope.preServerUrl + $scope.serverURlPrefix.serverURL + SCMS_SERVER_IMAGE_UPLOAD_URL);
                   var targetPath = $rootScope.baseAppDir + 'import/sewadar_pics/' + $scope.pictures[index].photo;
                   var filename = targetPath.split("/").pop();
                   var params = {};
@@ -213,12 +214,14 @@
                         return;
                   }else if($scope.getToken == null) {
                         $scope.syncingDatabase('Uploading database (0%)');
+
                         getToken('database');
                   }else
                   if($scope.attendanceCount <=0 && $scope.nominalCount <= 0) {
                         $cordovaToast.show('No data available to sync', 'short', 'center');
                         return;
                   }else {
+
                         $scope.syncingDatabase('Uploading database (0%)');
                         $scope.createExportFolder();                       
                   }
@@ -247,6 +250,7 @@
                               copyDBToExportFolder(success.nativeURL);
                         });
                   });
+
             }
 
             var copyDBToExportFolder = function(path) {
@@ -259,11 +263,12 @@
                               copiedDataInExport(path, dbName);
                         }
                   })
+
             }
 
             var copiedDataInExport = function(path,dbName) {
                   var trustAllHosts = true;
-                  var url = encodeURI($scope.serverURlPrefix.serverURL + SCMS_SERVER_UPLOAD_URL);
+                  var url = encodeURI($scope.preServerUrl + $scope.serverURlPrefix.serverURL + SCMS_SERVER_UPLOAD_URL);
                   var targetPath = path + dbName;
                   var filename = targetPath.split("/").pop();
                   var options = {
@@ -314,7 +319,7 @@
                   var trustHosts = true;
                   var downloadOptions = {};
                   var targetPath = $rootScope.baseAppDir + 'database.sqlite';
-                  var url = $scope.serverURlPrefix.serverURL + SCMS_SERVER_DOWNLOAD_URL;
+                  var url = $scope.preServerUrl + $scope.serverURlPrefix.serverURL + SCMS_SERVER_DOWNLOAD_URL;
                   var accessToken = "bearer " + $scope.getToken;
                   var headers = {'Authorization': accessToken};         
                   downloadOptions.headers = headers;
@@ -327,8 +332,6 @@
                   }, function (progress) {
                         $scope.downloadProgressDB = Math.floor((progress.loaded / progress.total) * 100);
                         $ionicLoading.show({ scope: $scope, template: '<div class="btn-animation-sync" style="color: #FFFFFF;"><ion-spinner icon="lines" class="spinner-calm"></ion-spinner><br><span style="vertical-align: middle;">&nbsp;&nbsp;Downloading ('+$scope.downloadProgressDB+'%)</span><br><br><br><button class ="button button-clear cancel-btn" ng-click="cancelLoading()"><i class="icon ion-close"></i>&nbsp;&nbsp;Cancel</button></div>'});
-
-                        
                   });
                   authService.setToken(accessToken);
             }     
@@ -395,14 +398,14 @@
                         var DownloadedTime =  $filter('date')(new Date(), 'h:mm:ss');
                         var params = {};                                         
                         if(picAndDatabaseTransferService.getLastImagesDownloadedTime() == null || requestType == 'all'){
-                              var url = $scope.serverURlPrefix.serverURL + SCMS_SERVER_IMAGE_DOWNLOAD_URL + "all=all";
+                              var url = $scope.preServerUrl + $scope.serverURlPrefix.serverURL + SCMS_SERVER_IMAGE_DOWNLOAD_URL + "all=all";
                              // var url = $scope.serverURlPrefix.serverURL + SCMS_SERVER_IMAGE_DOWNLOAD_URL + "date=2017/07/20&time=05:03";
                                 
                         }else {
                               params.date = picAndDatabaseTransferService.getLastImagesDownloadedTime().date;
                               params.time =  picAndDatabaseTransferService.getLastImagesDownloadedTime().time;
 
-                              var url = $scope.serverURlPrefix.serverURL + SCMS_SERVER_IMAGE_DOWNLOAD_URL + "date=" + params.date +"&" +"time=" + params.time;
+                              var url = $scope.preServerUrl + $scope.serverURlPrefix.serverURL + SCMS_SERVER_IMAGE_DOWNLOAD_URL + "date=" + params.date +"&" +"time=" + params.time;
                              // var url = $scope.serverURlPrefix.serverURL + SCMS_SERVER_IMAGE_DOWNLOAD_URL + "date=2017/07/20&time=05:03";
                         }   
                         var trustHosts = true;

@@ -94,7 +94,16 @@
                   }
             }
 
-            $scope.filterByDate = function(data) {                  
+            $scope.filterByDate = function(data) { 
+                  var dateSplitted = data.from_date.split('-'); // date must be in DD-MM-YYYY format
+                  var formattedDate = dateSplitted[1]+'-'+dateSplitted[0]+'-'+dateSplitted[2];
+                  var fromDate = new Date(formattedDate);
+                  var sDate = new Date(fromDate).getTime();
+
+                  var dateToSplitted = data.to_date.split('-'); // date must be in DD-MM-YYYY format
+                  var formattedToDate = dateToSplitted[1]+'-'+dateToSplitted[0]+'-'+dateToSplitted[2];
+                  var toDate = new Date(formattedToDate);
+                  var eDate = new Date(toDate).getTime();
                   if($scope.isDatePopupOpend) {
                         return;
                   }
@@ -106,7 +115,11 @@
                   if(angular.isDefined(data.from_date) && angular.isDefined(data.to_date)) { 
                         $scope.nominals = [];
                         angular.forEach($scope.nominalCompleteData, function(val){
-                              if((val.date_from >= data.from_date) && (val.date_from <= data.to_date)){
+                              var dateValFromSplitted = val.date_from.split('-'); // date must be in DD-MM-YYYY format
+                              var formattedValFromDate = dateValFromSplitted[1]+'-'+dateValFromSplitted[0]+'-'+dateValFromSplitted[2];
+                              var fromValDate = new Date(formattedValFromDate);
+                              var fDate = new Date(fromValDate).getTime();
+                              if((fDate >= sDate) && (fDate <= eDate)){
                                     $scope.nominals.push(val);
                               }                             
                         });
@@ -132,7 +145,7 @@
             var datePickedFrom = {
                   callback: function (val) {  //Mandatory
                        $scope.selectedDate = (val, new Date(val));
-                       $scope.nominaldate.from_date =  $filter('date')($scope.selectedDate, 'yyyy-MM-dd');
+                       $scope.nominaldate.from_date =  $filter('date')($scope.selectedDate, 'dd-MM-yyyy');
                        $scope.isDatePopupOpend = false;                      
 
                   },
@@ -148,7 +161,7 @@
             var datePickedTo = {
                   callback: function (val) {  //Mandatory
                         $scope.selectedDate = (val, new Date(val));
-                        $scope.nominaldate.to_date =  $filter('date')($scope.selectedDate, 'yyyy-MM-dd');
+                        $scope.nominaldate.to_date =  $filter('date')($scope.selectedDate, 'dd-MM-yyyy');
                         $scope.isDatePopupOpend = false;                      
                   },
                   disabledDates: [],
