@@ -12,11 +12,11 @@
                         username: '', 
                         password: ''
                   };
+                  $scope.preServerUrl = 'http://';                 
                   if(authService.getSansangPlaceInfo() != null) {
                         $scope.importData.server_url = authService.getSansangPlaceInfo().serverURL; 
-                        $scope.serverURlPrefix = $scope.importData.server_url;
-                  }                  
-                  
+                        $scope.serverURlPrefix = $scope.preServerUrl + $scope.importData.server_url; 
+                  }
             };  
 
             $scope.syncingDatabase = function(msg) {
@@ -189,7 +189,8 @@
                         $scope.downloadOptions = {};
                         $scope.targetPath = $rootScope.baseAppDir + 'database.sqlite';
                         $scope.url = $scope.serverURlPrefix + SCMS_SERVER_DOWNLOAD_URL;
-                        var serverUrl = importData.server_url;
+                        var serverUrl = $scope.preServerUrl + importData.server_url;
+
                         var config = 1;
                         picAndDatabaseTransferService.getTokenFromServer(importData.username, importData.password, config, serverUrl).then(function(response) {
                               var accessToken = "bearer " + response.data.signature;

@@ -16,8 +16,10 @@
                 <div class="list list-inset login-wraper">
                     <label class="item item-input custom-text">
                         <i class="icon ion-android-globe placeholder-icon"></i>
+                        {{preServerUrl}}
                         <input 
                             type="text" 
+                            class="url-space"
                             name="server-url"
                             autocomplete="off"
                             validator="required"
@@ -25,7 +27,7 @@
                             message-id="url_id" 
                             ng-model="importData.server_url" 
                             ng-change="serverURL(importData.server_url)"
-                            placeholder="Server Url"> 
+                        > 
                     </label>
                 </div> 
                 <p id='url_id'></p>
