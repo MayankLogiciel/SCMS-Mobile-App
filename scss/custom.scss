@@ -11,6 +11,21 @@
 .url-space {
 	padding-left: 0 !important;
 }
+.pre-url {
+	position: relative;
+	span {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		font-size: 20px;
+		@media(max-width: 480px) {
+			font-size: 14px;
+		}
+	}
+	input {
+		padding-left: 55px;
+	}
+}
 .placehoder-text-change {
 	&::-webkit-input-placeholder {
 		text-transform: capitalize !important;

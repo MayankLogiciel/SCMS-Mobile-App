@@ -12,6 +12,7 @@
                   }else {
                         $scope.hideEdit = false;
                   }
+                  $scope.preServerUrl = 'http://';
                  
             }; 
 

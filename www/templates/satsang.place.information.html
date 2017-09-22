@@ -35,8 +35,9 @@
                                     pattern="[0-9]{10}" ng-disabled="!hideEdit">
             </label>
             <label class="item item-input item-floating-label disabled-input" ng-class="{'final-diable':!hideEdit}">
+                
                 <span class="input-label" class="text-transform-capital">Server Url</span>
-                <input type="text" ng-model="info.serverURL" placeholder="Server Url" ng-disabled="!hideEdit">
+                <div class="pre-url"><span>{{preServerUrl}}</span><input type="text" ng-model="info.serverURL" ng-disabled="!hideEdit"></div>
             </label>
              <button class="button button-block button-assertive btn-padding info-update-btn"  
             on-tap="placeInfo(info)" ng-disabled="!hideEdit">
