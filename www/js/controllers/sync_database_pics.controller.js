@@ -22,7 +22,7 @@
                   $scope.dbPath = '';
                   $scope.currentDate =  $filter('date')(new Date(), 'yyyy-MM-dd');
                   $scope.syncDateAndTime = picAndDatabaseTransferService.getLastImagesDownloadedTime();
-
+                  $scope.abortTransferRequest = null;
             }; 
  
             $scope.goBack = function() {
@@ -37,6 +37,7 @@
             }
 
             $scope.cancelLoading = function(str) {
+                  $scope.abortTransferRequest.abort();
                   $ionicLoading.hide();
             }
 
@@ -164,7 +165,8 @@
                   options.headers = headers;
                   params.id = $scope.pictures[index].id;
                   options.params = params;
-                  $cordovaFileTransfer.upload(url, targetPath, options, trustAllHosts).then(function(result) {
+                  $scope.abortTransferRequest = $cordovaFileTransfer.upload(url, targetPath, options, trustAllHosts);
+                  $scope.abortTransferRequest.then(function(result) {
                         ++$scope.p;
                         syncLoader($scope.p);
                         $timeout(function() {
@@ -281,7 +283,8 @@
                   };
                   var headers={'Authorization': $scope.getToken};
                   options.headers = headers;
-                  $cordovaFileTransfer.upload(url, targetPath, options, trustAllHosts).then(function(result) {
+                  $scope.abortTransferRequest  =  $cordovaFileTransfer.upload(url, targetPath, options, trustAllHosts);
+                  $scope.abortTransferRequest.then(function(result) {
                         $scope.import();
                   }, function(err) {
 
@@ -324,8 +327,8 @@
                   var headers = {'Authorization': accessToken};         
                   downloadOptions.headers = headers;
                   $ionicLoading.show({ scope: $scope, template: '<div class="btn-animation-sync" style="color: #FFFFFF;"><ion-spinner icon="lines" class="spinner-calm"></ion-spinner><br><span style="vertical-align: middle;">Preparing Database</span><br><br><br><button class ="button button-clear cancel-btn" ng-click="cancelLoading()"><i class="icon ion-close"></i>&nbsp;&nbsp;Cancel</button></div>'});
-                  $cordovaFileTransfer.download(url, targetPath, downloadOptions, trustHosts)
-                  .then(function(result) { 
+                  $scope.abortTransferRequest = $cordovaFileTransfer.download(url, targetPath, downloadOptions, trustHosts);
+                  $scope.abortTransferRequest.then(function(result) { 
                         CopyPicturesandDatabaseToImport();
                   }, function(err) {
                         $scope.cancelLoading();
@@ -413,8 +416,8 @@
                         var targetPath = $rootScope.baseAppDir + 'sewadar.zip';
                         var headers={'Authorization': $scope.getToken};
                         downloadOptions.headers = headers;
-                        $cordovaFileTransfer.download(url, targetPath, downloadOptions, trustHosts)
-                        .then(function(result) { 
+                        $scope.abortTransferRequest = $cordovaFileTransfer.download(url, targetPath, downloadOptions, trustHosts);
+                        $scope.abortTransferRequest.then(function(result) { 
                              unzip();
                         }, function(err){
                         }, function (progress){
