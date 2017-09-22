@@ -174,6 +174,7 @@
             }
 
             $scope.import = function(importData) { 
+                  console.log(importData);
                   if($cordovaNetwork.isOffline()){
                         $cordovaToast.show('Please Check your network connection', 'short', 'center');
                         return;
@@ -188,7 +189,9 @@
                         $scope.trustHosts = true;
                         $scope.downloadOptions = {};
                         $scope.targetPath = $rootScope.baseAppDir + 'database.sqlite';
-                        $scope.url = $scope.serverURlPrefix + SCMS_SERVER_DOWNLOAD_URL;
+                        $scope.url = $scope.preServerUrl + importData.server_url + SCMS_SERVER_DOWNLOAD_URL;
+                  console.log($scope.url);
+                        
                         var serverUrl = $scope.preServerUrl + importData.server_url;
 
                         var config = 1;
