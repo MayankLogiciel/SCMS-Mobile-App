@@ -20,12 +20,15 @@
             };
 
             $scope.viewAttendees= function(date, action) {
-                  if(date == $scope.todayDate && !angular.isDefined(action)){
+                  if(date == $scope.todayDate && !angular.isDefined(action) && ($scope.editRequired == null || $scope.editRequired == 'null')){
                         $state.go('satsang_day');                        
                   }else if(date == $scope.todayDate && (angular.isDefined(action) || action == 'edit')){
                         localStorage.removeItem('SCMS_AttendaceClosedForDay');
                         satsangDayAttendanceListService.setSatsangAttendanceDate(date);
+                        $state.go('satsang_day');
+                  }else if(date == $scope.todayDate && ($scope.editRequired != null || $scope.editRequired != 'null') ){
                         $state.go('satsang_day_attendance');
+                        satsangDayAttendanceListService.setSatsangAttendanceDate(date);
                   }else{
                         $state.go('satsang_day_attendance');
                         satsangDayAttendanceListService.setSatsangAttendanceDate(date);
