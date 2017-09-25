@@ -27,7 +27,7 @@
             $scope.placeInfo = function(value) {                  
                   authService.setSansangPlaceInfo(value);
                   $scope.hideEdit = false;
-                  $cordovaToast.show('Information save successfully', 'short', 'center'); 
+                  $cordovaToast.show('Information saved successfully', 'short', 'center'); 
 
             };
             setup();

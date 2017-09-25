@@ -205,7 +205,7 @@
                                     }, function(err) {                  
                                     });                           
                               } else {
-                                    $cordovaToast.show('Sewadar alredy exist', 'short', 'center');
+                                    $cordovaToast.show('Sewadar already exist', 'short', 'center');
                               }
                         }, function(err) { 
                         });
@@ -299,7 +299,7 @@
 
                                     }); 
                               }else{
-                                   $cordovaToast.show('Sewadar alredy exist', 'short', 'center');
+                                   $cordovaToast.show('Sewadar already exist', 'short', 'center');
                               }
                         });
                   }else{
