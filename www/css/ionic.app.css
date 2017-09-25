@@ -9826,6 +9826,19 @@ a.button {
 .url-space {
   padding-left: 0 !important; }
 
+.pre-url {
+  position: relative; }
+  .pre-url span {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px; }
+    @media (max-width: 480px) {
+      .pre-url span {
+        font-size: 14px; } }
+  .pre-url input {
+    padding-left: 55px; }
+
 .placehoder-text-change::-webkit-input-placeholder {
   text-transform: capitalize !important; }
 
@@ -9836,6 +9849,12 @@ a.button {
   border-radius: 50px; }
   .button.button-icon.button-add .plus-icon:before {
     font-size: 22px; }
+
+.pre-url-size {
+  font-size: 20px; }
+  @media (max-width: 480px) {
+    .pre-url-size {
+      font-size: 14px; } }
 
 .total-attendees {
   display: block; }

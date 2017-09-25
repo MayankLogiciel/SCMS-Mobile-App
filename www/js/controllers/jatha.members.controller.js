@@ -70,7 +70,9 @@
             $scope.getListForJatha = function() {
                   var query = "SELECT name as jatha_name, id as department_id FROM departments ORDER BY jatha_name ASC";
                   $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
+                        cfpLoadingBar.start();
                         if(res.rows.length > 0) {
+                              $scope.jathas = [];
                               for(var i= 0; i<res.rows.length; i++) { 
                                     if($scope.nominalRollsData.jatha_name == res.rows.item(i).jatha_name) {
                                           res.rows.item(i).jatha_name = htmlDecode(res.rows.item(i).jatha_name + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#10003;");
@@ -78,6 +80,7 @@
                                     $scope.jathas.push(res.rows.item(i));                                   
                               }
                         }
+                        cfpLoadingBar.complete();
                   }, function (err) { 
                   });
             };          
