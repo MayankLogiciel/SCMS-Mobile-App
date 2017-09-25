@@ -55,7 +55,6 @@
                   $scope.TempSewadarData = {};
                   $scope.refId = (new Date())/1000|0;
                   $scope.isBatchNumber = true;
-
             };
 
             $scope.$on('$ionicView.enter', function() {
@@ -234,6 +233,7 @@
                         var updateQuery = "UPDATE temp_sewadars SET name = '"+TempSewadarData.name+"', guardian = '"+TempSewadarData.guardian+"', gender = '"+TempSewadarData.gender+"', address = '"+TempSewadarData.address+"', age = '"+TempSewadarData.age+"' Where id = "+TempSewadarData.id ;
                         $cordovaSQLite.execute($rootScope.db, updateQuery).then(function(res) {
                               $scope.TempSewadarData = {};
+                              $cordovaToast.show('Updated successfully', 'short', 'center');
                         }, function(err){
 
                         });   
@@ -329,6 +329,7 @@
                         $scope.popover.show($event);
                         if(angular.isDefined(sewadar)){
                               $scope.openSewadarPopoverTitle = "Edit Open Sewadar";
+                              $scope.ButtonValue = 'Update Sewadar';
                               $scope.TempSewadarData = sewadar;
                               if(sewadar.gender == 'M'){
                                     $scope.TempSewadarData.Male = true;
@@ -337,6 +338,7 @@
                               }
                         }else {
                               $scope.openSewadarPopoverTitle = "Add Open Sewadar";
+                              $scope.ButtonValue = 'MARK ATTENDANCE';
                         }
                   });
             };

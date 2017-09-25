@@ -3,7 +3,7 @@
       /**
       * SatsangPlaceController
       **/
-      var SatsangPlaceController = function($log, $scope, authService, $ionicHistory) {
+      var SatsangPlaceController = function($log, $scope, authService, $ionicHistory, $cordovaToast) {
             var setup = function() {
                   $log.debug("Satsang Place Information Controller");
                   $scope.info = authService.getSansangPlaceInfo();
@@ -27,10 +27,12 @@
             $scope.placeInfo = function(value) {                  
                   authService.setSansangPlaceInfo(value);
                   $scope.hideEdit = false;
+                  $cordovaToast.show('Information save successfully', 'short', 'center'); 
+
             };
             setup();
       };
-      SatsangPlaceController.$inject  = ['$log', '$scope', 'authService', '$ionicHistory'];
+      SatsangPlaceController.$inject  = ['$log', '$scope', 'authService', '$ionicHistory', '$cordovaToast'];
       angular
       .module('SCMS_ATTENDANCE')
       .controller("SatsangPlaceController", SatsangPlaceController);
