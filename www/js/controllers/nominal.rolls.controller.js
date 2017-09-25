@@ -226,7 +226,10 @@
                               {text : '<i class="icon ion-edit"></i> Edit Nominal Roll '},
                               {text : '<i class="icon ion-paper-airplane"></i> Mark As Dispatched'}
                         ];
-                  } else {
+                  } else if(nominal.status == 'Dispatched' || nominal.status == 'dispatched') {
+                        $cordovaToast.show('Nominal Roll Already Dispatched ', 'short', 'center');                        
+                        return;
+                  }else {
                         $scope.buttonText = [
                         {text : '<i class="icon ion-edit"></i> Edit Nominal Roll '}
                         ];
