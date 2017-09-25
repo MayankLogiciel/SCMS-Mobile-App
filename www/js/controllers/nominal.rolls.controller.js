@@ -50,13 +50,10 @@
                   var query = "select nominal_roll_id,sum(case when gender = 'M' then 1 else 0 end) Male,sum(case when gender = 'F' then 1 else 0 end) Female from ( SELECT DISTINCT sewadars.id, attendances.sewadar_type,sewadars.gender,attendances.nominal_roll_id FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where attendances.sewadar_type = 'permanent' AND attendances.status <> 'deleted' UNION SELECT DISTINCT temp_sewadars.id, attendances.sewadar_type,temp_sewadars.gender,attendances.nominal_roll_id FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where attendances.sewadar_type = 'temporary' AND attendances.status <> 'deleted')group by nominal_roll_id";
                   $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
                         for(var i= 0; i<res.rows.length; i++) { 
-                            // $scope.sewadarsCount.push(res.rows.item(i));
-                            for(var j= 0; j<$scope.nominals.length; j++) { 
-                            // $scope.sewadarsCount.push(res.rows.item(i));
+                              for(var j= 0; j<$scope.nominals.length; j++) { 
                                     if($scope.nominals[j].id == res.rows.item(i).nominal_roll_id) {
                                           $scope.nominals[j].MaleCounts = res.rows.item(i).Male;
                                           $scope.nominals[j].FemaleCounts = res.rows.item(i).Female;
-                                          //return;
                                     }
                               }
                         }
