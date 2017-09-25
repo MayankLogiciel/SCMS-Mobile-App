@@ -161,8 +161,7 @@
                   var stringToDateTo = dateTo[2] +'-'+ dateTo[1] + '-' + dateTo[0];
                   var toDate = new Date(stringToDateTo);
                   var endDateForNominalRoll = new Date(stringToDateTo).getTime();
-
-                  nominalData.new_sewa = (!angular.isDefined(nominalData.new_sewa) || nominalData.new_sewa == 'N/A') ? null : nominalData.new_sewa;
+                  //nominalData.new_sewa = (!angular.isDefined(nominalData.new_sewa) || nominalData.new_sewa == 'N/A') ? null : nominalData.new_sewa;
                   $scope.vehicleId = (!angular.isDefined($scope.vehicleId)) ? null : $scope.vehicleId;
                   nominalData.vehicle_no  = (!angular.isDefined(nominalData.vehicle_no) || nominalData.vehicle_no == '') ? null : nominalData.vehicle_no;
                   nominalData.driver_name  = (!angular.isDefined(nominalData.driver_name) || nominalData.driver_name == '') ? null : nominalData.driver_name;                
@@ -179,9 +178,11 @@
                   }
                   if(!$scope.newEntryDisabled && (!angular.isDefined(nominalData.new_sewa)|| nominalData.new_sewa == '')) {
                         $scope.isValidMiscSewa = false;
+                        nominalData.new_sewa = null;
                         return;
                   }else {
                         $scope.isValidMiscSewa = true;
+                        nominalData.new_sewa = nominalData.new_sewa;
                   }
                   if(!angular.isDefined($scope.schedule)) {
                         $scope.schedule = 1;
