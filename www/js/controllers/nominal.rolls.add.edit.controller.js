@@ -127,6 +127,7 @@
                         $scope.newEntryDisabled = false;
                   } else {
                         $scope.newEntryDisabled = true;
+                        $scope.nominal.new_sewa = 'N/A';
                   }                
             }
 
@@ -178,11 +179,9 @@
                   }
                   if(!$scope.newEntryDisabled && (!angular.isDefined(nominalData.new_sewa)|| nominalData.new_sewa == '')) {
                         $scope.isValidMiscSewa = false;
-                        nominalData.new_sewa = null;
                         return;
                   }else {
                         $scope.isValidMiscSewa = true;
-                        nominalData.new_sewa = nominalData.new_sewa;
                   }
                   if(!angular.isDefined($scope.schedule)) {
                         $scope.schedule = 1;
