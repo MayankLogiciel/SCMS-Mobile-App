@@ -110,7 +110,7 @@
                         }
 
 
-                        var showDeleteConfirm = function(sewadar) {                             
+                        var showDeleteConfirm = function(sewadar) { 
                               $ionicPopup.confirm({
                                     title: 'Please Confirm',
                                     template: 'Are you sure you want to detete '+sewadar.name+' from attendees list? ',
@@ -136,7 +136,6 @@
                                           }
                                           if($scope.nominal_id) {
                                                 var query = "UPDATE attendances set status = 'deleted' WHERE sewadar_id = '"+sewadar.id+"' AND nominal_roll_id = "+$scope.nominal_id;
-                                                
                                           } 
                                           else {
                                                 var query = "DELETE FROM attendances WHERE sewadar_id = '"+sewadar.id+"' AND attendances.nominal_roll_id = 'null'";

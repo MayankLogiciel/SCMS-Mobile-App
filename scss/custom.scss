@@ -11,6 +11,24 @@
 .url-space {
 	padding-left: 0 !important;
 }
+.modal-image {
+	float: right;
+    text-align: right;
+    position: relative;
+	img {
+		float: right;
+		height: 300px;
+		width: 300px;
+		@media(max-width: 480px) {
+			height: 100px;
+			width: 100px;
+			margin-right: 6px;
+		}
+	}
+} 
+.modal-content-left {
+	display: block;
+}
 .pre-url {
 	position: relative;
 	span {
@@ -1753,8 +1771,10 @@
     border-radius: 50%;
     padding-top: 20px;
     padding-bottom: 15px;
-    left: 64%;
-    top: -56px;
+    left: auto;
+    bottom: -30px;
+    position: absolute !important;
+    right: 8px;
     &:before {
     	font-size: 33px;
     }
@@ -2222,8 +2242,10 @@
 	    border-radius: 50%;
 	    padding-top: 9px;
 	    padding-bottom: 1px;
-	    left: 77px;
-	    top: -28px;
+	    left: auto;
+    	bottom: -30px;
+    	position: absolute !important;
+    	right: 8px;
 	}
 	.date-popover {
 	    width: 90%;

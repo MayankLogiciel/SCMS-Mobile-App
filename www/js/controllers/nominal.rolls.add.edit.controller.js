@@ -59,6 +59,7 @@
             };
            
             $scope.getNominalDataForEdit = function(nominalData) {
+
                   if(nominalData.sewa_name != "Misc Sewa"){
                         $scope.newEntryDisabled = true;
                         nominalData.new_sewa = 'N/A';
@@ -69,6 +70,7 @@
                         $scope.isVehicaltypeSected = true;
                   }else {
                         $scope.isVehicaltypeSected = false;
+                        nominalData.vehicle_type = nominalData.vehicle_type;
                   }
                   $timeout(function() {
                         nominalData.vehicle_no = (nominalData.vehicle_no == 'null') ? 'N/A' : nominalData.vehicle_no;
@@ -157,7 +159,6 @@
                   var stringToDateFrom = dateFrom[2] +'-'+ dateFrom[1] + '-' + dateFrom[0];
                   var fromDate = new Date(stringToDateFrom);
                   var startDateForNominalRoll = new Date(stringToDateFrom).getTime();
-
                   var dateTo =nominalData.date_to.split('-');
                   var stringToDateTo = dateTo[2] +'-'+ dateTo[1] + '-' + dateTo[0];
                   var toDate = new Date(stringToDateTo);
@@ -191,14 +192,14 @@
                        $cordovaToast.show('End date should be greater or equal to start date ', 'short', 'center');
                        return;
                   }
-                  if($scope.nominal_id) { 
+                  if($scope.nominal_id) {                        
                         if(!angular.isDefined($scope.sewaId)) {
                               $scope.sewaId = $scope.nominalRollsData.nominalPlace.sewa_id;
                         }
                         if(!angular.isDefined($scope.jathaId)) {
                               $scope.jathaId = $scope.nominalRollsData.nominalDept.department_id;
                         }
-                        if(!angular.isDefined($scope.vehicleId)) {
+                        if(!angular.isDefined($scope.vehicleId) || $scope.vehicleId == null || $scope.vehicleId == 'null') {
                               $scope.vehicleId = $scope.nominalRollsData.nominalVehicle.vehicle_id;
                         }
                         var upadteQuery = "UPDATE nominal_roles SET name = '"+nominalData.name+"', sewa_id = '"+$scope.sewaId+"', vehicle_id = '"+$scope.vehicleId+"', department_id = '"+$scope.jathaId+"', date_from = '"+nominalData.date_from+"',date_to = '"+nominalData.date_to+"',driver_name = '"+nominalData.driver_name+"', vehicle_no = '"+nominalData.vehicle_no+"', contact_no = '"+nominalData.contact_no+"', is_scheduled = "+$scope.schedule+", 'new_sewa' = '"+nominalData.new_sewa+"' WHERE id = '"+$scope.nominal_id+"'";           
