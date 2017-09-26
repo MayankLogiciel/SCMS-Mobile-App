@@ -101,10 +101,11 @@
                   var formattedToDate = dateToSplitted[1]+'-'+dateToSplitted[0]+'-'+dateToSplitted[2];
                   var toDate = new Date(formattedToDate);
                   var eDate = new Date(toDate).getTime();
+
                   if($scope.isDatePopupOpend) {
                         return;
                   }
-                  if(data.from_date > data.to_date) {
+                  if(sDate  > eDate) {
                        $cordovaToast.show('End date should be greater or equal to start date ', 'short', 'center');
                        return;
                   }  

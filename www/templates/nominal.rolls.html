@@ -36,10 +36,10 @@
 							<label>Sewa Place:</label>
 							<span ng-bind="nominal.sewa_name" class="text-transform-capital"></span>
 						</h4>  
-						<h4 class="sewa-place-misc" ng-hide="nominal.new_sewa == 'null' || nominal.new_sewa == 'N/A'" ng-class="{'final-diable':nominal.new_sewa == 'null' || nominal.new_sewa == 'N/A'}">
+						<h4 class="sewa-place-misc" ng-hide="nominal.new_sewa == 'null' || nominal.new_sewa == 'N/A' || nominal.new_sewa == ''" ng-class="{'final-diable':nominal.new_sewa == 'null' || nominal.new_sewa == 'N/A' || nominal.new_sewa == ''}">
 							<label>Misc Sewa Place:</label>
 							<span class="text-transform-capital">
-								{{nominal.new_sewa == 'null' ? 'N/A' : nominal.new_sewa}}
+								{{(nominal.new_sewa == 'null' || nominal.new_sewa == '') ? 'N/A' : nominal.new_sewa}}
 							</span>
 						</h4>
 						<div class="row other-nominal-info"> 
