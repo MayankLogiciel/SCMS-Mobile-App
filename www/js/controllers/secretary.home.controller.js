@@ -159,7 +159,7 @@
                   else if(nominal.status == 'dispatched') {
                         $scope.buttonText = [
                               {text: '<i class="icon ion-checkmark-circled icon-space"></i>Mark As Approved'},
-                              {text : '<i class="icon ion-edit"></i> Edit Nominal Roll'},
+                              // {text : '<i class="icon ion-edit"></i> Edit Nominal Roll'},
                               {text : '<i class="icon ion-trash-a del-nominal-on-tab"></i> Delete Nominal Roll'}
                         ];
                         txt = 'Approved';
