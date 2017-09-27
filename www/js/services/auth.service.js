@@ -30,6 +30,16 @@
 	        }
     	}; 
 
+    	this.setAppVisitedCount = function() {
+            var appVisitedCount = JSON.parse(localStorage.scms_appVisitedCounter || 0);
+            appVisitedCount++;
+            localStorage.scms_appVisitedCounter = appVisitedCount;
+        }
+
+        this.getAppVisitedCount =  function(){
+            return localStorage.scms_appVisitedCounter;
+        }
+
     	this.setDatabaseNotFound= function(err) {
 	        DBErr = err;
     	};
