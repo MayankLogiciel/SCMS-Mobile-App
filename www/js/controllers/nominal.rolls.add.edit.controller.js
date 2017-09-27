@@ -59,6 +59,15 @@
             };
            
             $scope.getNominalDataForEdit = function(nominalData) {
+                  var dateFrom =nominalData.date_from.split('-');
+                  var stringToDateFrom = dateFrom[0] +'-'+ dateFrom[1] + '-' + dateFrom[2];
+                  var fromDate = new Date(stringToDateFrom);
+                  var sDate = $filter('date')((fromDate),'dd-MM-yyyy');
+                  
+                  var dateTo =nominalData.date_to.split('-');
+                  var stringToDateTo = dateTo[0] +'-'+ dateTo[1] + '-' + dateTo[2];
+                  var toDate = new Date(stringToDateTo);
+                  var eDate = $filter('date')((toDate),'dd-MM-yyyy');
 
                   if(nominalData.sewa_name != "Misc Sewa"){
                         $scope.newEntryDisabled = true;
@@ -73,6 +82,8 @@
                         nominalData.vehicle_type = nominalData.vehicle_type;
                   }
                   $timeout(function() {
+                        nominalData.date_from = sDate;
+                        nominalData.date_to = eDate;
                         nominalData.vehicle_no = (nominalData.vehicle_no == 'null') ? 'N/A' : nominalData.vehicle_no;
                         nominalData.driver_name = (nominalData.driver_name == 'null') ? 'N/A' : nominalData.driver_name;
                         nominalData.new_sewa = (nominalData.new_sewa == 'null') ? 'N/A' : nominalData.new_sewa;
@@ -155,14 +166,20 @@
             }
             
             $scope.addEditNominal = function(nominalData) {
+
                   var dateFrom =nominalData.date_from.split('-');
                   var stringToDateFrom = dateFrom[2] +'-'+ dateFrom[1] + '-' + dateFrom[0];
                   var fromDate = new Date(stringToDateFrom);
                   var startDateForNominalRoll = new Date(stringToDateFrom).getTime();
+                  var sDate = $filter('date')((fromDate),'yyyy-MM-dd');
+
                   var dateTo =nominalData.date_to.split('-');
                   var stringToDateTo = dateTo[2] +'-'+ dateTo[1] + '-' + dateTo[0];
                   var toDate = new Date(stringToDateTo);
                   var endDateForNominalRoll = new Date(stringToDateTo).getTime();
+                  var eDate = $filter('date')((toDate),'yyyy-MM-dd');
+
+
                   $scope.vehicleId = (!angular.isDefined($scope.vehicleId)) ? null : $scope.vehicleId;
                   nominalData.vehicle_no  = (!angular.isDefined(nominalData.vehicle_no) || nominalData.vehicle_no == '') ? null : nominalData.vehicle_no;
                   nominalData.driver_name  = (!angular.isDefined(nominalData.driver_name) || nominalData.driver_name == '') ? null : nominalData.driver_name;                
@@ -202,7 +219,7 @@
                         if(!angular.isDefined($scope.vehicleId) || $scope.vehicleId == null || $scope.vehicleId == 'null') {
                               $scope.vehicleId = $scope.nominalRollsData.nominalVehicle.vehicle_id;
                         }
-                        var upadteQuery = "UPDATE nominal_roles SET name = '"+nominalData.name+"', sewa_id = '"+$scope.sewaId+"', vehicle_id = '"+$scope.vehicleId+"', department_id = '"+$scope.jathaId+"', date_from = '"+nominalData.date_from+"',date_to = '"+nominalData.date_to+"',driver_name = '"+nominalData.driver_name+"', vehicle_no = '"+nominalData.vehicle_no+"', contact_no = '"+nominalData.contact_no+"', is_scheduled = "+$scope.schedule+", 'new_sewa' = '"+nominalData.new_sewa+"' WHERE id = '"+$scope.nominal_id+"'";           
+                        var upadteQuery = "UPDATE nominal_roles SET name = '"+nominalData.name+"', sewa_id = '"+$scope.sewaId+"', vehicle_id = '"+$scope.vehicleId+"', department_id = '"+$scope.jathaId+"', date_from = '"+sDate+"',date_to = '"+eDate+"',driver_name = '"+nominalData.driver_name+"', vehicle_no = '"+nominalData.vehicle_no+"', contact_no = '"+nominalData.contact_no+"', is_scheduled = "+$scope.schedule+", 'new_sewa' = '"+nominalData.new_sewa+"' WHERE id = '"+$scope.nominal_id+"'";           
                         $cordovaSQLite.execute($rootScope.db, upadteQuery).then(function(res) {
                               $rootScope.$broadcast('refreshPage');
                               if($scope.nominal_user == 'secretary') {
@@ -214,19 +231,20 @@
                               $cordovaToast.show('Nominal roll updated successfully', 'short', 'center');
                         }, function(err) {  
                         }); 
-                  }else {                        
+                  }else {   
+
+
                         var status = 'pending'; 
                         var approved_by = 0;
                         var incharge_id = null;
                         var incharge_type = null;
-                        var Insertquery = "INSERT INTO nominal_roles('name', 'sewa_id', 'driver_name', 'contact_no', 'department_id', 'vehicle_id', 'vehicle_no', 'date_from', 'date_to', 'status', 'reference_id', 'created_at', 'updated_at', 'approved_by', 'is_scheduled', 'new_sewa', 'incharge_id', 'incharge_type') VALUES ('"+nominalData.name+"', '"+$scope.sewaId+"', '"+nominalData.driver_name+"', '"+nominalData.contact_no+"', '"+$scope.jathaId+"' , "+$scope.vehicleId+", '"+nominalData.vehicle_no+"', '"+nominalData.date_from+"', '"+nominalData.date_to+"', '"+status+"', NULL, '"+$scope.current+"', '"+$scope.current+"', "+approved_by+", "+$scope.schedule+", '"+nominalData.new_sewa+"', '"+incharge_id+"', '"+incharge_type+"')";
-                              $cordovaSQLite.execute($rootScope.db, Insertquery).then(function(res) {
-                                    $rootScope.$broadcast('refreshPage',{vahicleId: $scope.vehicleId});
-                                    $state.go("nominal_rolls");
-                                    $cordovaToast.show('Nominal roll added successfully', 'short', 'center');
-                              }, function(err) { 
-                        });
-                        
+                        var Insertquery = "INSERT INTO nominal_roles('name', 'sewa_id', 'driver_name', 'contact_no', 'department_id', 'vehicle_id', 'vehicle_no', 'date_from', 'date_to', 'status', 'reference_id', 'created_at', 'updated_at', 'approved_by', 'is_scheduled', 'new_sewa', 'incharge_id', 'incharge_type') VALUES ('"+nominalData.name+"', '"+$scope.sewaId+"', '"+nominalData.driver_name+"', '"+nominalData.contact_no+"', '"+$scope.jathaId+"' , "+$scope.vehicleId+", '"+nominalData.vehicle_no+"', '"+sDate+"', '"+eDate+"', '"+status+"', NULL, '"+$scope.current+"', '"+$scope.current+"', "+approved_by+", "+$scope.schedule+", '"+nominalData.new_sewa+"', '"+incharge_id+"', '"+incharge_type+"')";
+                        $cordovaSQLite.execute($rootScope.db, Insertquery).then(function(res) {
+                              $rootScope.$broadcast('refreshPage',{vahicleId: $scope.vehicleId});
+                              $state.go("nominal_rolls");
+                              $cordovaToast.show('Nominal roll added successfully', 'short', 'center');
+                        }, function(err) { 
+                        });                        
                   };
             };
             var datePickedFrom = {

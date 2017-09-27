@@ -114,7 +114,8 @@
                         $scope.nominals = [];
                         angular.forEach($scope.nominalCompleteData, function(val){
                               var dateValFromSplitted = val.date_from.split('-'); // date must be in DD-MM-YYYY format
-                              var formattedValFromDate = dateValFromSplitted[1]+'-'+dateValFromSplitted[0]+'-'+dateValFromSplitted[2];
+                              
+                              var formattedValFromDate = dateValFromSplitted[1]+'-'+dateValFromSplitted[2]+'-'+dateValFromSplitted[0];
                               var fromValDate = new Date(formattedValFromDate);
                               var fDate = new Date(fromValDate).getTime();
                               if((fDate >= sDate) && (fDate <= eDate)){
@@ -266,7 +267,6 @@
                         }
                   });
             }
-
 
             var showConfirm = function(str, nominal) { 
                   $ionicPopup.confirm({

@@ -37,6 +37,7 @@
                         $scope.nominalRollsData.driver_name = (nominalRollsService.getNominalRollsData().driver_name == 'null') ? '' : nominalRollsService.getNominalRollsData().driver_name;
                         var oneDay = 24*60*60*1000; 
                         $scope.startDate = new Date($scope.nominalRollsData.date_from);
+
                         var endDate = new Date($scope.nominalRollsData.date_to);
                         $scope.diffDays = Math.round(Math.abs(($scope.startDate.getTime() - endDate.getTime())/(oneDay)));
                         if($scope.nominalRollsData.status == 'pending') {
@@ -44,7 +45,18 @@
                         } else {
                               $scope.isCurrentDate = true;
                         }                                    
+                        var dateFrom =$scope.nominalRollsData.date_from.split('-');
+                        var stringToDateFrom = dateFrom[0] +'-'+ dateFrom[1] + '-' + dateFrom[2];
+                        var fromDate = new Date(stringToDateFrom);
+                        $scope.sDate = $filter('date')((fromDate),'dd-MM-yyyy');
+                        console.log($scope.sDate);
+                  
+                        var dateTo =$scope.nominalRollsData.date_to.split('-');
+                        var stringToDateTo = dateTo[0] +'-'+ dateTo[1] + '-' + dateTo[2];
+                        var toDate = new Date(stringToDateTo);
+                        $scope.eDate = $filter('date')((toDate),'dd-MM-yyyy');
                   }
+
                   if(profilePicService.getTimeOfPic()=='') {
                         $scope.timeStampPhoto = '';
                   }else {
@@ -195,9 +207,9 @@
                         var reference_id = $scope.refId+sewadar.id;
                         var sewadar_type = 'permanent';
                         var Insertquery;
-                        var date = new Date($scope.startDate);        
-                        var CheckQuery = "SELECT sewadar_id FROM attendances where sewadar_id ='"+sewadar.id+"' AND nominal_roll_id ='"+$scope.nominal_id+"'";
-                        $cordovaSQLite.execute($rootScope.db, CheckQuery).then(function(res) {
+                        var date = $filter('date')($scope.startDate, 'yyyy-MM-dd');       
+                        var CheckQuery = "SELECT sewadar_id, status FROM attendances where sewadar_id ='"+sewadar.id+"' AND nominal_roll_id ='"+$scope.nominal_id+"'";
+                        $cordovaSQLite.execute($rootScope.db, CheckQuery).then(function(res) {                             
                               if(res.rows.length==0) {
                                     Insertquery = "INSERT INTO attendances('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id') VALUES ('"+date+"','"+sewadar.id+"','"+$scope.nominalRollsData.sewa_id+"', '"+reference_id+"', '"+type+"', '"+batch_type+"','"+$scope.current+"','"+$scope.current+"', '"+sewadar_type+"','"+$scope.nominal_id+"')";
                                     $cordovaSQLite.execute($rootScope.db, Insertquery).then(function(res) {
@@ -206,7 +218,18 @@
                                     }, function(err) {                  
                                     });                           
                               } else {
-                                    $cordovaToast.show('Sewadar already exist', 'short', 'center');
+                                    for(var i= 0; i<res.rows.length; i++) { 
+                                          if(res.rows.item(i).status == 'deleted') {
+                                                var UpdateQuery = "Update attendances set status = 'active' where sewadar_id ='"+res.rows.item(i).sewadar_id+"'";
+                                                $cordovaSQLite.execute($rootScope.db, UpdateQuery).then(function(res) {
+                                                      $scope.sewadarAttendance.unshift(sewadar);                              
+                                                      $cordovaToast.show('Sewadar added', 'short', 'center');
+                                                }, function(err) {                  
+                                                });   
+                                          } else {
+                                                $cordovaToast.show('Sewadar already exist', 'short', 'center');                                                
+                                          }                                  
+                                    } 
                               }
                         }, function(err) { 
                         });
@@ -471,7 +494,7 @@
                                     } 
                                     var htmlBodyStart = '<html><body>';
                                     var header = '<div style="width: 99%; margin: auto; margin-top: -27px;"> <div style="width: 20%; display:inline-block; vertical-align: middle;"> <div> <img src="img/nomination.png" style="width: 55px; margin-top: -20px; alt="nomination-logo"> </div> </div> <div style="width: 58%; display:inline-block;"> <div style="text-align: center;"> <h3> SATSANG CENTERS IN INDIA <br> NOMINAL ROLL SEWA JATHA </h3> </div> </div> <div style="width: 20%; display:inline-block; vertical-align: top;"> <div style="text-align: right;"> <h4>SCI/2016/84</h4> </div> </div> </div>'; 
-                                    var subHeader = '<table style="width: 99%; margin: auto;"><tr><td style="width:60%; font-size: 12px;">Name of Satsang Place :&nbsp;<span style="font-weight: bold; font-size: 12px;">'+$scope.placeInfo.place+'</span></td><td style="width:25%; font-size: 12px;">Area :&nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.placeInfo.area+'</span></td><td style="width:15%; font-size: 12px;">Zone :<span style="font-weight: bold; font-size: 11px;">'+$scope.placeInfo.zone+'</span></td></tr><tr><td style="width:60%; font-size: 12px;">Name of Jathedar : &nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.nominalRollsData.name+'</span></td><td colspan="2" style="width:40%; font-size: 12px;">Name of Driver :</span> &nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.nominalRollsData.driver_name+'</span></td></tr><tr><td style="font-size: 12px; width:60%;">Type of Vehicle : &nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.nominalRollsData.vehicle_type+'</span></td><td colspan="2" style="font-size: 12px; width:40%;">Vehicle No : &nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.nominalRollsData.vehicle_no+'</span></td></tr><tr><td style="width:60%; font-size: 12px;">Place of Sewa : &nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.nominalRollsData.sewa_name+'</span></td><td style="width:25%; font-size: 12px;">Duration From :&nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.nominalRollsData.date_from+'</span></td><td style="width:15%; font-size: 12px;">To :&nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.nominalRollsData.date_to+'</span></td></tr><tr><td colspan="3" style="font-size: 12px;">(Mention Beas Department or Center as Applicable)</td></tr></table>';
+                                    var subHeader = '<table style="width: 99%; margin: auto;"><tr><td style="width:60%; font-size: 12px;">Name of Satsang Place :&nbsp;<span style="font-weight: bold; font-size: 12px;">'+$scope.placeInfo.place+'</span></td><td style="width:25%; font-size: 12px;">Area :&nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.placeInfo.area+'</span></td><td style="width:15%; font-size: 12px;">Zone :<span style="font-weight: bold; font-size: 11px;">'+$scope.placeInfo.zone+'</span></td></tr><tr><td style="width:60%; font-size: 12px;">Name of Jathedar : &nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.nominalRollsData.name+'</span></td><td colspan="2" style="width:40%; font-size: 12px;">Name of Driver :</span> &nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.nominalRollsData.driver_name+'</span></td></tr><tr><td style="font-size: 12px; width:60%;">Type of Vehicle : &nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.nominalRollsData.vehicle_type+'</span></td><td colspan="2" style="font-size: 12px; width:40%;">Vehicle No : &nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.nominalRollsData.vehicle_no+'</span></td></tr><tr><td style="width:60%; font-size: 12px;">Place of Sewa : &nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.nominalRollsData.sewa_name+'</span></td><td style="width:25%; font-size: 12px;">Duration From :&nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.sDate+'</span></td><td style="width:15%; font-size: 12px;">To :&nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.eDate+'</span></td></tr><tr><td colspan="3" style="font-size: 12px;">(Mention Beas Department or Center as Applicable)</td></tr></table>';
                                     var tableStart = '<table style="border-collapse: collapse; width: 99%; margin-right: auto; margin-left: auto; margin-top: 10px"> <thead style="display: table-header-group"> <tr> <th style="border: 1px solid #000; font-size: 10px; ">Sr.No.</th> <th style="border: 1px solid #000; font-size: 10px;">Name of Sewadar / <br>Sewadarni</th> <th style="border: 1px solid #000; font-size: 10px; ">Father'+'s / Husband'+'s <br>Name</th> <th style="border: 1px solid #000;font-size: 10px;">Male / <br>Female</th> <th style="border: 1px solid #000; font-size: 10px;">&nbsp;&nbsp;&nbsp;Age&nbsp;&nbsp;&nbsp;</th> <th style="border: 1px solid #000;font-size: 10px;">R/O Village / Town / Location / District</th> <th style="border: 1px solid #000;font-size: 10px;">Badge <br>No.</th> </tr> </thead>';
                                     var tableStart11 = '<table style="border-collapse: collapse; width: 99%; margin-right: auto; margin-left: auto; margin-top: -15px"> <thead style="display: table-header-group"> <tr> <th style="border: 1px solid #000; font-size: 10px; ">Sr.No.</th> <th style="border: 1px solid #000; font-size: 10px;">Name of Sewadar / <br>Sewadarni</th> <th style="border: 1px solid #000; font-size: 10px; ">Father'+'s / Husband'+'s <br>Name</th> <th style="border: 1px solid #000;font-size: 10px;">Male / <br>Female</th> <th style="border: 1px solid #000; font-size: 10px;">&nbsp;&nbsp;&nbsp;Age&nbsp;&nbsp;&nbsp;</th> <th style="border: 1px solid #000;font-size: 10px;">R/O Village / Town / Location / District</th> <th style="border: 1px solid #000;font-size: 10px;">Badge <br>No.</th> </tr> </thead>';
                                     var tableStart1 = '<table style="border-collapse: collapse; width: 99%; margin-right: auto; margin-left: auto; margin-top: 10px"> <thead style="display: table-header-group"> <tr> <th style="border: 1px solid #000; font-size: 10px; ">Sr.No.</th> <th style="border: 1px solid #000; font-size: 10px;">Name of Sewadar / <br>Sewadarni</th> <th style="border: 1px solid #000; font-size: 10px; ">Father'+'s / Husband'+'s <br>Name</th> <th style="border: 1px solid #000;font-size: 10px;">Male / <br>Female</th> <th style="border: 1px solid #000; font-size: 10px;">&nbsp;&nbsp;&nbsp;Age&nbsp;&nbsp;&nbsp;</th> <th style="border: 1px solid #000;font-size: 10px;">R/O Village / Town / Location / District</th> <th style="border: 1px solid #000;font-size: 10px;">Badge <br>No.</th> </tr> </thead>';
