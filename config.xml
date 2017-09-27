@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.scms.rssb-testing" version="0.0.8" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>SCMS-TESTING-PHASE</name>
+<widget id="com.scms.rssb-testing" version="0.0.8-date-format" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+  <name>SCMS-DATE-TESTING-PHASE</name>
   <description>
         An Ionic Framework and Cordova project.
     </description>
