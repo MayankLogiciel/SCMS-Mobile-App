@@ -59,6 +59,7 @@
             };
            
             $scope.getNominalDataForEdit = function(nominalData) {
+                  console.log(nominalData);
                   var dateFrom =nominalData.date_from.split('-');
                   var stringToDateFrom = dateFrom[0] +'-'+ dateFrom[1] + '-' + dateFrom[2];
                   var fromDate = new Date(stringToDateFrom);
@@ -201,8 +202,6 @@
                         $scope.isValidMiscSewa = true;
                   }
                   if(!angular.isDefined($scope.schedule)) {
-                        $scope.schedule = 1;
-                  }else {
                         $scope.schedule = ($scope.schedule=='Scheduled') ? 1 : 0;
                   }
                   if(startDateForNominalRoll > endDateForNominalRoll) {
