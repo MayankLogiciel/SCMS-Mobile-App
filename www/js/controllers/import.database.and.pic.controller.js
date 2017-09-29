@@ -174,7 +174,6 @@
             }
 
             $scope.import = function(importData) { 
-                  console.log(importData);
                   if($cordovaNetwork.isOffline()){
                         $cordovaToast.show('Please Check your network connection', 'short', 'center');
                         return;
@@ -190,10 +189,7 @@
                         $scope.downloadOptions = {};
                         $scope.targetPath = $rootScope.baseAppDir + 'database.sqlite';
                         $scope.url = $scope.preServerUrl + importData.server_url + SCMS_SERVER_DOWNLOAD_URL;
-                  console.log($scope.url);
-                        
                         var serverUrl = $scope.preServerUrl + importData.server_url;
-
                         var config = 1;
                         picAndDatabaseTransferService.getTokenFromServer(importData.username, importData.password, config, serverUrl).then(function(response) {
                               var accessToken = "bearer " + response.data.signature;

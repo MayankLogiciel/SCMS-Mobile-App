@@ -82,7 +82,7 @@
                         $scope.isVehicaltypeSected = false;
                         nominalData.vehicle_type = nominalData.vehicle_type;
                   }
-                  $timeout(function() {
+                  $timeout(function() {                        
                         nominalData.date_from = sDate;
                         nominalData.date_to = eDate;
                         nominalData.vehicle_no = (nominalData.vehicle_no == 'null') ? 'N/A' : nominalData.vehicle_no;
@@ -149,12 +149,14 @@
                   $scope.jathaId =  jatha.department_id;
             }
 
-            $scope.selectedVehicle = function(vehicle) {                 
+            $scope.selectedVehicle = function(vehicle) {                                  
                   $scope.vehicleId =  (vehicle == null) ? null : vehicle.vehicle_id; 
                   if(vehicle != null) {
                         $scope.isVehicaltypeSected = false;
                   } else {
                         $scope.isVehicaltypeSected = true;
+                        $scope.nominal.driver_name = 'N/A';
+                        $scope.nominal.vehicle_no = 'N/A';
                   }
             }
 
@@ -167,7 +169,6 @@
             }
             
             $scope.addEditNominal = function(nominalData) {
-
                   var dateFrom =nominalData.date_from.split('-');
                   var stringToDateFrom = dateFrom[2] +'-'+ dateFrom[1] + '-' + dateFrom[0];
                   var fromDate = new Date(stringToDateFrom);
@@ -180,8 +181,6 @@
                   var endDateForNominalRoll = new Date(stringToDateTo).getTime();
                   var eDate = $filter('date')((toDate),'yyyy-MM-dd');
 
-
-                  $scope.vehicleId = (!angular.isDefined($scope.vehicleId)) ? null : $scope.vehicleId;
                   nominalData.vehicle_no  = (!angular.isDefined(nominalData.vehicle_no) || nominalData.vehicle_no == '') ? null : nominalData.vehicle_no;
                   nominalData.driver_name  = (!angular.isDefined(nominalData.driver_name) || nominalData.driver_name == '') ? null : nominalData.driver_name;                
                   nominalData.name  = (!angular.isDefined(nominalData.name) || nominalData.name == '') ? null : nominalData.name;                
@@ -201,22 +200,30 @@
                   }else {
                         $scope.isValidMiscSewa = true;
                   }
-                  if(!angular.isDefined($scope.schedule)) {
-                        $scope.schedule = ($scope.schedule=='Scheduled') ? 1 : 0;
-                  }
+                 
                   if(startDateForNominalRoll > endDateForNominalRoll) {
                        $cordovaToast.show('End date should be greater or equal to start date ', 'short', 'center');
                        return;
                   }
-                  if($scope.nominal_id) {                        
+                  if($scope.nominal_id) { 
+                        if(!angular.isDefined($scope.schedule)) {
+                              $scope.schedule = nominalData.is_scheduled;
+                        }else{
+                              $scope.schedule = ($scope.schedule=='Scheduled') ? 1 : 0;
+                        }                       
                         if(!angular.isDefined($scope.sewaId)) {
                               $scope.sewaId = $scope.nominalRollsData.nominalPlace.sewa_id;
                         }
                         if(!angular.isDefined($scope.jathaId)) {
                               $scope.jathaId = $scope.nominalRollsData.nominalDept.department_id;
                         }
-                        if(!angular.isDefined($scope.vehicleId) || $scope.vehicleId == null || $scope.vehicleId == 'null') {
+                        if(!angular.isDefined($scope.vehicleId)) {
                               $scope.vehicleId = $scope.nominalRollsData.nominalVehicle.vehicle_id;
+                        }
+                        else if($scope.vehicleId == null || $scope.vehicleId == 'null') {
+                              $scope.vehicleId = null;
+                        }else {
+                              $scope.vehicleId = $scope.vehicleId;                              
                         }
                         var upadteQuery = "UPDATE nominal_roles SET name = '"+nominalData.name+"', sewa_id = '"+$scope.sewaId+"', vehicle_id = '"+$scope.vehicleId+"', department_id = '"+$scope.jathaId+"', date_from = '"+sDate+"',date_to = '"+eDate+"',driver_name = '"+nominalData.driver_name+"', vehicle_no = '"+nominalData.vehicle_no+"', contact_no = '"+nominalData.contact_no+"', is_scheduled = "+$scope.schedule+", 'new_sewa' = '"+nominalData.new_sewa+"' WHERE id = '"+$scope.nominal_id+"'";           
                         $cordovaSQLite.execute($rootScope.db, upadteQuery).then(function(res) {
@@ -224,15 +231,19 @@
                               if($scope.nominal_user == 'secretary') {
                                     $state.go("secretary-home");
                               }else {
-
                                     $state.go("nominal_rolls");
                               }
                               $cordovaToast.show('Nominal roll updated successfully', 'short', 'center');
                         }, function(err) {  
                         }); 
-                  }else {   
+                  }else {  
+                        $scope.vehicleId = (!angular.isDefined($scope.vehicleId) || $scope.vehicleId == null || $scope.vehicleId == 'null') ? null : $scope.vehicleId;
+                        if(!angular.isDefined($scope.schedule)) {
+                              $scope.schedule = 1;
+                        }else {
 
-
+                              $scope.schedule = ($scope.schedule=='Scheduled') ? 1 : 0;
+                        }
                         var status = 'pending'; 
                         var approved_by = 0;
                         var incharge_id = null;

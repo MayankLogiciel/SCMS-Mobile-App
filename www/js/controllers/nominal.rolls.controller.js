@@ -39,7 +39,8 @@
                               for(var i= 0; i<res.rows.length; i++) { 
                                     $scope.nominals.push(res.rows.item(i));                                                                                                         
                               }  
-                              nominalRollsService.setnominalRollsCompleteData($scope.nominals);                               
+                              nominalRollsService.setnominalRollsCompleteData($scope.nominals);
+
                         }
                         cfpLoadingBar.complete();
                   }, function (err) { 

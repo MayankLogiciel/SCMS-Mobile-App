@@ -265,7 +265,7 @@
                         for(var i=0; i <$scope.nominals.length; i++) {
                               if($scope.nominals[i].id == n_id) {
                                     $scope.nominals.splice(i,true);
-                              }
+                              }                             
                         }                      
                   }, function(err){
                   });
@@ -275,8 +275,7 @@
                   var query = "UPDATE attendances SET status = 'deleted' WHERE nominal_roll_id =" + n_id;
                   $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
                   }, function(err){
-                  });
-                  
+                  });                  
             }  
 
             $scope.getListForNominalRolls = function(){

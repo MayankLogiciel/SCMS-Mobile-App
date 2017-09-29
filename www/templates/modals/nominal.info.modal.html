@@ -11,7 +11,7 @@
 				</h4>
 				<h4 class="g-name com-padding-modal nominal-info-modal-misc"  ng-class="{'final-diable':nominalRolesData.new_sewa == 'null'}">
 					<label>Misc Sewa Place:</label>
-					<span>{{nominalRolesData.new_sewa == 'null' ? 'N/A' : nominalRolesData.new_sewa}}</span>
+					<span>{{(nominalRolesData.new_sewa == 'null' || nominalRolesData.new_sewa == '') ? 'N/A' : nominalRolesData.new_sewa}}</span>
 				</h4>
 				<div class="row nominal-info-modal-other">
 					<div class="col col-50">
@@ -28,7 +28,7 @@
 						<h4 class="g-name">
 							<label>Jathedar Name:</label>
 							<span>
-								{{nominalRolesData.name == 'null'? 'N/A': nominalRolesData.name}}
+								{{(nominalRolesData.name == 'null' || nominalRolesData.name=='')? 'N/A': nominalRolesData.name}}
 							</span>
 						</h4>
 						<h4 class="g-name">
@@ -40,7 +40,7 @@
 						<h4 class="g-name">
 							<label>Driver Name:</label>
 							<span class="text-transform-capital" >
-								{{nominalRolesData.driver_name == 'null'? 'N/A': nominalRolesData.driver_name}}
+								{{(nominalRolesData.driver_name == 'null' || nominalRolesData.driver_name == '')? 'N/A': nominalRolesData.driver_name}}
 							</span> 
 						</h4>
 						<h4 class="g-name">
@@ -60,13 +60,13 @@
 						<h4 class="g-name">
 							<label>Contact No:</label>
 							<span>
-								{{nominalRolesData.contact_no == 'undefined'? 'N/A': nominalRolesData.contact_no}}
+								{{(nominalRolesData.contact_no == 'undefined' || nominalRolesData.contact_no == '')? 'N/A': nominalRolesData.contact_no}}
 							</span>
 						</h4>
 						<h4 class="g-name">
 							<label>Vehicle Number:</label>	
 							<span class = "text-transform-uppercase">
-								{{nominalRolesData.vehicle_no == 'null'? 'N/A': nominalRolesData.vehicle_no}}
+								{{(nominalRolesData.vehicle_no == 'null' || nominalRolesData.vehicle_no == '')? 'N/A': nominalRolesData.vehicle_no}}
 							</span>                 
 						</h4>
 						<h4 class="g-name">
@@ -100,7 +100,7 @@
 				</h4>
 				<h4 class="g-name"  ng-class="{'final-diable':nominalRolesData.new_sewa == 'null'}">
 					<label>Misc Sewa Place:</label>
-					<span>{{nominalRolesData.new_sewa == 'null' ? 'N/A' : nominalRolesData.new_sewa}}</span>
+					<span>{{(nominalRolesData.new_sewa == 'null' || nominalRolesData.new_sewa == '') ? 'N/A' : nominalRolesData.new_sewa}}</span>
 				</h4>
 				<h4 class="g-name">
 					<label>Scheduled Status:</label>
@@ -115,13 +115,13 @@
 				<h4 class="g-name">
 					<label>Jathedar Name:</label>
 					<span>
-						{{nominalRolesData.name == 'null'? 'N/A': nominalRolesData.name}}
+						{{(nominalRolesData.name == 'null' || nominalRolesData.name=='')? 'N/A': nominalRolesData.name}}
 					</span>
 				</h4>
 				<h4 class="g-name">
 					<label>Contact No:</label>
 					<span>
-						{{nominalRolesData.contact_no == 'undefined'? 'N/A': nominalRolesData.contact_no}}
+						{{(nominalRolesData.contact_no == 'undefined' || nominalRolesData.contact_no == '')? 'N/A': nominalRolesData.contact_no}}
 					</span>
 				</h4>
 				<h4 class="g-name">
@@ -134,13 +134,13 @@
 				<h4 class="g-name">
 					<label>Vehicle Number:</label>	
 					<span class = "text-transform-uppercase">
-						{{nominalRolesData.vehicle_no == 'null'? 'N/A': nominalRolesData.vehicle_no}}
+						{{(nominalRolesData.vehicle_no == 'null' || nominalRolesData.vehicle_no == '')? 'N/A': nominalRolesData.vehicle_no}}
 					</span>                 
 				</h4>
 				<h4 class="g-name">
 					<label>Driver Name:</label>
 					<span class="text-transform-capital" >
-						{{nominalRolesData.driver_name == 'null'? 'N/A': nominalRolesData.driver_name}}
+						{{(nominalRolesData.driver_name == 'null' || nominalRolesData.driver_name == '')? 'N/A': nominalRolesData.driver_name}}
 					</span> 
 				</h4>
 				<h4 class="g-name">

@@ -35,6 +35,10 @@
 						<label>DOB:</label>
 						<span ng-bind="sewadar.dob | date: 'dd-MM-yyyy'"></span>
 					</h4>
+					<h4 ng-if="!sewadar.dob">
+						<label>Age:</label>
+						<span >{{sewadar.age +' Years'}}</span>
+					</h4>
 					<h4 ng-if="sewadar.gender">
 						<label>Gender:</label>
 						<span ng-bind="(sewadar.gender=='M')?'Male':'Female'"></span>

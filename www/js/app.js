@@ -1,5 +1,7 @@
 angular.module('SCMS_ATTENDANCE', ['ionic', 'ngCordova', 'validation', 'validation.rule', 'ionic-datepicker', 'angular-loading-bar', 'ngAnimate', 'dtrw.bcrypt', 'ion-floating-menu'])     
 .run(function($ionicPlatform, $cordovaSQLite, $rootScope, $state, $ionicPopup, authService, $cordovaFile,  $timeout, $cordovaSplashscreen, cfpLoadingBar) {
+      
+
       $ionicPlatform.ready(function() {
             $rootScope.isImageDirectoryNotFound = false;
             $rootScope.isDBNotFound = false;
@@ -13,7 +15,7 @@ angular.module('SCMS_ATTENDANCE', ['ionic', 'ngCordova', 'validation', 'validati
                   if(ionic.Platform.isIOS()){
                         $rootScope.baseAppDir = cordova.file.dataDirectory;
                   }else {
-                        $rootScope.baseAppDir = cordova.file.externalApplicationStorageDirectory;
+                        $rootScope.baseAppDir = cordova.file.externalApplicationStorageDirectory;                       
                   }
             }
             var hideSplashScreen = function (){
@@ -36,6 +38,59 @@ angular.module('SCMS_ATTENDANCE', ['ionic', 'ngCordova', 'validation', 'validati
 
             hideSplashScreen();
 
+            var getRequestPermission = function() {
+                  cordova.plugins.diagnostic.getPermissionsAuthorizationStatus(function(statuses){
+                        for (var permission in statuses){
+                              switch(statuses[permission]){
+                                    case cordova.plugins.diagnostic.permissionStatus.GRANTED:
+                                    createFolder();
+                                    break;
+                                    case cordova.plugins.diagnostic.permissionStatus.NOT_REQUESTED:                              
+                                    case cordova.plugins.diagnostic.permissionStatus.DENIED:                             
+                                    case cordova.plugins.diagnostic.permissionStatus.DENIED_ALWAYS:
+                                    setRequestPermission();
+                                    break;
+                              }
+                        }
+                  }, function(error){
+                  },[
+                  cordova.plugins.diagnostic.permission.WRITE_EXTERNAL_STORAGE,
+                  ]);
+            }
+
+            getRequestPermission();
+
+            var setRequestPermission = function() {
+                  cordova.plugins.diagnostic.requestRuntimePermission(function(status){
+                        switch(status){
+                              case cordova.plugins.diagnostic.permissionStatus.GRANTED:
+                              deleteImportFolder();
+                              break;
+                              case cordova.plugins.diagnostic.permissionStatus.NOT_REQUESTED:
+                              case cordova.plugins.diagnostic.permissionStatus.DENIED:
+                              case cordova.plugins.diagnostic.permissionStatus.DENIED_ALWAYS:
+                              getRequestPermission();
+                              break;
+                        }
+                  }, function(error){
+                  }, cordova.plugins.diagnostic.permission.WRITE_EXTERNAL_STORAGE);
+            }
+
+            var  deleteImportFolder = function() {
+                  $cordovaFile.checkDir($rootScope.baseAppDir, "import")
+                  .then(function (success) {
+                        $cordovaFile.removeRecursively($rootScope.baseAppDir, "import")
+                        .then(function (success1) {
+                              createFolder();  
+                        }, function (error) { 
+                              createFolder();                                 
+                        });
+
+                  }, function (error) {
+                        createFolder();
+                  });                                    
+            }
+
 
             var createFolder = function() {
                   $cordovaFile.createDir($rootScope.baseAppDir, "import", false)
@@ -56,7 +111,7 @@ angular.module('SCMS_ATTENDANCE', ['ionic', 'ngCordova', 'validation', 'validati
                   });
             }
 
-            createFolder();
+            
 
 
             var checkDBAndCopy = function () {
