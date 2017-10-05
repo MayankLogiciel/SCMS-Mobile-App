@@ -82,14 +82,16 @@ angular.module('SCMS_ATTENDANCE', ['ionic', 'ngCordova', 'validation', 'validati
                         $cordovaFile.removeRecursively($rootScope.baseAppDir, "import")
                         .then(function (success1) {
                               localStorage.clear();
-                              createFolder();  
+                              $state.go('login');
+                              createFolder();                              
                         }, function (error) { 
-                              createFolder();                                 
+                              createFolder();                                                         
                         });
-
                   }, function (error) {
+                        localStorage.clear();
+                        $state.go('login');
                         createFolder();
-                  });                                    
+                  });                                                      
             }
 
 
