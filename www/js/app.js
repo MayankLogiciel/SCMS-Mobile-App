@@ -81,6 +81,7 @@ angular.module('SCMS_ATTENDANCE', ['ionic', 'ngCordova', 'validation', 'validati
                   .then(function (success) {
                         $cordovaFile.removeRecursively($rootScope.baseAppDir, "import")
                         .then(function (success1) {
+                              localStorage.clear();
                               createFolder();  
                         }, function (error) { 
                               createFolder();                                 
