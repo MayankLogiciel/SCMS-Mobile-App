@@ -2679,6 +2679,97 @@
 }
 
 
+@media(max-width: 767px) {
+	.sync-pic {
+		margin-top: 5%;
+	}
+	.modal-padding {
+		h4 {
+			line-height: 1.8;
+			span {
+		    	font-size: 18px;
+	    		padding: 0;
+	    	}
+		    img {
+		    	width: 150px;
+	    	}
+	    	label {
+	    		font-size: 18px;
+	    	}
+		}
+	}
+	.modal-image img {
+	    float: right;
+	    height: 200px !important;
+	    width: 200px !important;
+	}
+	.camera-model-button {
+	    padding-left: 15px;
+	    padding-right: 15px;
+	    border-radius: 50%;
+	    padding-top: 10px;
+	    padding-bottom: 5px;
+	    left: auto;
+	    bottom: -30px;
+	    position: absolute !important;
+	    right: 8px;
+	}
+	.sat-att-list-edit {
+		font-size: 0 !important;
+	}
+
+	.date-count a .button.button-assertive {
+	    left: 76%;
+	}
+	.nominal-roll-add-btn {
+		font-size: 0 !important;
+		top: -4px;
+		background: transparent !important;
+		left: 25px !important;
+	}
+	.nominal-list-mob h4 label {
+		font-size: 17px !important;
+		padding-left: 15px !important;
+		margin-right: 10px;
+		width: auto;
+	}
+	.nominal-list-mob h4 span {
+		font-size: 16px !important;
+		padding-left: 2px !important;
+		font-weight: 400;
+	}	
+	.driver-data {
+		label {
+			width: auto !important;
+			display: inline-block;
+			margin-right: 10px;
+		}
+	}
+	.list-nominal-add:before {
+    	font-size: 50px;
+    	margin-top: 30px;
+    }
+    .date-popover {
+    	height: 23%;
+    }
+    .floating-btn-for-list {
+		display: block;	
+	}
+
+	.on-mob-display-none {
+		display: none !important;
+	}
+	.jatha-member .sewa-name {
+    	width: 100%;
+	}
+	.ionic_datepicker_popup.popup-container .popup .date_col {
+		padding-left: 0;
+		padding-right: 0;
+	}
+
+}
+
+
 
 //IOS css
 
