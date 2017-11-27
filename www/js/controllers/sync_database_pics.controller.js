@@ -3,7 +3,7 @@
       /**
       * Sync DB Controller
       **/
-      var SyncDBPicsController = function($log, $scope, $ionicHistory, $cordovaSQLite, $ionicLoading, authService, $cordovaFileTransfer, $timeout, $cordovaFile, $filter, $rootScope, picAndDatabaseTransferService, $cordovaToast, $state, $cordovaNetwork, SCMS_SERVER_UPLOAD_URL, SCMS_SERVER_IMAGE_UPLOAD_URL, SCMS_SERVER_IMAGE_DOWNLOAD_URL, $cordovaZip, SCMS_SERVER_DOWNLOAD_URL) {
+      var SyncDBPicsController = function($log, $scope, $ionicHistory, $cordovaSQLite, $ionicLoading, authService, $cordovaFileTransfer, $timeout, $cordovaFile, $filter, $rootScope, picAndDatabaseTransferService, $cordovaToast, $state, $cordovaNetwork, SCMS_SERVER_UPLOAD_URL, SCMS_SERVER_IMAGE_UPLOAD_URL, SCMS_SERVER_IMAGE_DOWNLOAD_URL, $cordovaZip, SCMS_SERVER_DOWNLOAD_URL, requestIntercepter) {
             var setup = function() {
                   $log.debug("Sync DB Controller");
                   $scope.pictures = [];
@@ -114,11 +114,8 @@
                                     return;
                         }                        
                   }, function(err){
-                        if(err.status == -1) {
-                              $cordovaToast.show('Please enter valid server url', 'short', 'center'); 
-                              $scope.cancelLoading();
-                              return;
-                        }
+                        $scope.cancelLoading();
+                        return;
                   });                 
             }
 
@@ -180,26 +177,20 @@
                               }
                         }, 1000);
                   }, function(err) {
+                        requestIntercepter.responseError(err);
                         $timeout(function() {
                               switch(err.http_status) {
-                                    case 500: 
-                                          $scope.cancelLoading();
-                                          $cordovaToast.show('Internal server Error', 'short', 'center');
-                                          return;
                                     case 401:
-                                          localStorage.removeItem("SCMS_token");
-                                          getToken('pics')
+                                          getToken('database');
                                           return;
                                     case 400:
-                                          localStorage.removeItem("SCMS_token");
-                                          getToken('pics')
+                                          getToken('database');
                                           return;
-                                    case null:
+                                    default:
                                           $scope.cancelLoading();
-                                          $cordovaToast.show('Please enter valid server url', 'short', 'center');
-                                          return;  
-                              }
-                        }, 500);
+                                          return;
+                                    } 
+                        }, 500);      
                   }, function (progress) {
                         $timeout(function () {
                               $scope.downloadProgress = (progress.loaded / progress.total) * 100;
@@ -211,19 +202,20 @@
                   if($cordovaNetwork.isOffline()){
                         $cordovaToast.show('Please Check your network connection', 'short', 'center');
                         return;
-                  }else if($scope.serverURlPrefix == null) {
+                  }else if(!angular.isDefined($scope.serverURlPrefix) || 
+                        $scope.serverURlPrefix == null || 
+                        $scope.serverURlPrefix.serverURL =='' ||
+                        $scope.serverURlPrefix.serverURL ==null) {
                         $cordovaToast.show('Please enter valid server url', 'short', 'center');
                         return;
-                  }else if($scope.getToken == null) {
+                  }else if($scope.getToken == null || $scope.getToken == '') {
                         $scope.syncingDatabase('Uploading database (0%)');
-
                         getToken('database');
                   }else
                   if($scope.attendanceCount <=0 && $scope.nominalCount <= 0) {
                         $cordovaToast.show('No data available to sync', 'short', 'center');
                         return;
                   }else {
-
                         $scope.syncingDatabase('Uploading database (0%)');
                         $scope.createExportFolder();                       
                   }
@@ -287,27 +279,18 @@
                   $scope.abortTransferRequest.then(function(result) {
                         $scope.import();
                   }, function(err) {
-
+                        requestIntercepter.responseError(err);
                         $timeout(function() {
                               switch(err.http_status) {
-
-                                    case 500: 
-                                          $scope.cancelLoading();
-                                          $cordovaToast.show('Internal server Error', 'short', 'center');
-                                          return;
                                     case 401:
-                                          localStorage.removeItem("SCMS_token");
                                           getToken('database');
                                           return;
                                     case 400:
-                                          localStorage.removeItem("SCMS_token");
                                           getToken('database');
                                           return;
-                                    case null:
+                                    default:
                                           $scope.cancelLoading();
-                                          $cordovaToast.show('Please enter valid server url', 'short', 'center');
-                                          return; 
-                              } 
+                                    } 
                         }, 500);                                   
                   }, function (progress) {
                         $timeout(function () {
@@ -407,7 +390,6 @@
                         }else {
                               params.date = picAndDatabaseTransferService.getLastImagesDownloadedTime().date;
                               params.time =  picAndDatabaseTransferService.getLastImagesDownloadedTime().time;
-
                               var url = $scope.preServerUrl + $scope.serverURlPrefix.serverURL + SCMS_SERVER_IMAGE_DOWNLOAD_URL + "date=" + params.date +"&" +"time=" + params.time;
                              // var url = $scope.serverURlPrefix.serverURL + SCMS_SERVER_IMAGE_DOWNLOAD_URL + "date=2017/07/20&time=05:03";
                         }   
@@ -509,7 +491,7 @@
             }
             setup();
       };
-      SyncDBPicsController.$inject  = ['$log', '$scope', '$ionicHistory', '$cordovaSQLite', '$ionicLoading', 'authService', '$cordovaFileTransfer', '$timeout', '$cordovaFile', '$filter', '$rootScope', 'picAndDatabaseTransferService', '$cordovaToast', '$state', '$cordovaNetwork', 'SCMS_SERVER_UPLOAD_URL', 'SCMS_SERVER_IMAGE_UPLOAD_URL', 'SCMS_SERVER_IMAGE_DOWNLOAD_URL', '$cordovaZip', 'SCMS_SERVER_DOWNLOAD_URL'];
+      SyncDBPicsController.$inject  = ['$log', '$scope', '$ionicHistory', '$cordovaSQLite', '$ionicLoading', 'authService', '$cordovaFileTransfer', '$timeout', '$cordovaFile', '$filter', '$rootScope', 'picAndDatabaseTransferService', '$cordovaToast', '$state', '$cordovaNetwork', 'SCMS_SERVER_UPLOAD_URL', 'SCMS_SERVER_IMAGE_UPLOAD_URL', 'SCMS_SERVER_IMAGE_DOWNLOAD_URL', '$cordovaZip', 'SCMS_SERVER_DOWNLOAD_URL', 'requestIntercepter'];
       angular
       .module('SCMS_ATTENDANCE')
       .controller("SyncDBPicsController", SyncDBPicsController);

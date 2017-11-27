@@ -4,7 +4,7 @@
    	/**
    	* ImportDatabaseAndPicController Controller
    	**/
-      var ImportDatabaseAndPicController = function($log, $scope, $cordovaSQLite, $state, authService, $cordovaToast, $ionicPopup, bcrypt, cfpLoadingBar, $ionicHistory, picAndDatabaseTransferService, $cordovaZip, $cordovaFileTransfer, $timeout, $cordovaFile, $rootScope, $cordovaNetwork, SCMS_SERVER_DOWNLOAD_URL, $ionicLoading, $filter, SCMS_SERVER_UPLOAD_URL) {  
+      var ImportDatabaseAndPicController = function($log, $scope, $cordovaSQLite, $state, authService, $cordovaToast, $ionicPopup, bcrypt, cfpLoadingBar, $ionicHistory, picAndDatabaseTransferService, $cordovaZip, $cordovaFileTransfer, $timeout, $cordovaFile, $rootScope, $cordovaNetwork, SCMS_SERVER_DOWNLOAD_URL, $ionicLoading, $filter, SCMS_SERVER_UPLOAD_URL, requestIntercepter) {  
             var setup = function() {
                   $log.debug("ImportDatabaseAndPicController Controller");
                   $scope.importData = { 
@@ -92,7 +92,6 @@
             /**
             * creating export folder 
             **/
-
             $scope.createExportFolder = function(accessToken) {
                   $cordovaFile.createDir($rootScope.baseAppDir, "export", false)
                   .then(function (success) {
@@ -144,32 +143,13 @@
                   $cordovaFileTransfer.upload(url, targetPath, options, trustAllHosts).then(function(result) {
                         downloadDB($scope.url,$scope.targetPath,$scope.downloadOptions,$scope.trustHosts, accessToken);
                   }, function(err) {
+                        requestIntercepter.responseError(err);
                         $scope.cancelLoading();
-                        $timeout(function() {
-                              switch(err.http_status) {
-                                   case 500: 
-                                          $scope.cancelLoading();
-                                          $cordovaToast.show('Internal server Error', 'short', 'center');
-                                          return;
-                                    case 401:
-                                          $scope.cancelLoading();
-                                          localStorage.removeItem("SCMS_token");
-                                          return;
-                                    case 400:
-                                          $scope.cancelLoading();
-                                          localStorage.removeItem("SCMS_token");
-                                          return;
-                                    case null:
-                                          $scope.cancelLoading();
-                                          $cordovaToast.show('Please enter valid server url', 'short', 'center');
-                                          return;  
-                              } 
-                        }, 500);                                   
                   }, function (progress) {
                         $timeout(function () {
                               $scope.downloadProgress = Math.floor((progress.loaded / progress.total) * 100);
                               $ionicLoading.show({ scope: $scope, template: '<button class="button button-clear btn-animation" style="color: #FFFFFF;"><ion-spinner icon="lines" class="spinner-calm"></ion-spinner><br><span style="vertical-align: middle;">&nbsp;&nbsp;Uploading database ('+$scope.downloadProgress+'%)</span></button>'});
-                        })
+                        });
                   });
             }
 
@@ -204,22 +184,8 @@
                               }, 500);
                               
                         }, function(err) {
-                              $timeout(function() {
-                                    switch (err.status) {
-                                          case 401:
-                                                $scope.cancelLoading();
-                                                $cordovaToast.show(err.data.message, 'short', 'center');
-                                                return;                                    
-                                          case -1:
-                                                $scope.cancelLoading();
-                                                $cordovaToast.show('Please check your server URL', 'short', 'center');
-                                                return;                                    
-                                          case 500: 
-                                                $scope.cancelLoading();
-                                                $cordovaToast.show(err.statusText, 'short', 'center');
-                                                return;
-                                    }
-                              }, 500);
+                              requestIntercepter.responseError(err);
+                              $scope.cancelLoading();
                         });
                   }                 
             }  
@@ -236,7 +202,6 @@
                               copyDatabaseToInternalMemory();
                         });
                   }, function (error) {
-
                   });
             } 
             var copyDatabaseToInternalMemory = function() {
@@ -271,7 +236,7 @@
       setup();
 };
 
-ImportDatabaseAndPicController.$inject  = ['$log', '$scope', '$cordovaSQLite', '$state', 'authService', '$cordovaToast', '$ionicPopup', 'bcrypt', 'cfpLoadingBar', '$ionicHistory', 'picAndDatabaseTransferService', '$cordovaZip', '$cordovaFileTransfer', '$timeout', '$cordovaFile', '$rootScope', '$cordovaNetwork', 'SCMS_SERVER_DOWNLOAD_URL', '$ionicLoading', '$filter', 'SCMS_SERVER_UPLOAD_URL'];
+ImportDatabaseAndPicController.$inject  = ['$log', '$scope', '$cordovaSQLite', '$state', 'authService', '$cordovaToast', '$ionicPopup', 'bcrypt', 'cfpLoadingBar', '$ionicHistory', 'picAndDatabaseTransferService', '$cordovaZip', '$cordovaFileTransfer', '$timeout', '$cordovaFile', '$rootScope', '$cordovaNetwork', 'SCMS_SERVER_DOWNLOAD_URL', '$ionicLoading', '$filter', 'SCMS_SERVER_UPLOAD_URL', 'requestIntercepter'];
 
 angular
 .module('SCMS_ATTENDANCE')

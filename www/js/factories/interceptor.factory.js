@@ -1,34 +1,54 @@
 angular
 	.module('SCMS_ATTENDANCE')
-	.factory('requestIntercepter', function($log, $q){
-
-
-		return{
+	.factory('requestIntercepter', function($log, $q, $cordovaToast, $injector){
+        var message = {
+            wrongUrl: "Please enter valid server URL",
+            wrongRoute: "404: Please check your server URL",
+            serverErrorMessage: "500: Whoops, looks like something went wrong"
+        }
+        return{
             responseError: function(rejection) {
                 console.log(rejection);
-                //var InterceptorFactory = $injector.get('InterceptorFactory');
+                rejection.status = (angular.isDefined(rejection.status))? rejection.status: rejection.http_status;
+                var $state = $injector.get('$state');
                 switch(rejection.status){
                     case 500:
-                        console.log("hello");
+                        $cordovaToast.show(message.serverErrorMessage, 'short', 'center'); 
                         break;
                     case 400: 
-                        console.log("hello");                               
+                        localStorage.removeItem("SCMS_token");                            
                         break;
                     case 404: 
-                        console.log("hello");                              
+                        if(rejection.statusText == 'Not Found') {
+                            $cordovaToast.show(message.wrongRoute, 'short', 'center'); 
+                        }
+                        if(rejection.data.message) {
+                            $cordovaToast.show(rejection.data.message, 'short', 'center'); 
+                        }
                         break; 
                     case 401:  
-                        console.log("hello");                             
+                        if($state.current.name == "import-database") {
+                            $cordovaToast.show(rejection.data.message, 'short', 'center'); 
+                        }
+                        localStorage.removeItem("SCMS_token"); 
                         break;
-                    case -1:  
-                        console.log("hello");                             
-                        break; 
+                    case 412:
+                        if(angular.isDefined(rejection.data)) {
+                            if(!angular.isObject(rejection.data.message)) {
+                                $cordovaToast.show(rejection.data.message, 'short', 'center');
+                            }else {
+                                $cordovaToast.show(rejection.data.message[Object.keys(rejection.data.message)[0]][0], 'short', 'center');
+                            }
+                        }
+                        break;
+                    case -1: 
+                        $cordovaToast.show(message.wrongUrl, 'short', 'center'); 
+                        break;
                 }//end of switch
                 return $q.reject(rejection);
             } 
         };
 	})
     .config(function($httpProvider) {
-        //$httpProvider.defaults.headers['hello'] = 'work';
         $httpProvider.interceptors.push('requestIntercepter');
     });
