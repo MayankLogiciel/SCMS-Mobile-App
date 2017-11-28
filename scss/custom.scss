@@ -2775,6 +2775,18 @@
 	.action-sheet-wrapper .action-sheet-has-icons .icon {
 		right: 35% !important;
 	}
+	.name-badge-button-popover.active {
+		opacity: 1 !important;
+	}
+	.name-badge-button-popover {
+		left: 500px !important;
+	}
+	.srch-width {
+		width: 92%;
+	} 
+	.modal-padding h4 span {
+		color: rgba(68, 68, 68, 0.77);
+	}
 
 }
 
