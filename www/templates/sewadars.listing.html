@@ -52,7 +52,7 @@
 					<span ng-bind="sewadar.department_name" class="text-transform-capital" ></span>			
 				</h2>
       		</div>
-      		<div class="col col-10" ng-if="isCurrentDate">
+      		<div class="col col-10" ng-if="isCurrentDate && !isAttendaceClosed">
 				<i class="icon ion-trash-a list-trash" on-tap="deleteSewadar(sewadar)"></i>
 			</div>
       	</h2>
