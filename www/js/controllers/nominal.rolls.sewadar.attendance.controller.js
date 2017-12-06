@@ -135,8 +135,7 @@
                         buttonClicked: function(index) {
                               switch (index){
                                     case 0 :
-                                          if(
-                                                !angular.isDefined($scope.nominalRollsData) ||
+                                          if(   !angular.isDefined($scope.nominalRollsData) ||
                                                 (($scope.nominalRollsData.incharge_female_id == null) ||
                                                 ($scope.nominalRollsData.incharge_female_id == 'null')) &&
                                                 (($scope.nominalRollsData.incharge_id == null) ||

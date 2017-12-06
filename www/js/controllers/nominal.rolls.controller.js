@@ -19,7 +19,7 @@
             };
             $scope.$on('$ionicView.enter', function() {
                   cfpLoadingBar.start();                   
-                  $scope.getListForNominalRolls();
+                  $scope.getListForNominalRolls();                  
                   sewadarsCount();
             });  
             $scope.goBack = function() {
@@ -40,12 +40,11 @@
                                     $scope.nominals.push(res.rows.item(i));                                                                                                         
                               }  
                               nominalRollsService.setnominalRollsCompleteData($scope.nominals);
-
                         }
                         cfpLoadingBar.complete();
                   }, function (err) { 
                   });
-            };
+            };            
 
             var sewadarsCount = function() {
                   var query = "select nominal_roll_id,sum(case when gender = 'M' then 1 else 0 end) Male,sum(case when gender = 'F' then 1 else 0 end) Female from ( SELECT DISTINCT sewadars.id, attendances.sewadar_type,sewadars.gender,attendances.nominal_roll_id FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where attendances.sewadar_type = 'permanent' AND attendances.status <> 'deleted' UNION SELECT DISTINCT temp_sewadars.id, attendances.sewadar_type,temp_sewadars.gender,attendances.nominal_roll_id FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where attendances.sewadar_type = 'temporary' AND attendances.status <> 'deleted')group by nominal_roll_id";

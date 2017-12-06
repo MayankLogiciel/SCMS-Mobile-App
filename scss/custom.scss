@@ -2676,6 +2676,11 @@
 	.nominal-less-data {
 		padding: 7px 0 0 0 !important;
 	}
+	.nominal-sewa-detail-modal {
+		background: #ccc;
+    	margin-right: 25px;
+    	text-align: center;
+	}
 }
 
 
@@ -2786,6 +2791,22 @@
 	} 
 	.modal-padding h4 span {
 		color: rgba(68, 68, 68, 0.77);
+	}
+	.n-modal-padding {
+		h4 {
+			line-height: 1.5 !important;
+			label {
+				font-size: 16px !important;
+			}
+			span {
+				font-size: 15px !important;
+			}
+		}		
+		.nominal-sewa-detail-modal {
+			background: #ccc;
+	    	margin-right: 25px;
+	    	text-align: center;
+		}
 	}
 
 }
