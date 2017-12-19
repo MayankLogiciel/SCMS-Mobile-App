@@ -155,7 +155,8 @@
                                                             $scope.nominalRollsData.incharge_female_type = incharge_type;
                                                       }
                                                       $scope.nominalRollsData.contact_no = (!angular.isDefined(sewadar.sewadar_contact) || sewadar.sewadar_contact =='undefined' || sewadar.sewadar_contact =='null' || sewadar.sewadar_contact == null)? '': sewadar.sewadar_contact;
-                                                      $scope.nominalRollsData.name = sewadar.name;      
+                                                      $scope.nominalRollsData.name = sewadar.name;  
+                                                      $cordovaToast.show(sewadar.name + ' is selected as incharge', 'short', 'center');    
                                                 });
 
                                           } else if(($scope.nominalRollsData.incharge_id == null) ||
@@ -170,6 +171,7 @@
                                                             $scope.nominalRollsData.incharge_female_type = incharge_type;
                                                       }
                                                       $scope.nominalRollsData.name = sewadar.name;
+                                                      $cordovaToast.show(sewadar.name + ' is selected as incharge', 'short', 'center');    
                                                       $scope.nominalRollsData.contact_no = (!angular.isDefined(sewadar.sewadar_contact) || sewadar.sewadar_contact =='undefined' || sewadar.sewadar_contact =='null' || sewadar.sewadar_contact == null)? '': sewadar.sewadar_contact;
                                                 });
                                           } else {
@@ -183,11 +185,13 @@
                                                             $scope.nominalRollsData.incharge_id = sewadar.id; 
                                                             $scope.nominalRollsData.incharge_type = incharge_type;
                                                             $scope.nominalRollsData.contact_no = (!angular.isDefined(sewadar.sewadar_contact) || sewadar.sewadar_contact =='undefined' || sewadar.sewadar_contact =='null' || sewadar.sewadar_contact == null)? '': sewadar.sewadar_contact;
-                                                            $scope.nominalRollsData.name = sewadar.name;                                                      
+                                                            $scope.nominalRollsData.name = sewadar.name; 
+
                                                       }else {
                                                             $scope.nominalRollsData.incharge_female_id = sewadar.id; 
                                                             $scope.nominalRollsData.incharge_female_type = incharge_type;
                                                       }
+                                                      $cordovaToast.show(sewadar.name + ' is selected as incharge', 'short', 'center');    
                                                 });
                                           }
                                           
