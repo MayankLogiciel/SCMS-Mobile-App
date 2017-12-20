@@ -114,7 +114,7 @@
                         angular.forEach($scope.maleMembers, function(val, i) {
                               if(val.id == item.sewadar_id ) {
                                     $scope.maleMembers[i].isDisabled = true;
-                                    $scope.maleMembers[i].isSelected = true;                                    
+                                    $scope.maleMembers[i].isSelected = true; 
                               }else {
                               }
                         });
@@ -156,12 +156,12 @@
                               Insertquery = "INSERT INTO attendances('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id') VALUES ('"+nominalAttendanceDate+"','"+$scope.maleIds[i]+"','"+$scope.nominalRollsData.sewa_id+"', '"+reference_id+"', '"+type+"', '"+batch_type+"','"+$scope.current+"','"+$scope.current+"', '"+sewadar_type+"','"+$scope.nominalRollsData.id+"')";
                               $cordovaSQLite.execute($rootScope.db, Insertquery).then(function(res) {
                                           $scope.tempArray.push($scope.maleIds[i]);
-                                          $cordovaToast.show('Sewadar added', 'short', 'center'); 
                                           $scope.maleSelectedCount = 0;
                                           $state.go('nominal_rolls-list', {id: $scope.nominalRollsData.id, status: 'Approved'});
                                    
                               }, function(err) { 
                               }); 
+                              $cordovaToast.show('Sewadar added', 'short', 'center'); 
                         }
 
                   }                 
@@ -191,12 +191,12 @@
                               Insertquery = "INSERT INTO attendances('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id') VALUES ('"+nominalAttendanceDate+"','"+$scope.femaleIds[i]+"','"+$scope.nominalRollsData.sewa_id+"', '"+reference_id+"', '"+type+"', '"+batch_type+"','"+$scope.current+"','"+$scope.current+"', '"+sewadar_type+"','"+$scope.nominalRollsData.id+"')";
                               $cordovaSQLite.execute($rootScope.db, Insertquery).then(function(res) {
                                           $scope.tempArray.push($scope.femaleIds[i]);
-                                          $cordovaToast.show('Sewadar added', 'short', 'center'); 
                                           $scope.femaleSelectedCount = 0;
                                           $state.go('nominal_rolls-list', {id: $scope.nominalRollsData.id, status: 'Approved'});
                                    
                               }, function(err) { 
                               }); 
+                              $cordovaToast.show('Sewadar added', 'short', 'center'); 
                         }
 
                   }                 
