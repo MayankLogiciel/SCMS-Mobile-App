@@ -135,7 +135,7 @@
                                                 $scope.modal.hide();
                                           }
                                           if($scope.nominal_id) {
-                                                var query = "UPDATE attendances set status = 'deleted' WHERE sewadar_id = '"+sewadar.id+"' AND nominal_roll_id = "+$scope.nominal_id;
+                                                var query = "DELETE FROM attendances WHERE sewadar_id = '"+sewadar.id+"' AND nominal_roll_id = "+$scope.nominal_id;
                                           } 
                                           else {
                                                 var query = "DELETE FROM attendances WHERE sewadar_id = '"+sewadar.id+"' AND attendances.nominal_roll_id = 'null'";
@@ -145,19 +145,9 @@
                                                       if($scope.sewadarAttendance[i].id == sewadar.id) {
                                                             $scope.sewadarAttendance.splice(i,true);
                                                             if($scope.nominal_id) {
-                                                                  var checkIncharge = "select incharge_id from nominal_roles where id = "+$scope.nominal_id;
-                                                                  $cordovaSQLite.execute($rootScope.db, checkIncharge).then(function(ressult) {
-                                                                        for(var i= 0; i<ressult.rows.length; i++) { 
-                                                                              $scope.incharge = ressult.rows.item(i);
-                                                                        } 
-                                                                        if($scope.incharge.incharge_id == sewadar.id) {
-                                                                              var updateIncharge = "UPDATE nominal_roles SET incharge_id = "+null+", incharge_type = '"+null+"' WHERE id = '"+$scope.nominal_id+"'";
-                                                                              $cordovaSQLite.execute($rootScope.db, updateIncharge).then(function(response) {
-                                                                                    $rootScope.$broadcast('refreshPage');
-                                                                              });
-                                                                        }
-                                                                  });
-                                                                  $cordovaToast.show('Sewadar removed', 'short', 'center');
+                                                                  removeDeletedIncharge($scope.nominal_id, sewadar);
+                                                                  $cordovaToast.show('Sewadar removed', 'short', 'center');                                                            
+
                                                             } else {
                                                                   $cordovaToast.show('Attendance unmarked successfully', 'short', 'center');
                                                             }
@@ -172,7 +162,9 @@
                                     }
                               }]
                         });                
-                        };      
+                        };  
+
+
 
                        
                         $scope.selectedSewadarDetail = function(sewadar, str, warn) {
@@ -200,6 +192,81 @@
                                     $scope.openModalForSewadarDetail();                  
                               }
                         }  
+                        var removeDeletedIncharge = function(id, sewadar) {
+                              var checkIncharge = "select incharge_id, incharge_female_id, incharge_female_type from nominal_roles where id = "+$scope.nominal_id;
+                              $cordovaSQLite.execute($rootScope.db, checkIncharge).then(function(ressult) {
+                                    for(var i= 0; i<ressult.rows.length; i++) { 
+                                          $scope.incharge = ressult.rows.item(i);
+                                    }
+
+                                    if($scope.incharge.incharge_id != sewadar.id && $scope.incharge.incharge_female_id != sewadar.id) {
+                                          return;
+                                    }
+
+                                    if($scope.incharge.incharge_id == sewadar.id) {
+                                          checkFemaleIncharge($scope.incharge,id);
+                                    }
+
+                                    if($scope.incharge.incharge_female_id == sewadar.id) {
+                                          checkMaleIncharge($scope.incharge,id);
+                                    }
+                              });
+                        }   
+
+                        var checkFemaleIncharge = function(incharge, id) {
+                              if(incharge.incharge_female_id == 'null' || incharge.incharge_female_id == null) {
+                                    var updateIncharge = "UPDATE nominal_roles SET name = '"+null+"', incharge_id = "+null+", incharge_type = '"+null+"' WHERE id = "+id;
+
+                              }else {
+                                    getFemaleName(incharge, id);
+                              }
+                              $cordovaSQLite.execute($rootScope.db, updateIncharge).then(function(response) {
+                              });
+                              $rootScope.$broadcast('refreshPage', 'male');
+
+                        } 
+
+                        var checkMaleIncharge = function(incharge, id) {
+                              if(incharge.incharge_id == 'null' || incharge.incharge_id == null) {
+                                    var updateIncharge = "UPDATE nominal_roles SET name = '"+null+"', contact_no = '"+null+"', incharge_female_id = "+null+", incharge_female_type = '"+null+"' WHERE id = "+id;
+
+                              }else {
+                                    var updateIncharge = "UPDATE nominal_roles SET incharge_female_id = "+null+", incharge_female_type = '"+null+"' WHERE id = "+id;
+
+                              }
+                              $cordovaSQLite.execute($rootScope.db, updateIncharge).then(function(response) {
+                              });
+                              $rootScope.$broadcast('refreshPage', 'female');
+
+                        } 
+
+                        var getFemaleName = function(incharge, id) {
+                              if(incharge.incharge_female_type == 't') {
+                                    var query = "select name from temp_sewadars where id =" +  incharge.incharge_female_id;
+                              } else {
+                                    var query = "select name, sewadar_contact from sewadars where id =" +  incharge.incharge_female_id;
+                              }
+                              $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
+                                    for(var i= 0; i<res.rows.length; i++) { 
+                                          var femaleInchangeName = res.rows.item(i).name; 
+                                          if(incharge.incharge_female_type == 't') {
+                                                var femaleInchangeContact = null;
+                                          }else {
+                                                var femaleInchangeContact = res.rows.item(i).sewadar_contact; 
+                                                
+                                          }
+                                          setFemaleIncharge(femaleInchangeName, femaleInchangeContact, id);
+                                    }  
+                              });
+
+                        }
+
+                        var setFemaleIncharge = function(name, no, id) {
+                              var updateIncharge = "UPDATE nominal_roles SET name = '"+name+"', contact_no = "+no+", incharge_id = "+null+", incharge_type = '"+null+"' WHERE id = "+id;
+                              $cordovaSQLite.execute($rootScope.db, updateIncharge).then(function(res) {
+                                    $rootScope.$broadcast('refreshPage');
+                              });
+                        }
                   }]  
             }
       }

@@ -79,7 +79,7 @@
 						<h4 class="g-name">
 							<label>Contact No:</label>
 							<span>
-								{{(nominalRolesData.contact_no == 'undefined' || nominalRolesData.contact_no == '')? 'N/A': nominalRolesData.contact_no}}
+								{{(nominalRolesData.contact_no == 'undefined' || nominalRolesData.contact_no == '' || nominalRolesData.contact_no == null || nominalRolesData.contact_no == 'null')? 'N/A': nominalRolesData.contact_no}}
 							</span>
 						</h4>
 						<h4 class="g-name">
@@ -88,7 +88,7 @@
 								{{(nominalRolesData.vehicle_no == 'null' || nominalRolesData.vehicle_no == '')? 'N/A': nominalRolesData.vehicle_no}}
 							</span>                 
 						</h4>
-						<h4 class="g-name">
+						<h4 class="g-name" ng-if="isFemale">
 							<label>Female Incharge:</label>
 							<span ng-bind="nominalRolesData.femaleInchangeName" class="text-transform-capital" ></span>                    
 						</h4>

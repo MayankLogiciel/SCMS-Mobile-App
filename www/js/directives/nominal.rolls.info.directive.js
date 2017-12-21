@@ -25,7 +25,19 @@ angular.module('SCMS_ATTENDANCE')
             };   
 
 
-            var getFemaleIncharge = function() { 
+            var getFemaleIncharge = function() {
+                if(
+                    (($scope.nominalRolesData.incharge_id == 'null') ||
+                    ($scope.nominalRolesData.incharge_id == null)) &&  
+                    (($scope.nominalRolesData.incharge_female_type != null ||
+                    $scope.nominalRolesData.incharge_female_type != 'null'))
+                ) {
+                        $scope.isFemale = false;
+                }else {
+
+                        $scope.isFemale = true;    
+                }
+                
                 if(!angular.isDefined($scope.nominalRolesData.incharge_female_type) || 
                     $scope.nominalRolesData.incharge_female_type == '' ||
                     $scope.nominalRolesData.incharge_female_type == null ||
