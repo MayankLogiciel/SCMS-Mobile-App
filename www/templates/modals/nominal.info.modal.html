@@ -143,9 +143,9 @@
 						{{(nominalRolesData.contact_no == 'undefined' || nominalRolesData.contact_no == '')? 'N/A': nominalRolesData.contact_no}}
 					</span>
 				</h4>
-				<h4 class="g-name">
+				<h4 class="g-name" ng-if="isFemale">
 					<label>Female Incharge:</label>
-					<span ng-bind="nominalRolesData.femaleInchangeName" class="text-transform-capital" ></span>                    
+					<span ng-bind="nominalRolesData.femaleInchangeName" class="text-transform-capital" ></span>
 				</h4>
 				<h4 class="g-name">
 					<label>Vehicle Type:</label>

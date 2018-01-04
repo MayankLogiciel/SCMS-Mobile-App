@@ -147,12 +147,18 @@
                         buttonClicked: function(index) {
                               switch (index){
                                     case 0 :
-                                          if(   !angular.isDefined($scope.nominalRollsData) ||
-                                                (($scope.nominalRollsData.incharge_female_id == null) ||
-                                                ($scope.nominalRollsData.incharge_female_id == 'null')) &&
-                                                (($scope.nominalRollsData.incharge_id == null) ||
-                                                ($scope.nominalRollsData.incharge_id == 'null'))
-                                          ) {
+                                          if(sewadar.gender == 'M' && $scope.nominalRollsData.incharge_id == sewadar.id) { 
+                                                $cordovaToast.show(sewadar.name + '  is already selected as incharge', 'short', 'center');    
+                                                return true;
+                                          }
+                                          if(sewadar.gender == 'F' && $scope.nominalRollsData.incharge_female_id == sewadar.id) { 
+                                                $cordovaToast.show(sewadar.name + '  is already selected as incharge', 'short', 'center');    
+                                                return true;
+                                          }     
+
+                                          var mId = $scope.nominalRollsData.incharge_id;
+                                          var fId = $scope.nominalRollsData.incharge_female_id;
+                                          if(mId == null && fId == null) {
                                                 if(sewadar.gender == 'M') {
                                                       var query = "UPDATE nominal_roles SET name = '"+sewadar.name+"', contact_no = '"+sewadar.sewadar_contact+"', incharge_id = '"+sewadar.id+"', incharge_type = '"+incharge_type+"' WHERE id = '"+$scope.nominal_id+"'";
                                                 }else {
@@ -172,45 +178,7 @@
                                                 });
                                                 return true;
 
-                                          } 
-
-
-                                          if(   angular.isDefined($scope.nominalRollsData) ||
-                                                (($scope.nominalRollsData.incharge_female_id != null) ||
-                                                ($scope.nominalRollsData.incharge_female_id != 'null')) &&
-                                                (($scope.nominalRollsData.incharge_id != null) ||
-                                                ($scope.nominalRollsData.incharge_id != 'null'))
-                                          ) {
-                                                if(sewadar.gender == 'M') {
-                                                      var query = "UPDATE nominal_roles SET name = '"+sewadar.name+"', contact_no = '"+sewadar.sewadar_contact+"', incharge_id = '"+sewadar.id+"', incharge_type = '"+incharge_type+"' WHERE id = '"+$scope.nominal_id+"'";
-                                                }else {
-                                                      var query = "UPDATE nominal_roles SET incharge_female_id = '"+sewadar.id+"', incharge_female_type = '"+incharge_type+"' WHERE id = '"+$scope.nominal_id+"'";
-                                                }
-                                                $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
-                                                      if(sewadar.gender == 'M') { 
-                                                            $scope.nominalRollsData.incharge_id = sewadar.id; 
-                                                            $scope.nominalRollsData.incharge_type = incharge_type;
-                                                            $scope.nominalRollsData.contact_no = (!angular.isDefined(sewadar.sewadar_contact) || sewadar.sewadar_contact =='undefined' || sewadar.sewadar_contact =='null' || sewadar.sewadar_contact == null)? '': sewadar.sewadar_contact;
-                                                            $scope.nominalRollsData.name = sewadar.name;  
-                                                      }else {
-                                                            $scope.nominalRollsData.incharge_female_id = sewadar.id; 
-                                                            $scope.nominalRollsData.incharge_female_type = incharge_type;
-                                                      }
-                                                      $cordovaToast.show(sewadar.name + ' is selected as incharge', 'short', 'center');    
-                                                });
-
-                                                return true;
-
-                                          }
-
-
-                                          if(   angular.isDefined($scope.nominalRollsData) ||
-                                                (($scope.nominalRollsData.incharge_female_id == null) ||
-                                                ($scope.nominalRollsData.incharge_female_id == 'null')) &&
-                                                (($scope.nominalRollsData.incharge_id != null) ||
-                                                ($scope.nominalRollsData.incharge_id != 'null'))
-                                          ) {
-
+                                          }else if(mId != null && fId != null) {
                                                 if(sewadar.gender == 'M') {
                                                       var query = "UPDATE nominal_roles SET name = '"+sewadar.name+"', contact_no = '"+sewadar.sewadar_contact+"', incharge_id = '"+sewadar.id+"', incharge_type = '"+incharge_type+"' WHERE id = '"+$scope.nominal_id+"'";
                                                 }else {
@@ -229,15 +197,8 @@
                                                       $cordovaToast.show(sewadar.name + ' is selected as incharge', 'short', 'center');    
                                                 });
                                                 return true;
-                                          }
 
-                                          if(   angular.isDefined($scope.nominalRollsData) ||
-                                                (($scope.nominalRollsData.incharge_female_id != null) ||
-                                                ($scope.nominalRollsData.incharge_female_id != 'null')) &&
-                                                (($scope.nominalRollsData.incharge_id == null) ||
-                                                ($scope.nominalRollsData.incharge_id == 'null'))
-                                          ) {
-
+                                          }else if(mId == null && fId != null) {
                                                 if(sewadar.gender == 'M') {
                                                       var query = "UPDATE nominal_roles SET name = '"+sewadar.name+"', contact_no = '"+sewadar.sewadar_contact+"', incharge_id = '"+sewadar.id+"', incharge_type = '"+incharge_type+"' WHERE id = '"+$scope.nominal_id+"'";
                                                 }else {
@@ -256,8 +217,27 @@
                                                       $cordovaToast.show(sewadar.name + ' is selected as incharge', 'short', 'center');    
                                                 });
                                                 return true;
+                                          }else {
+                                                if(sewadar.gender == 'M') {
+                                                      var query = "UPDATE nominal_roles SET name = '"+sewadar.name+"', contact_no = '"+sewadar.sewadar_contact+"', incharge_id = '"+sewadar.id+"', incharge_type = '"+incharge_type+"' WHERE id = '"+$scope.nominal_id+"'";
+                                                }else {
+                                                      var query = "UPDATE nominal_roles SET incharge_female_id = '"+sewadar.id+"', incharge_female_type = '"+incharge_type+"' WHERE id = '"+$scope.nominal_id+"'";
+                                                }
+                                                $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
+                                                      if(sewadar.gender == 'M') { 
+                                                            $scope.nominalRollsData.incharge_id = sewadar.id; 
+                                                            $scope.nominalRollsData.incharge_type = incharge_type;
+                                                            $scope.nominalRollsData.contact_no = (!angular.isDefined(sewadar.sewadar_contact) || sewadar.sewadar_contact =='undefined' || sewadar.sewadar_contact =='null' || sewadar.sewadar_contact == null)? '': sewadar.sewadar_contact;
+                                                            $scope.nominalRollsData.name = sewadar.name;  
+                                                      }else {
+                                                            $scope.nominalRollsData.incharge_female_id = sewadar.id; 
+                                                            $scope.nominalRollsData.incharge_female_type = incharge_type;
+                                                      }
+                                                      $cordovaToast.show(sewadar.name + ' is selected as incharge', 'short', 'center');    
+                                                });
+                                                return true;
+
                                           }
-                                           
                                     case 1 :
                                           $scope.openPopoverForTempSewadar('', sewadar, 'edit');                                          
                                           return true; 
