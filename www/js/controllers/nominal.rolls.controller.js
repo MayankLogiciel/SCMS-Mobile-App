@@ -260,6 +260,13 @@
                                           $state.go('addedit-nominal_rolls', {action: 'edit',id: nominal.id, user: ''});
                                           return true;
                                     case '<i class="icon ion-paper-airplane"></i> Mark As Dispatched' :
+                                          if(
+                                                (!angular.isDefined(nominal.FemaleCounts) &&!angular.isDefined(nominal.MaleCounts)) ||
+                                                (nominal.FemaleCounts == 0 && nominal.MaleCounts == 0)
+                                           ) {
+                                                $cordovaToast.show('You cannot dispatch as no sewadar added to this nominal', 'short', 'center');
+                                                return true;
+                                          }      
                                           var msgDispatched = "After dispached you will not able to add more sewadars or modify this nominal roll. Confirm to Proceed. ";
                                           showConfirm(msgDispatched, nominal);
                                           return true;

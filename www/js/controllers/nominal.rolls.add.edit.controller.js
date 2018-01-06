@@ -184,7 +184,7 @@
                   nominalData.vehicle_no  = (!angular.isDefined(nominalData.vehicle_no) || nominalData.vehicle_no == '') ? null : nominalData.vehicle_no;
                   nominalData.driver_name  = (!angular.isDefined(nominalData.driver_name) || nominalData.driver_name == '') ? null : nominalData.driver_name;                
                   nominalData.name  = (!angular.isDefined(nominalData.name) || nominalData.name == '') ? null : nominalData.name;                
-                  if(nominalData.contact_no == 'N/A' || nominalData.contact_no == '' ||  !angular.isDefined(nominalData.contact_no)){
+                  if(nominalData.contact_no == 'N/A' || nominalData.contact_no == '' || nominalData.contact_no == 'null' || nominalData.contact_no == null ||  !angular.isDefined(nominalData.contact_no)){
                         $scope.isNotValidNumber = false;
                   }else {
                         if(nominalData.contact_no.length > 0 && nominalData.contact_no.length < 10) {

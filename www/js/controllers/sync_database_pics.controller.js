@@ -385,13 +385,10 @@
                         var params = {};                                         
                         if(picAndDatabaseTransferService.getLastImagesDownloadedTime() == null || requestType == 'all'){
                               var url = $scope.preServerUrl + $scope.serverURlPrefix.serverURL + SCMS_SERVER_IMAGE_DOWNLOAD_URL + "all=all";
-                             // var url = $scope.serverURlPrefix.serverURL + SCMS_SERVER_IMAGE_DOWNLOAD_URL + "date=2017/07/20&time=05:03";
-                                
                         }else {
                               params.date = picAndDatabaseTransferService.getLastImagesDownloadedTime().date;
                               params.time =  picAndDatabaseTransferService.getLastImagesDownloadedTime().time;
                               var url = $scope.preServerUrl + $scope.serverURlPrefix.serverURL + SCMS_SERVER_IMAGE_DOWNLOAD_URL + "date=" + params.date +"&" +"time=" + params.time;
-                             // var url = $scope.serverURlPrefix.serverURL + SCMS_SERVER_IMAGE_DOWNLOAD_URL + "date=2017/07/20&time=05:03";
                         }   
                         var trustHosts = true;
                         var downloadOptions = {};
@@ -402,6 +399,10 @@
                         $scope.abortTransferRequest.then(function(result) { 
                              unzip();
                         }, function(err){
+                              $scope.cancelLoading();
+                              if(err.http_status == 404) {
+                                    $cordovaToast.show('No image to import', 'short', 'center');
+                              }
                         }, function (progress){
                               $scope.downloadProgress = Math.floor((progress.loaded / progress.total) * 100);
                               $ionicLoading.show({ scope: $scope, template: '<button class="button button-clear btn-animation" style="color: #FFFFFF;"><ion-spinner icon="lines" class="spinner-calm"></ion-spinner><br><span style="vertical-align: middle;">&nbsp;&nbsp; Importing Images ('+$scope.downloadProgress+'%)</span></button>'});

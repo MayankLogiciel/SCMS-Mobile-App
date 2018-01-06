@@ -206,9 +206,23 @@
                                          showConfirm(msg, nominal.id, 'deleted');
                                           return true; 
                                     case '<i class="icon ion-paper-airplane"></i> Mark As Dispatched' :
+                                          if(
+                                                (!angular.isDefined(nominal.FemaleCounts) &&!angular.isDefined(nominal.MaleCounts)) ||
+                                                (nominal.FemaleCounts == 0 && nominal.MaleCounts == 0)
+                                           ) {
+                                                $cordovaToast.show('You cannot dispatch as no sewadar added to this nominal', 'short', 'center');
+                                                return true;
+                                          }                                         
                                           showConfirm(msgDispatched, nominal, 'dispatched');                                          
                                           return true;
                                     case '<i class="icon ion-ios-close icon-space"></i>Remove Approval' :
+                                          if(
+                                                (angular.isDefined(nominal.FemaleCounts) || angular.isDefined(nominal.MaleCounts)) &&
+                                                (nominal.FemaleCounts > 0 || nominal.MaleCounts > 0)
+                                          ) {
+                                                $cordovaToast.show('You cannot remove approval as sewadar added to this nominal', 'short', 'center');
+                                                return true;
+                                          }
                                           nominal.status = txt;
                                           nominal.isSelected = false;
                                           var query = "UPDATE nominal_roles SET status = '"+txt+"' WHERE id = '"+nominal.id+"'";

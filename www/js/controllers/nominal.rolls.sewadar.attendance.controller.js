@@ -13,7 +13,8 @@
                   $scope.tempSewadarAttendance = [];
                   $scope.sewadarAttendance = [];
                   $scope.sewadarPrintList = [];                  
-                  $scope.showError = false;                  
+                  $scope.showError = false;  
+                  $scope.showAge = false;                
                   $scope.sewadar ={}; 
                   $scope.start = 10;
                   $scope.end = $scope.start+10;
@@ -212,7 +213,8 @@
                                                             $scope.nominalRollsData.incharge_female_id = sewadar.id; 
                                                             $scope.nominalRollsData.incharge_female_type = incharge_type;
                                                       }
-                                                      $scope.nominalRollsData.name = sewadar.name;  
+                                                      $scope.nominalRollsData.name = sewadar.name; 
+                                                      $scope.nominalRollsData.femaleInchangeName = 'N/A';
                                                       $scope.nominalRollsData.contact_no = (!angular.isDefined(sewadar.sewadar_contact) || sewadar.sewadar_contact =='undefined' || sewadar.sewadar_contact =='null' || sewadar.sewadar_contact == null)? '': sewadar.sewadar_contact;
                                                       $cordovaToast.show(sewadar.name + ' is selected as incharge', 'short', 'center');    
                                                 });
@@ -345,40 +347,46 @@
             }
 
             $scope.addTempSewadar = function(TempSewadarData) {
-                  if(TempSewadarData.id){
-                        var updateQuery = "UPDATE temp_sewadars SET name = '"+TempSewadarData.name+"', guardian = '"+TempSewadarData.guardian+"', gender = '"+TempSewadarData.gender+"', address = '"+TempSewadarData.address+"', age = '"+TempSewadarData.age+"' Where id = "+TempSewadarData.id ;
-                        $cordovaSQLite.execute($rootScope.db, updateQuery).then(function(res) {
-                              $scope.TempSewadarData = {};
-                              $cordovaToast.show('Updated successfully', 'short', 'center');
-                        }, function(err){
+                  if(TempSewadarData.age < 5) {
+                        $scope.showAge = true;
+                        return;
+                  }else {                        
+                        $scope.showAge = false;
+                        if(TempSewadarData.id){
+                              var updateQuery = "UPDATE temp_sewadars SET name = '"+TempSewadarData.name+"', guardian = '"+TempSewadarData.guardian+"', gender = '"+TempSewadarData.gender+"', address = '"+TempSewadarData.address+"', age = '"+TempSewadarData.age+"' Where id = "+TempSewadarData.id ;
+                              $cordovaSQLite.execute($rootScope.db, updateQuery).then(function(res) {
+                                    $scope.TempSewadarData = {};
+                                    $cordovaToast.show('Updated successfully', 'short', 'center');
+                              }, function(err){
 
-                        });   
-                  }else {
-                        $scope.current = $filter('date')(new Date(), 'yyyy-MM-dd h:mm:ss');
-                        if(!angular.isDefined(TempSewadarData.Male) && !angular.isDefined(TempSewadarData.Female)) {
-                              $scope.showError = true;
-                              return;
-                        }
-                        var CheckQuery = "SELECT * FROM temp_sewadars where name ='"+TempSewadarData.name+"' AND guardian ='"+TempSewadarData.guardian+"' AND gender ='"+TempSewadarData.gender+"' AND address ='"+TempSewadarData.address+"' AND age ='"+TempSewadarData.age+"'";
-                        $cordovaSQLite.execute($rootScope.db, CheckQuery).then(function(res) {
-                              if(res.rows.length == 0) {
-                                    var Insertquery = "INSERT INTO temp_sewadars('name', 'guardian', 'gender', 'address', 'age', 'created_at', 'updated_at') VALUES ('"+TempSewadarData.name+"','"+TempSewadarData.guardian+"','"+TempSewadarData.gender+"', '"+TempSewadarData.address+"', '"+TempSewadarData.age+"','"+$scope.current+"','"+$scope.current+"')";
-                                    $cordovaSQLite.execute($rootScope.db, Insertquery).then(function(resTemp) {
-                                                TempSewadarData.id = resTemp.insertId;
-                                                addTempSewadarNested(TempSewadarData);
-                                    }, function(err){
-
-                                    });   
-                              }else {
-                                    for(var i= 0; i<res.rows.length; i++) {                                    
-                                          addTempSewadarNested(res.rows.item(i));
-                                    }
+                              });   
+                        }else {
+                              $scope.current = $filter('date')(new Date(), 'yyyy-MM-dd h:mm:ss');
+                              if(!angular.isDefined(TempSewadarData.Male) && !angular.isDefined(TempSewadarData.Female)) {
+                                    $scope.showError = true;
+                                    return;
                               }
-                        })
+                              var CheckQuery = "SELECT * FROM temp_sewadars where name ='"+TempSewadarData.name+"' AND guardian ='"+TempSewadarData.guardian+"' AND gender ='"+TempSewadarData.gender+"' AND address ='"+TempSewadarData.address+"' AND age ='"+TempSewadarData.age+"'";
+                              $cordovaSQLite.execute($rootScope.db, CheckQuery).then(function(res) {
+                                    if(res.rows.length == 0) {
+                                          var Insertquery = "INSERT INTO temp_sewadars('name', 'guardian', 'gender', 'address', 'age', 'created_at', 'updated_at') VALUES ('"+TempSewadarData.name+"','"+TempSewadarData.guardian+"','"+TempSewadarData.gender+"', '"+TempSewadarData.address+"', '"+TempSewadarData.age+"','"+$scope.current+"','"+$scope.current+"')";
+                                          $cordovaSQLite.execute($rootScope.db, Insertquery).then(function(resTemp) {
+                                                      TempSewadarData.id = resTemp.insertId;
+                                                      addTempSewadarNested(TempSewadarData);
+                                          }, function(err){
 
+                                          });   
+                                    }else {
+                                          for(var i= 0; i<res.rows.length; i++) {                                    
+                                                addTempSewadarNested(res.rows.item(i));
+                                          }
+                                    }
+                              })
+
+                        }
+                        $scope.closePopoverForTempSewadar();
+                        setFocus();
                   }
-                  $scope.closePopoverForTempSewadar();
-                  setFocus();
             };
 
             function setFocus() {
@@ -673,6 +681,16 @@
                                                 $scope.males.push(res.rows.item(i)); 
                                           }                                                                      
                                     } 
+
+                                    if(
+                                          !angular.isDefined($scope.nominalRollsData.contact_no) ||
+                                          ($scope.nominalRollsData.contact_no == 'undefined') ||
+                                          ($scope.nominalRollsData.contact_no == 'null') ||
+                                          ($scope.nominalRollsData.contact_no == null)
+
+                                    ) {
+                                          $scope.nominalRollsData.contact_no = '';
+                                    }
                                     var htmlBodyStart = '<html><body>';
                                     var header = '<div style="width: 99%; margin: auto; margin-top: -27px;"> <div style="width: 20%; display:inline-block; vertical-align: middle;"> <div> <img src="img/nomination.png" style="width: 55px; margin-top: -20px; alt="nomination-logo"> </div> </div> <div style="width: 58%; display:inline-block;"> <div style="text-align: center;"> <h3> SATSANG CENTERS IN INDIA <br> NOMINAL ROLL SEWA JATHA </h3> </div> </div> <div style="width: 20%; display:inline-block; vertical-align: top;"> <div style="text-align: right;"> <h4>SCI/2016/84</h4> </div> </div> </div>'; 
                                     var subHeader = '<table style="width: 99%; margin: auto;"><tr><td style="width:60%; font-size: 12px;">Name of Satsang Place :&nbsp;<span style="font-weight: bold; font-size: 12px;">'+$scope.placeInfo.place+'</span></td><td style="width:25%; font-size: 12px;">Area :&nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.placeInfo.area+'</span></td><td style="width:15%; font-size: 12px;">Zone :<span style="font-weight: bold; font-size: 11px;">'+$scope.placeInfo.zone+'</span></td></tr><tr><td style="width:60%; font-size: 12px;">Name of Jathedar : &nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.nominalRollsData.name+'</span></td><td colspan="2" style="width:40%; font-size: 12px;">Name of Driver :</span> &nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.nominalRollsData.driver_name+'</span></td></tr><tr><td style="font-size: 12px; width:60%;">Type of Vehicle : &nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.nominalRollsData.vehicle_type+'</span></td><td colspan="2" style="font-size: 12px; width:40%;">Vehicle No : &nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.nominalRollsData.vehicle_no+'</span></td></tr><tr><td style="width:60%; font-size: 12px;">Place of Sewa : &nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.nominalRollsData.sewa_name+'</span></td><td style="width:25%; font-size: 12px;">Duration From :&nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.sDate+'</span></td><td style="width:15%; font-size: 12px;">To :&nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.eDate+'</span></td></tr><tr><td colspan="3" style="font-size: 12px;">(Mention Beas Department or Center as Applicable)</td></tr></table>';
