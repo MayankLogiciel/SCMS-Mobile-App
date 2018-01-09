@@ -279,7 +279,6 @@
                   $scope.abortTransferRequest.then(function(result) {
                         $scope.import();
                   }, function(err) {
-                        requestIntercepter.responseError(err);
                         $timeout(function() {
                               switch(err.http_status) {
                                     case 401:
@@ -289,6 +288,7 @@
                                           getToken('database');
                                           return;
                                     default:
+                                          requestIntercepter.responseError(err);
                                           $scope.cancelLoading();
                                     } 
                         }, 500);                                   
@@ -314,6 +314,7 @@
                   $scope.abortTransferRequest.then(function(result) { 
                         CopyPicturesandDatabaseToImport();
                   }, function(err) {
+                        requestIntercepter.responseError(err);
                         $scope.cancelLoading();
                   }, function (progress) {
                         $scope.downloadProgressDB = Math.floor((progress.loaded / progress.total) * 100);

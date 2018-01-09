@@ -74,6 +74,7 @@
                   .then(function(result) { 
                         CopyPicturesandDatabaseToImport();
                   }, function(err) {
+                        requestIntercepter.responseError(err);
                         $scope.cancelLoading();
                   }, function (progress) {
                         $timeout(function () {

@@ -4,11 +4,11 @@ angular
         var message = {
             wrongUrl: "Please enter valid server URL",
             wrongRoute: "404: Please check your server URL",
-            serverErrorMessage: "500: Whoops, looks like something went wrong"
+            serverErrorMessage: "500: Whoops, looks like something went wrong",
+            underProcessMessage: "Sync is already running on another device"
         }
         return{
             responseError: function(rejection) {
-                console.log(rejection);
                 rejection.status = (angular.isDefined(rejection.status))? rejection.status: rejection.http_status;
                 var $state = $injector.get('$state');
                 switch(rejection.status){
@@ -17,6 +17,9 @@ angular
                         break;
                     case 400: 
                         localStorage.removeItem("SCMS_token");                            
+                        break;
+                    case 422: 
+                         $cordovaToast.show(message.underProcessMessage, 'short', 'center');                           
                         break;
                     case 404: 
                         if(rejection.statusText == 'Not Found') {
