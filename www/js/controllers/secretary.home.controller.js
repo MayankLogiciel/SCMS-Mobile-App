@@ -13,7 +13,6 @@
                   $scope.approvalCount = 0;
                   $scope.sewadarsCount = [];
                   sewadarsCount(); 
-
                   if($state.current.name == "app") {
                         $timeout(function(){
                               $ionicHistory.clearCache();
@@ -43,7 +42,6 @@
             $scope.openSyncNominalPopover = function($event) {
                   $ionicPopover.fromTemplateUrl('templates/popovers/sync.delete.nominal.rolls.popover.html', {
                         scope: $scope,
-                        //backdropClickToClose: false                  
                   }).then(function(popover) {
                         $scope.popover = popover; 
                         $scope.popover.show($event);
@@ -60,12 +58,8 @@
                         if(res.rows.length > 0) {
                               for(var i= 0; i<res.rows.length; i++) { 
                                     $scope.nominals.push(res.rows.item(i)); 
-                                    if(res.rows.item(i).status == 'Approved' || res.rows.item(i).status == 'approved' || res.rows.item(i).status == 'dispatched') {
-                                          $scope.nominalAprroveList.push(res.rows.item(i)); 
-                                    }
                               }  
                         }
-                              $scope.checkedNominal(); 
                   }, function (err) { 
                   });
             };
@@ -83,7 +77,7 @@
                         for(var i = 0; i<$scope.nominals.ids.length; i++) {
                               var updateQuery = "UPDATE nominal_roles SET status = 'Approved', approved_by = "+approved_by_group_id.group_id + " WHERE id = '"+$scope.nominals.ids[i]+"'";
                               updateNominal(updateQuery, 'approvedMany', $scope.nominals.ids[i]);                       
-                        }
+                        }                        
                   }
             }
             $scope.logOut = function() {
@@ -94,13 +88,11 @@
             }
 
             $scope.markSelected = function (nominal) { 
-                  if(nominal.isSelected == true) {                        
+                  if(nominal.isSelected) {
                         $scope.approvalCount =  $scope.approvalCount  + 1;
-                  }
-                  if(nominal.isSelected == false) {
+                  }else {
                         $scope.approvalCount =  $scope.approvalCount  - 1;
-                  }
-                             
+                  }   
             };
 
             //refreshing page 
@@ -108,34 +100,19 @@
                   setup();
             });
 
-            $scope.checkedNominal = function() {
-                  angular.forEach($scope.nominalAprroveList, function(item) {
-                        angular.forEach($scope.nominals, function(val, i) {
-                              if( val.id == item.id ) {
-                                    $scope.nominals[i].isSelected = true;    
-
-                              }
-                        });
-                  });
-                 
-            }; 
-
             var  updateNominal = function(query, str, data) {
                   $cordovaSQLite.execute($rootScope.db, query).then(function(res) { 
                         if(str == 'approvedMany') {
                               for(var i =0 ; i<$scope.nominals.length; i++) {
                                     if($scope.nominals[i].id == data) {
                                         $scope.nominals[i].status = 'Approved'; 
-                                        $scope.approvalCount =  $scope.approvalCount  - (i+1); 
+                                        $scope.nominals[i].isSelected = false; 
                                     }
                               }
-                              $cordovaToast.show('Nominal Roll Approved', 'short', 'center'); 
-                        } else if(str == 'Approved' && data.isSelected ){
-                              $scope.approvalCount =  $scope.approvalCount  - 1;
-                              
+                              //$cordovaToast.show('Nominal Roll Approved', 'short', 'center');
+                              $scope.approvalCount = 0; 
                         }else {
-                              $cordovaToast.show('Nominal Roll Approval removed', 'short', 'center'); 
-
+                              $cordovaToast.show('Nominal Roll Approval removed', 'short', 'center');
                         }
                   }, function (err) { 
                   });
@@ -159,7 +136,6 @@
                   else if(nominal.status == 'dispatched') {
                         $scope.buttonText = [
                               {text: '<i class="icon ion-checkmark-circled icon-space"></i>Mark As Approved'},
-                              // {text : '<i class="icon ion-edit"></i> Edit Nominal Roll'},
                               {text : '<i class="icon ion-trash-a del-nominal-on-tab"></i> Delete Nominal Roll'}
                         ];
                         txt = 'Approved';
@@ -189,12 +165,6 @@
                               switch (actionText){
                                     case '<i class="icon ion-checkmark-circled icon-space"></i>Mark As Approved' :
                                           nominal.status = txt;
-                                          if(txt=='Approved') {
-                                                nominal.isSelected = true;
-
-                                          } else {
-                                                nominal.isSelected = false;
-                                          }                                         
                                           var query = "UPDATE nominal_roles SET status = '"+txt+"', approved_by = "+approved_by_group_id.group_id + " WHERE id = '"+nominal.id+"'";
                                           updateNominal(query, txt, nominal);
                                           return true;   
@@ -224,11 +194,9 @@
                                                 return true;
                                           }
                                           nominal.status = txt;
-                                          nominal.isSelected = false;
                                           var query = "UPDATE nominal_roles SET status = '"+txt+"' WHERE id = '"+nominal.id+"'";
                                           updateNominal(query, txt, nominal);
-                                          return true; 
-
+                                          return true;
                               }
                         }
                   });
@@ -257,16 +225,81 @@
                                           case 'dispatched': 
                                                 markAsDispatched(n_id);
                                                 return true;
-                                    }                                      
+                                          case 'delete-selected': 
+                                                delSelected();
+                                                return true;
+                                          case 'dispatched-selected': 
+                                                markAsDispatchedSelected();
+                                                return true;
+                                          }                                      
                               }
                         }]
                   });                
             }; 
 
+            $scope.deleteSelected = function() {
+                  if($scope.nominals.length > 0 && $scope.approvalCount <= 0) {
+                      $cordovaToast.show('Please select atleast one nominal roll ', 'short', 'center'); 
+                      return; 
+                  }
+                  var msg = "All assigned sewadars will be deleted with all Nominal Rolls. Confirm to Proceed.";
+                  showConfirm(msg, 'all', 'delete-selected');
+            }
+
+            var delSelected = function () {
+                  $scope.nominals.ids = $filter('nominalFilter')($scope.nominals,'isSelected');  
+                  angular.forEach($scope.nominals.ids, function (row, index) {
+                        var query = "UPDATE nominal_roles SET status = 'deleted' WHERE id = '"+row+"'";                 
+                        $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
+                              angular.forEach($scope.nominals, function (row1, i) {
+                                    if(row == row1.id) {
+                                          $scope.nominals.splice(i, true);                                          
+                                    }
+                              });
+                        }, function(err){
+                        });
+                  });
+                  $scope.approvalCount = 0;
+            }
+
+            $scope.dispatchedSelected = function() {
+                  if($scope.nominals.length > 0 && $scope.approvalCount <= 0) {
+                      $cordovaToast.show('Please select atleast one nominal roll ', 'short', 'center'); 
+                      return; 
+                  }
+                  var msg = "Nominal rolls having status approved and have sewadar/sewadars will be disspached only.";
+                  showConfirm(msg, 'all', 'dispatched-selected');            
+            }
+
+            var markAsDispatchedSelected = function () {
+                  $scope.nominals.ids = $filter('nominalFilter')($scope.nominals,'isSelected');  
+                  angular.forEach($scope.nominals.ids, function(value,j) {
+                        angular.forEach($scope.nominals, function(val,i) {
+                              if(
+                                    (value == val.id && 
+                                    (val.status == 'Approved' || val.status == 'dispatched')) && 
+                                    ((val.MaleCounts > 0) || 
+                                    (val.FemaleCounts > 0))
+                              ) {
+                                    var query = "UPDATE nominal_roles SET status = 'dispatched' WHERE id = '"+value+"'";
+                                    $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
+                                          $scope.nominals[i].status = 'Dispatched'; 
+                                          $scope.nominals[i].isSelected = false; 
+                                    }, function(err){
+                                    });
+                                    
+                              }else {
+                                    $scope.nominals[i].isSelected = false; 
+                              }
+                            
+                        });   
+                  });
+                  $scope.approvalCount = 0;
+            }
+
 
             var markAsDispatched = function(nominal) {
                   nominal.status = 'dispatched';
-                  nominal.isSelected = true;
                   var query = "UPDATE nominal_roles SET status = 'dispatched' WHERE id ="+nominal.id;
                   $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
                   }, function(err){
@@ -291,6 +324,13 @@
                   }, function(err){
                   });                  
             }  
+
+            $scope.$on('floating-menu:open', function(){
+                  $scope.isDisabled = true; 
+            });
+            $scope.$on('floating-menu:close', function(){
+                  $scope.isDisabled = false; 
+            });
 
             $scope.getListForNominalRolls = function(){
                   var dbName = 'database.sqlite';

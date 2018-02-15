@@ -64,6 +64,9 @@
 	}
 
 }
+.f-btn {
+	display: block !important;
+}
 .pre-url-size {
 	font-size: 20px;
 	@media(max-width: 480px) {
@@ -2819,12 +2822,21 @@
 	}
 
 }
+.badge-status {
+	background-color: $assertive !important;
+    color: #fff !important;
+    padding-left: 9px !important;
+    padding-right: 9px !important;
+    padding-bottom: 3px !important;
+    padding-top: 3px !important;
+    display: inline-block !important;
+    border-radius: 5px !important;
+    float: right;
+}
 
 
 
 //IOS css
-
-
 .platform-ios {
 	@media(max-width: 480px) {
 		.search-wrapper { 
