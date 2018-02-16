@@ -1446,7 +1446,8 @@
 }
 
 .approval-title {
-	margin-left: 10%;
+	margin-left: 0;
+	text-align: left;
 }
 .checkbox input:disabled:checked:before, .checkbox input:disabled:checked + .checkbox-icon:before {
 	background:$balanced;
@@ -2936,4 +2937,14 @@
 
 	}
 
+}
+.status-button-popover .scroll-content {
+	margin-top: 0;
+	top: -66px;
+	bottom: auto;
+}
+.status-filter {
+	text-align: right !important;
+	text-transform: capitalize;
+	font-size: 17px !important;
 }

@@ -3,7 +3,7 @@
       /**
       * SecretaryHome Controller
       **/
-      var SecretaryHomeController = function($log,$scope, $state, $filter, $cordovaSQLite, $timeout, nominalRollsService, $cordovaToast, $ionicHistory, $ionicActionSheet, $rootScope, authService, $ionicPopup, $stateParams, $ionicPopover) {
+      var SecretaryHomeController = function($log,$scope, $state, $filter, $cordovaSQLite, $timeout, nominalRollsService, $cordovaToast, $ionicHistory, $ionicActionSheet, $rootScope, authService, $ionicPopup, $stateParams, $ionicPopover, cfpLoadingBar) {
             var setup = function() {
                   $log.debug("Nominal Rolls Controller");
                   $scope.nominals = [];   
@@ -12,6 +12,8 @@
                   $scope.getListForNominalRolls(); 
                   $scope.approvalCount = 0;
                   $scope.sewadarsCount = [];
+                  $scope.selectedStatus = 'All';
+                  $scope.tempData = [];
                   sewadarsCount(); 
                   if($state.current.name == "app") {
                         $timeout(function(){
@@ -54,14 +56,17 @@
            
             var getNominalRollsData = function(query) {
                   $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
+
                         $scope.nominals = []; 
                         if(res.rows.length > 0) {
                               for(var i= 0; i<res.rows.length; i++) { 
-                                    $scope.nominals.push(res.rows.item(i)); 
+                                    $scope.nominals.push(res.rows.item(i));
+                                    $scope.tempData.push(res.rows.item(i)); 
                               }  
                         }
                   }, function (err) { 
                   });
+                  cfpLoadingBar.complete();
             };
             $scope.markApproved = function () {
                   var approved_by_group_id = authService.getLoggedInUserData();
@@ -121,7 +126,7 @@
 
             $scope.quickActions = function(nominal) {
                   var msg = "All assigned sewadars will be deleted with this Nominal Roll. Confirm to Proceed.";
-                  var msgDispatched = "After dispached you will not able to add more sewadars or modify this nominal roll. Confirm to Proceed. ";
+                  var msgDispatched = "Nominal rolls having status approved and have sewadar/sewadars will be disspached only.";
                   var approved_by_group_id = authService.getLoggedInUserData();
                   var txt = '';
                   if(nominal.status == 'Approved' || nominal.status == 'approved') {
@@ -332,7 +337,39 @@
                   $scope.isDisabled = false; 
             });
 
+            $scope.openStatusPopover = function($event) {
+                  $ionicPopover.fromTemplateUrl('templates/popovers/secrectary.filter.popover.html', {
+                        scope: $scope,
+                        //backdropClickToClose: false                  
+                  }).then(function(popover) {
+                        $scope.popover = popover; 
+                        $scope.popover.show($event);
+                  });
+            };
+
+            var closeStatusPopover = function() {
+                  $scope.popover.hide();
+            }
+
+            $scope.byStatus = function(str) {
+                  $scope.nominals = []; 
+                  $scope.selectedStatus = str;
+                  closeStatusPopover();
+                  switch (str){
+                        case 'all':
+                        $scope.nominals = $scope.tempData;
+                        return;
+                        default :
+                        angular.forEach($scope.tempData, function(val) {
+                              if(val.status == str) {
+                                    $scope.nominals.push(val);
+                              }
+                        });                        
+                  }
+            }
+
             $scope.getListForNominalRolls = function(){
+                  cfpLoadingBar.start();
                   var dbName = 'database.sqlite';
                   $rootScope.db = $cordovaSQLite.openDB({name: dbName, location: 'default'}); 
                   var query =  "select nr.*, (CASE WHEN v.id NOTNULL THEN v.name ELSE 'null' END) AS vehicle_type, s.name as sewa_name, d.name as jatha_name from nominal_roles AS nr left join vehicles as v ON v.id = nr.vehicle_id left join sewas as s ON s.id = nr.sewa_id left join departments as d ON d.id = nr.department_id where nr.status <> 'deleted'";
@@ -341,11 +378,9 @@
             setup();
       };
 
-      SecretaryHomeController.$inject  = ['$log', '$scope', '$state', '$filter', '$cordovaSQLite', '$timeout', 'nominalRollsService', '$cordovaToast', '$ionicHistory', '$ionicActionSheet', '$rootScope', 'authService', '$ionicPopup', '$stateParams', '$ionicPopover'];
+      SecretaryHomeController.$inject  = ['$log', '$scope', '$state', '$filter', '$cordovaSQLite', '$timeout', 'nominalRollsService', '$cordovaToast', '$ionicHistory', '$ionicActionSheet', '$rootScope', 'authService', '$ionicPopup', '$stateParams', '$ionicPopover', 'cfpLoadingBar'];
 
       angular
       .module('SCMS_ATTENDANCE')
       .controller("SecretaryHomeController", SecretaryHomeController);
 })();
-
-
