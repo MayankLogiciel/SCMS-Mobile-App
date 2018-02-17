@@ -289,7 +289,7 @@
                               ) {
                                     var query = "UPDATE nominal_roles SET status = 'dispatched' WHERE id = '"+value+"'";
                                     $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
-                                          $scope.nominals[i].status = 'Dispatched'; 
+                                          $scope.nominals[i].status = 'dispatched'; 
                                           $scope.nominals[i].isSelected = false; 
                                     }, function(err){
                                     });
