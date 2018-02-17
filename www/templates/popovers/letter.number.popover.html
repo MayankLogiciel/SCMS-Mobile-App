@@ -1,0 +1,33 @@
+<ion-popover-view class="fit custom-popover temp-sewadar-form letter-form">
+	<div class="bar bar-header bar-balanced">
+		<h1 class="title temp-sewa">Enter Letter Number</h1>
+	</div>
+	<ion-content class="has-header letter-header-top"> 
+		<form name='FormLetterNumber' class="temp-form" novalidate>
+			<div class="list">
+				<div class="list list-inset login-wraper temp-name">
+					<label class="item item-input custom-text height-on-mob">
+						<i class="icon ion-clipboard placeholder-icon"></i>
+						<input 
+						class="text-transform-capital" 
+						type="text" 
+						name="letter"
+						autocomplete="off"
+						validator="required"
+						message-id = 'letter_id'
+						ng-model="LetterNumber.number"
+						required-error-message="* Enter letter number" 
+						placeholder="Letter Number"/>
+					</label>
+				</div>
+				<p id='letter_id'></p>
+			</div>  
+			<div class="bar bar-footer custom-footer open-sewadar-footer">       
+                        <div class="button-bar">
+                              <a class="button button-assertive temp-sewa-btn" ng-click="addLetterNumber(LetterNumber);" validation-submit="FormLetterNumber">SUBMIT</a>
+                              <a class="button button-stable temp-sewa-btn" ng-click="closePopoverLetterNumber()" validation-reset="FormLetterNumber">CANCEL</a>
+                        </div>      
+                  </div>                      
+		</form>
+	</ion-content>
+</ion-popover-view>

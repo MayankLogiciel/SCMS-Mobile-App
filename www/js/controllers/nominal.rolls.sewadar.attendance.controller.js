@@ -18,8 +18,8 @@
                   $scope.sewadar ={}; 
                   $scope.start = 10;
                   $scope.end = $scope.start+10;
-                  $scope.currentDate =  $filter('date')(new Date(), 'yyyy-MM-dd'); 
-                  $scope.LetterNumber =  $filter('date')(new Date(), 'yyyy/M');                 
+                  $scope.currentDate =  $filter('date')(new Date(), 'yyyy-MM-dd');  
+                  $scope.issueDate =  $filter('date')(new Date(), 'dd-MM-yyyy');                               
                   if($scope.nominal_id) {                      
                         $scope.nominalRollsData = nominalRollsService.getNominalRollsData();
                         if($scope.nominalRollsData.incharge_female_id == 'null') {
@@ -32,7 +32,6 @@
                         }else {
                               $scope.nominalRollsData.incharge_id = $scope.nominalRollsData.incharge_id;
                         }                      
-                        $scope.LetterNumber = $scope.LetterNumber + '/' + $scope.nominalRollsData.id;
                         if($scope.nominalRollsData.sewa_name == 'Misc Sewa') {
                               $scope.nominalRollsData.sewa_name = $scope.nominalRollsData.new_sewa;  
                         } else {
@@ -69,6 +68,7 @@
                   $scope.imagePath = $rootScope.baseAppDir + 'import/sewadar_pics/'; 
                   $scope.defaultImage = 'img/imgUnavailable.png';
                   $scope.TempSewadarData = {};
+                  $scope.LetterNumber =  {}; 
                   $scope.refId = (new Date())/1000|0;
                   $scope.isBatchNumber = true;
             };
@@ -516,7 +516,7 @@
                   }
             };
 
-            $scope.print = function() {
+            $scope.openPopoverLetterNumber = function($event) {
                   if($scope.sewadarAttendance.length <= 0) {
                         $cordovaToast.show('There is no sewadar to print', 'short', 'center');
                         return;
@@ -533,138 +533,158 @@
                   ) {
                         $cordovaToast.show('Please select nominal rolls incharge', 'short', 'center');
                         return;
+                  }else {
+                        $ionicPopover.fromTemplateUrl('templates/popovers/letter.number.popover.html', {
+                              scope: $scope,
+                              backdropClickToClose: false                  
+                        }).then(function(popover) {
+                              $scope.popover = popover; 
+                              $scope.popover.show($event);
+                        });
+                  }
+            };
+
+            $scope.addLetterNumber = function(letterNumber) {
+                  $scope.print();
+                  $scope.letterNumber = letterNumber.number;
+                  $scope.closePopoverLetterNumber();
+            }
+            $scope.closePopoverLetterNumber = function() {
+                  $scope.popover.hide(); 
+                  $timeout(function(){
+                        $scope.LetterNumber = {};  
+                  },0);                
+            };
+
+            $scope.print = function() {
+                  $scope.sewadarPrintList = [];                       
+                  cfpLoadingBar.start();
+                  $scope.signature = '';
+                  $scope.incharge = {};
+                  $scope.femaleIncharge = {};
+                  $scope.maleIncharge = {};
+                  if($scope.placeInfo == null) {
+                        $scope.placeInfo = {
+                              place: '',
+                              area: '',
+                              zone: '',
+                              mobile1: '',
+                              mobile2: ''
+                        };
+                  } 
+                  if(angular.isDefined($scope.placeInfo.mobile2) && $scope.placeInfo.mobile2 != '') {
+                        $scope.placeInfo.mobile2 = ' / ' + $scope.placeInfo.mobile2;  
+                  }else {
+                        $scope.placeInfo.mobile2 = '';   
+                  }
+
+                  if(angular.isDefined($scope.placeInfo.mobile1) && $scope.placeInfo.mobile1 != '') {
+                        $scope.placeInfo.mobile1 = $scope.placeInfo.mobile1;  
+                  }else {
+                        $scope.placeInfo.mobile1 = '';   
+                  }
+
+                  if(angular.isDefined($scope.placeInfo.place) && $scope.placeInfo.place != '') {
+                        $scope.placeInfo.place = $scope.placeInfo.place;  
+                  }else {
+                        $scope.placeInfo.place = '';   
+                  }
+
+                  if(angular.isDefined($scope.placeInfo.area) && $scope.placeInfo.area != '') {
+                        $scope.placeInfo.area = $scope.placeInfo.area;  
+                  }else {
+                        $scope.placeInfo.area = '';   
+                  }
+
+                  if(angular.isDefined($scope.placeInfo.zone) && $scope.placeInfo.zone != '') {
+                        $scope.placeInfo.zone = $scope.placeInfo.zone;  
+                  }else {
+                        $scope.placeInfo.zone = '';   
+                  }
+                  if(
+                        ($scope.nominalRollsData.incharge_id != null || 
+                        $scope.nominalRollsData.incharge_id != 'null' ||
+                        $scope.nominalRollsData.incharge_id != '') && 
+                        ($scope.nominalRollsData.incharge_female_id == null || 
+                        $scope.nominalRollsData.incharge_female_id == 'null' || 
+                        $scope.nominalRollsData.incharge_female_id == '') 
+                  ) {
+                        if($scope.nominalRollsData.incharge_type == 't') {
+                              var getIncharge = "SELECT * from temp_sewadars where id = "+$scope.nominalRollsData.incharge_id ;
+                        }else {
+                              var getIncharge = "SELECT * from sewadars where id = "+$scope.nominalRollsData.incharge_id ;
+                        }
+
+                        $cordovaSQLite.execute($rootScope.db, getIncharge).then(function(res) { 
+                              for(var i= 0; i<res.rows.length; i++) {
+                                    $scope.incharge = res.rows.item(i);
+                              }
+                              $scope.incharge.batch_no = (!angular.isDefined($scope.incharge.batch_no)) ? 'Open' : $scope.incharge.batch_no;
+                        });
+                        var getSewadarQuery = "SELECT DISTINCT sewadars.id, sewadars.name, sewadars.gender,sewadars.address, sewadars.batch_no, sewadars.guardian, sewadars.age, sewadars.photo, sewadars.designation_name, sewadars.department_name, sewadars.dob, sewadars.sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, attendances.nominal_roll_id, attendances.sewadar_type FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where attendances.nominal_roll_id = '"+$scope.nominal_id+"' AND attendances.sewadar_type = 'permanent' AND attendances.status <> 'deleted' AND attendances.sewadar_id <> "+$scope.nominalRollsData.incharge_id+" UNION SELECT DISTINCT temp_sewadars.id, temp_sewadars.name, temp_sewadars.gender,temp_sewadars.address, NULL as batch_no, temp_sewadars.guardian, temp_sewadars.age, NULL as photo, NULL as designation_name, NULL as department_name, NULL as dob, NULL as sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, attendances.nominal_roll_id, attendances.sewadar_type FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where attendances.nominal_roll_id = '"+$scope.nominal_id+"' AND attendances.status <> 'deleted' AND attendances.sewadar_type = 'temporary' AND attendances.sewadar_id <> "+$scope.nominalRollsData.incharge_id+" group by att_id ORDER BY attendances.sewadar_type asc, batch_no asc";
+
+                  } else if(
+                        ($scope.nominalRollsData.incharge_id == null || 
+                        $scope.nominalRollsData.incharge_id == 'null' || 
+                        $scope.nominalRollsData.incharge_id == '') && 
+                        ($scope.nominalRollsData.incharge_female_id != null || 
+                        $scope.nominalRollsData.incharge_female_id != 'null' || 
+                        $scope.nominalRollsData.incharge_female_id != '') 
+                  ) {
+                        if($scope.nominalRollsData.incharge_female_type == 't') {
+                              var getIncharge = "SELECT * from temp_sewadars where id = "+$scope.nominalRollsData.incharge_female_id ;
+                        }else {
+                              var getIncharge = "SELECT * from sewadars where id = "+$scope.nominalRollsData.incharge_female_id ;
+                        }
+
+                        $cordovaSQLite.execute($rootScope.db, getIncharge).then(function(res) { 
+                              for(var i= 0; i<res.rows.length; i++) {
+                                    $scope.incharge = res.rows.item(i);
+                              }
+                              $scope.incharge.batch_no = (!angular.isDefined($scope.incharge.batch_no)) ? 'Open' : $scope.incharge.batch_no;
+                        });
+                        var getSewadarQuery = "SELECT DISTINCT sewadars.id, sewadars.name, sewadars.gender,sewadars.address, sewadars.batch_no, sewadars.guardian, sewadars.age, sewadars.photo, sewadars.designation_name, sewadars.department_name, sewadars.dob, sewadars.sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, attendances.nominal_roll_id, attendances.sewadar_type FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where attendances.nominal_roll_id = '"+$scope.nominal_id+"' AND attendances.sewadar_type = 'permanent' AND attendances.status <> 'deleted' AND attendances.sewadar_id <> "+$scope.nominalRollsData.incharge_female_id+" UNION SELECT DISTINCT temp_sewadars.id, temp_sewadars.name, temp_sewadars.gender,temp_sewadars.address, NULL as batch_no, temp_sewadars.guardian, temp_sewadars.age, NULL as photo, NULL as designation_name, NULL as department_name, NULL as dob, NULL as sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, attendances.nominal_roll_id, attendances.sewadar_type FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where attendances.nominal_roll_id = '"+$scope.nominal_id+"' AND attendances.status <> 'deleted' AND attendances.sewadar_type = 'temporary' AND attendances.sewadar_id <> "+$scope.nominalRollsData.incharge_female_id+" group by att_id ORDER BY attendances.sewadar_type asc, batch_no asc";
+
                   } else {
-                        $scope.sewadarPrintList = [];                       
-                        cfpLoadingBar.start();
-                        $scope.signature = '';
-                        $scope.incharge = {};
-                        $scope.femaleIncharge = {};
-                        $scope.maleIncharge = {};
-                        if($scope.placeInfo == null) {
-                              $scope.placeInfo = {
-                                    place: '',
-                                    area: '',
-                                    zone: '',
-                                    mobile1: '',
-                                    mobile2: ''
-                              };
-                        } 
-                        if(angular.isDefined($scope.placeInfo.mobile2) && $scope.placeInfo.mobile2 != '') {
-                              $scope.placeInfo.mobile2 = ' / ' + $scope.placeInfo.mobile2;  
-                        }else {
-                              $scope.placeInfo.mobile2 = '';   
-                        }
-
-                        if(angular.isDefined($scope.placeInfo.mobile1) && $scope.placeInfo.mobile1 != '') {
-                              $scope.placeInfo.mobile1 = $scope.placeInfo.mobile1;  
-                        }else {
-                              $scope.placeInfo.mobile1 = '';   
-                        }
-
-                        if(angular.isDefined($scope.placeInfo.place) && $scope.placeInfo.place != '') {
-                              $scope.placeInfo.place = $scope.placeInfo.place;  
-                        }else {
-                              $scope.placeInfo.place = '';   
-                        }
-
-                        if(angular.isDefined($scope.placeInfo.area) && $scope.placeInfo.area != '') {
-                              $scope.placeInfo.area = $scope.placeInfo.area;  
-                        }else {
-                              $scope.placeInfo.area = '';   
-                        }
-
-                        if(angular.isDefined($scope.placeInfo.zone) && $scope.placeInfo.zone != '') {
-                              $scope.placeInfo.zone = $scope.placeInfo.zone;  
-                        }else {
-                              $scope.placeInfo.zone = '';   
-                        }
-                        if(
-                              ($scope.nominalRollsData.incharge_id != null || 
-                              $scope.nominalRollsData.incharge_id != 'null' ||
-                              $scope.nominalRollsData.incharge_id != '') && 
-                              ($scope.nominalRollsData.incharge_female_id == null || 
-                              $scope.nominalRollsData.incharge_female_id == 'null' || 
-                              $scope.nominalRollsData.incharge_female_id == '') 
-                        ) {
-                              if($scope.nominalRollsData.incharge_type == 't') {
-                                    var getIncharge = "SELECT * from temp_sewadars where id = "+$scope.nominalRollsData.incharge_id ;
-                              }else {
-                                    var getIncharge = "SELECT * from sewadars where id = "+$scope.nominalRollsData.incharge_id ;
+                        var getInchargeFemale;
+                        var getInchargeMale;
+                        var femaleIncharge = "select incharge_female_type from nominal_roles where id="+ $scope.nominal_id;
+                        $cordovaSQLite.execute($rootScope.db, femaleIncharge).then(function(res) {
+                              for(var i=0; i<res.rows.length; i++) {
+                                    if(res.rows.item(i).incharge_female_type == 't') {
+                                          getInchargeFemale = "SELECT * from temp_sewadars where id = "+$scope.nominalRollsData.incharge_female_id ;
+                                    }else {
+                                          getInchargeFemale = "SELECT * from sewadars where id = "+$scope.nominalRollsData.incharge_female_id ;
+                                    }
                               }
-
-                              $cordovaSQLite.execute($rootScope.db, getIncharge).then(function(res) { 
+                              $cordovaSQLite.execute($rootScope.db, getInchargeFemale).then(function(res) { 
                                     for(var i= 0; i<res.rows.length; i++) {
-                                          $scope.incharge = res.rows.item(i);
+                                          $scope.femaleIncharge = res.rows.item(i);
                                     }
-                                    $scope.incharge.batch_no = (!angular.isDefined($scope.incharge.batch_no)) ? 'Open' : $scope.incharge.batch_no;
+                                    $scope.femaleIncharge.batch_no = (!angular.isDefined($scope.femaleIncharge.batch_no)) ? 'Open' : $scope.femaleIncharge.batch_no;
                               });
-                              var getSewadarQuery = "SELECT DISTINCT sewadars.id, sewadars.name, sewadars.gender,sewadars.address, sewadars.batch_no, sewadars.guardian, sewadars.age, sewadars.photo, sewadars.designation_name, sewadars.department_name, sewadars.dob, sewadars.sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, attendances.nominal_roll_id, attendances.sewadar_type FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where attendances.nominal_roll_id = '"+$scope.nominal_id+"' AND attendances.sewadar_type = 'permanent' AND attendances.status <> 'deleted' AND attendances.sewadar_id <> "+$scope.nominalRollsData.incharge_id+" UNION SELECT DISTINCT temp_sewadars.id, temp_sewadars.name, temp_sewadars.gender,temp_sewadars.address, NULL as batch_no, temp_sewadars.guardian, temp_sewadars.age, NULL as photo, NULL as designation_name, NULL as department_name, NULL as dob, NULL as sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, attendances.nominal_roll_id, attendances.sewadar_type FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where attendances.nominal_roll_id = '"+$scope.nominal_id+"' AND attendances.status <> 'deleted' AND attendances.sewadar_type = 'temporary' AND attendances.sewadar_id <> "+$scope.nominalRollsData.incharge_id+" group by att_id ORDER BY attendances.sewadar_type asc, batch_no asc";
+                        });
 
-                        } else if(
-                              ($scope.nominalRollsData.incharge_id == null || 
-                              $scope.nominalRollsData.incharge_id == 'null' || 
-                              $scope.nominalRollsData.incharge_id == '') && 
-                              ($scope.nominalRollsData.incharge_female_id != null || 
-                              $scope.nominalRollsData.incharge_female_id != 'null' || 
-                              $scope.nominalRollsData.incharge_female_id != '') 
-                        ) {
-                              if($scope.nominalRollsData.incharge_female_type == 't') {
-                                    var getIncharge = "SELECT * from temp_sewadars where id = "+$scope.nominalRollsData.incharge_female_id ;
-                              }else {
-                                    var getIncharge = "SELECT * from sewadars where id = "+$scope.nominalRollsData.incharge_female_id ;
+                        var maleIncharge = "select incharge_type from nominal_roles where id="+ $scope.nominal_id;
+                        $cordovaSQLite.execute($rootScope.db, maleIncharge).then(function(res) {
+                              for(var i=0; i<res.rows.length; i++) {
+                                    if(res.rows.item(i).incharge_type == 't') {
+                                          getInchargeMale = "SELECT * from temp_sewadars where id = "+$scope.nominalRollsData.incharge_id ;
+                                    }else {
+                                          getInchargeMale = "SELECT * from sewadars where id = "+$scope.nominalRollsData.incharge_id ;
+                                    }
                               }
-
-                              $cordovaSQLite.execute($rootScope.db, getIncharge).then(function(res) { 
+                              $cordovaSQLite.execute($rootScope.db, getInchargeMale).then(function(res) { 
                                     for(var i= 0; i<res.rows.length; i++) {
-                                          $scope.incharge = res.rows.item(i);
+                                          $scope.maleIncharge = res.rows.item(i);
                                     }
-                                    $scope.incharge.batch_no = (!angular.isDefined($scope.incharge.batch_no)) ? 'Open' : $scope.incharge.batch_no;
+                                    $scope.maleIncharge.batch_no = (!angular.isDefined($scope.maleIncharge.batch_no)) ? 'Open' : $scope.maleIncharge.batch_no;
                               });
-                              var getSewadarQuery = "SELECT DISTINCT sewadars.id, sewadars.name, sewadars.gender,sewadars.address, sewadars.batch_no, sewadars.guardian, sewadars.age, sewadars.photo, sewadars.designation_name, sewadars.department_name, sewadars.dob, sewadars.sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, attendances.nominal_roll_id, attendances.sewadar_type FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where attendances.nominal_roll_id = '"+$scope.nominal_id+"' AND attendances.sewadar_type = 'permanent' AND attendances.status <> 'deleted' AND attendances.sewadar_id <> "+$scope.nominalRollsData.incharge_female_id+" UNION SELECT DISTINCT temp_sewadars.id, temp_sewadars.name, temp_sewadars.gender,temp_sewadars.address, NULL as batch_no, temp_sewadars.guardian, temp_sewadars.age, NULL as photo, NULL as designation_name, NULL as department_name, NULL as dob, NULL as sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, attendances.nominal_roll_id, attendances.sewadar_type FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where attendances.nominal_roll_id = '"+$scope.nominal_id+"' AND attendances.status <> 'deleted' AND attendances.sewadar_type = 'temporary' AND attendances.sewadar_id <> "+$scope.nominalRollsData.incharge_female_id+" group by att_id ORDER BY attendances.sewadar_type asc, batch_no asc";
+                        });
+                        var getSewadarQuery = "SELECT DISTINCT sewadars.id, sewadars.name, sewadars.gender,sewadars.address, sewadars.batch_no, sewadars.guardian, sewadars.age, sewadars.photo, sewadars.designation_name, sewadars.department_name, sewadars.dob, sewadars.sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, attendances.nominal_roll_id, attendances.sewadar_type FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where attendances.nominal_roll_id = '"+$scope.nominal_id+"' AND attendances.sewadar_type = 'permanent' AND attendances.status <> 'deleted' AND attendances.sewadar_id <> "+$scope.nominalRollsData.incharge_id+" AND attendances.sewadar_id <> "+$scope.nominalRollsData.incharge_female_id+" UNION SELECT DISTINCT temp_sewadars.id, temp_sewadars.name, temp_sewadars.gender,temp_sewadars.address, NULL as batch_no, temp_sewadars.guardian, temp_sewadars.age, NULL as photo, NULL as designation_name, NULL as department_name, NULL as dob, NULL as sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, attendances.nominal_roll_id, attendances.sewadar_type FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where attendances.nominal_roll_id = '"+$scope.nominal_id+"' AND attendances.status <> 'deleted' AND attendances.sewadar_type = 'temporary' AND attendances.sewadar_id <> "+$scope.nominalRollsData.incharge_female_id+" AND attendances.sewadar_id <> "+$scope.nominalRollsData.incharge_id+" group by att_id ORDER BY attendances.sewadar_type asc, batch_no asc";
+                  }
 
-
-                        } else {
-                              var getInchargeFemale;
-                              var getInchargeMale;
-                              var femaleIncharge = "select incharge_female_type from nominal_roles where id="+ $scope.nominal_id;
-                              $cordovaSQLite.execute($rootScope.db, femaleIncharge).then(function(res) {
-                                    for(var i=0; i<res.rows.length; i++) {
-                                          if(res.rows.item(i).incharge_female_type == 't') {
-                                                getInchargeFemale = "SELECT * from temp_sewadars where id = "+$scope.nominalRollsData.incharge_female_id ;
-                                          }else {
-                                                getInchargeFemale = "SELECT * from sewadars where id = "+$scope.nominalRollsData.incharge_female_id ;
-                                          }
-                                    }
-
-                                    $cordovaSQLite.execute($rootScope.db, getInchargeFemale).then(function(res) { 
-                                          for(var i= 0; i<res.rows.length; i++) {
-                                                $scope.femaleIncharge = res.rows.item(i);
-                                          }
-                                          $scope.femaleIncharge.batch_no = (!angular.isDefined($scope.femaleIncharge.batch_no)) ? 'Open' : $scope.femaleIncharge.batch_no;
-
-                                    });
-                              });
-
-                              var maleIncharge = "select incharge_type from nominal_roles where id="+ $scope.nominal_id;
-                              $cordovaSQLite.execute($rootScope.db, maleIncharge).then(function(res) {
-                                    for(var i=0; i<res.rows.length; i++) {
-                                          if(res.rows.item(i).incharge_type == 't') {
-                                                getInchargeMale = "SELECT * from temp_sewadars where id = "+$scope.nominalRollsData.incharge_id ;
-                                          }else {
-                                                getInchargeMale = "SELECT * from sewadars where id = "+$scope.nominalRollsData.incharge_id ;
-                                          }
-                                    }
-                                    $cordovaSQLite.execute($rootScope.db, getInchargeMale).then(function(res) { 
-                                          for(var i= 0; i<res.rows.length; i++) {
-                                                $scope.maleIncharge = res.rows.item(i);
-                                          }
-                                          $scope.maleIncharge.batch_no = (!angular.isDefined($scope.maleIncharge.batch_no)) ? 'Open' : $scope.maleIncharge.batch_no;
-                                    });
-                              });
-                              var getSewadarQuery = "SELECT DISTINCT sewadars.id, sewadars.name, sewadars.gender,sewadars.address, sewadars.batch_no, sewadars.guardian, sewadars.age, sewadars.photo, sewadars.designation_name, sewadars.department_name, sewadars.dob, sewadars.sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, attendances.nominal_roll_id, attendances.sewadar_type FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where attendances.nominal_roll_id = '"+$scope.nominal_id+"' AND attendances.sewadar_type = 'permanent' AND attendances.status <> 'deleted' AND attendances.sewadar_id <> "+$scope.nominalRollsData.incharge_id+" AND attendances.sewadar_id <> "+$scope.nominalRollsData.incharge_female_id+" UNION SELECT DISTINCT temp_sewadars.id, temp_sewadars.name, temp_sewadars.gender,temp_sewadars.address, NULL as batch_no, temp_sewadars.guardian, temp_sewadars.age, NULL as photo, NULL as designation_name, NULL as department_name, NULL as dob, NULL as sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, attendances.nominal_roll_id, attendances.sewadar_type FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where attendances.nominal_roll_id = '"+$scope.nominal_id+"' AND attendances.status <> 'deleted' AND attendances.sewadar_type = 'temporary' AND attendances.sewadar_id <> "+$scope.nominalRollsData.incharge_female_id+" AND attendances.sewadar_id <> "+$scope.nominalRollsData.incharge_id+" group by att_id ORDER BY attendances.sewadar_type asc, batch_no asc";
-                        }
-
-                        $timeout(function() {
+                  $timeout(function() {
                         var getSign = "SELECT signature from users  where group_id = "+$scope.nominalRollsData.approved_by ;
                         $cordovaSQLite.execute($rootScope.db, getSign).then(function(res) { 
                               for(var i= 0; i<res.rows.length; i++) {
@@ -675,22 +695,21 @@
                         $cordovaSQLite.execute($rootScope.db, getSewadarQuery).then(function(res) {
                               $scope.totalRows = res.rows.length;
                               $scope.males = [];
-                                    for(var i= 0; i<res.rows.length; i++) { 
-                                          $scope.sewadarPrintList.push(res.rows.item(i));  
-                                          if(res.rows.item(i).gender == 'M') {
-                                                $scope.males.push(res.rows.item(i)); 
-                                          }                                                                      
-                                    } 
+                              for(var i= 0; i<res.rows.length; i++) { 
+                                    $scope.sewadarPrintList.push(res.rows.item(i));  
+                                    if(res.rows.item(i).gender == 'M') {
+                                          $scope.males.push(res.rows.item(i)); 
+                                    }                                                                      
+                              } 
 
-                                    if(
-                                          !angular.isDefined($scope.nominalRollsData.contact_no) ||
-                                          ($scope.nominalRollsData.contact_no == 'undefined') ||
-                                          ($scope.nominalRollsData.contact_no == 'null') ||
-                                          ($scope.nominalRollsData.contact_no == null)
-
-                                    ) {
-                                          $scope.nominalRollsData.contact_no = '';
-                                    }
+                              if(
+                                    !angular.isDefined($scope.nominalRollsData.contact_no) ||
+                                    ($scope.nominalRollsData.contact_no == 'undefined') ||
+                                    ($scope.nominalRollsData.contact_no == 'null') ||
+                                    ($scope.nominalRollsData.contact_no == null)
+                              ) {
+                                    $scope.nominalRollsData.contact_no = '';
+                              }
                                     var htmlBodyStart = '<html><body>';
                                     var header = '<div style="width: 99%; margin: auto; margin-top: -27px;"> <div style="width: 20%; display:inline-block; vertical-align: middle;"> <div> <img src="img/nomination.png" style="width: 55px; margin-top: -20px; alt="nomination-logo"> </div> </div> <div style="width: 58%; display:inline-block;"> <div style="text-align: center;"> <h3> SATSANG CENTERS IN INDIA <br> NOMINAL ROLL SEWA JATHA </h3> </div> </div> <div style="width: 20%; display:inline-block; vertical-align: top;"> <div style="text-align: right;"> <h4>SCI/2016/84</h4> </div> </div> </div>'; 
                                     var subHeader = '<table style="width: 99%; margin: auto;"><tr><td style="width:60%; font-size: 12px;">Name of Satsang Place :&nbsp;<span style="font-weight: bold; font-size: 12px;">'+$scope.placeInfo.place+'</span></td><td style="width:25%; font-size: 12px;">Area :&nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.placeInfo.area+'</span></td><td style="width:15%; font-size: 12px;">Zone :<span style="font-weight: bold; font-size: 11px;">'+$scope.placeInfo.zone+'</span></td></tr><tr><td style="width:60%; font-size: 12px;">Name of Jathedar : &nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.nominalRollsData.name+'</span></td><td colspan="2" style="width:40%; font-size: 12px;">Name of Driver :</span> &nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.nominalRollsData.driver_name+'</span></td></tr><tr><td style="font-size: 12px; width:60%;">Type of Vehicle : &nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.nominalRollsData.vehicle_type+'</span></td><td colspan="2" style="font-size: 12px; width:40%;">Vehicle No : &nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.nominalRollsData.vehicle_no+'</span></td></tr><tr><td style="width:60%; font-size: 12px;">Place of Sewa : &nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.nominalRollsData.sewa_name+'</span></td><td style="width:25%; font-size: 12px;">Duration From :&nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.sDate+'</span></td><td style="width:15%; font-size: 12px;">To :&nbsp;<span style="font-weight: bold; font-size: 11px;">'+$scope.eDate+'</span></td></tr><tr><td colspan="3" style="font-size: 12px;">(Mention Beas Department or Center as Applicable)</td></tr></table>';
@@ -700,7 +719,7 @@
                                     var tableEnd = '</table>';
                                     var tableRows = []; 
                                     var tableRowsContinue = [];                              
-                                    var footer = '<table style="width: 99%; margin: auto; margin-top: 15px;"><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;"></td><td colspan="2" style="width: 25%; text-align:right; vertical-align: top; margin-right: 100px"><span style="padding-right: 36px; padding-left: 36px;"><img style="margin-right: 50px;" src="'+$scope.signature+'" " width="70"></span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;"></td><td colspan="2" style="width: 25%; text-align:right; vertical-align: top; margin-right: 100px"></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;"></td><td colspan="2" style="width: 25%; text-align:right; vertical-align: top; margin-right: 100px"></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;"><span style="border-top:1px solid #000; padding-right: 30px; padding-left: 30px; font-size: 12px;">(Signature of Jathedar)</span></td><td colspan="2" style="width: 25%; text-align:right; vertical-align: top; margin-right: 100px"></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: bottom  ; text-align: left; font-size: 12px;">Letter No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000; font-size: 12px;"></span></td><td colspan = "2"  style="width: 25%; text-align: right;"></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left; font-size: 12px;">Jatha : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000; font-size: 12px;">'+$scope.nominalRollsData.jatha_name+'</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: right;"><span style="border-top:1px solid #000; padding-right: 36px; padding-left: 36px; font-size: 12px;">(Signature of Functionary)</span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left; font-size: 12px;">Issue Date : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000; font-size: 12px;">'+$scope.sDate+'</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: right;"><span style="padding-right: 50px; font-size: 12px;">(Affix Rubber Stamp)</span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: ; font-size: 12px;">Contact No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000; font-size: 12px;">'+$scope.nominalRollsData.contact_no+'</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: right; font-size: 12px;">Contact No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000; font-size: 12px;">'+$scope.placeInfo.mobile1+' '+$scope.placeInfo.mobile2+'</span></td></tr></table>';    
+                                    var footer = '<table style="width: 99%; margin: auto; margin-top: 15px;"><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;"></td><td colspan="2" style="width: 25%; text-align:right; vertical-align: top; margin-right: 100px"><span style="padding-right: 36px; padding-left: 36px;"><img style="margin-right: 50px;" src="'+$scope.signature+'" " width="70"></span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;"></td><td colspan="2" style="width: 25%; text-align:right; vertical-align: top; margin-right: 100px"></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;"></td><td colspan="2" style="width: 25%; text-align:right; vertical-align: top; margin-right: 100px"></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;"><span style="border-top:1px solid #000; padding-right: 30px; padding-left: 30px; font-size: 12px;">(Signature of Jathedar)</span></td><td colspan="2" style="width: 25%; text-align:right; vertical-align: top; margin-right: 100px"></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: bottom  ; text-align: left; font-size: 12px;">Letter No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000; font-size: 12px;">'+$scope.letterNumber+'</span></td><td colspan = "2"  style="width: 25%; text-align: right;"></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left; font-size: 12px;">Jatha : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000; font-size: 12px;">'+$scope.nominalRollsData.jatha_name+'</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: right;"><span style="border-top:1px solid #000; padding-right: 36px; padding-left: 36px; font-size: 12px;">(Signature of Functionary)</span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left; font-size: 12px;">Issue Date : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000; font-size: 12px;">'+$scope.issueDate+'</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: right;"><span style="padding-right: 50px; font-size: 12px;">(Affix Rubber Stamp)</span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: ; font-size: 12px;">Contact No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000; font-size: 12px;">'+$scope.nominalRollsData.contact_no+'</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: right; font-size: 12px;">Contact No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000; font-size: 12px;">'+$scope.placeInfo.mobile1+' '+$scope.placeInfo.mobile2+'</span></td></tr></table>';    
                                     setBlankRows(function() {
                                           for(var i=0; i<$scope.sewadarPrintList.length;i++) {
                                                 if(!angular.isDefined($scope.sewadarPrintList[i].guardian) || $scope.sewadarPrintList[i].guardian == null) {
@@ -712,7 +731,7 @@
                                                 if(!angular.isDefined($scope.sewadarPrintList[i].batch_no) || $scope.sewadarPrintList[i].batch_no == null) {
                                                       $scope.sewadarPrintList[i].batch_no = 'Open';
                                                 }
-                                                
+                                                      
                                                 var offset = 0;
                                                 if($scope.incharge.gender == 'M') {
                                                       var tableRow = '<tr height = "28.4" > <td style="border: 1px solid #000; font-size: 11px; text-align: center;">'+(i+1+offset)+'</td> <td style="border: 1px solid #000; font-size: 11px; padding-left: 5px; width: 125px;">'+$scope.sewadarPrintList[i].name + '</td> <td style="border: 1px solid #000; font-size: 11px; padding-left: 5px; width: 125px;">'+$scope.sewadarPrintList[i].guardian+'</td> <td style="border: 1px solid #000; font-size: 11px; text-align: center;">'+$scope.sewadarPrintList[i].gender+'</td> <td style="border: 1px solid #000; font-size: 11px; text-align: center;">'+$scope.sewadarPrintList[i].age+'</td> <td style="border: 1px solid #000; font-size: 10px; text-overflow:ellipsis; padding-left: 5px">'+$scope.sewadarPrintList[i].address+'</td> <td style="border: 1px solid #000; font-size: 11px; text-align: center;">'+$scope.sewadarPrintList[i].batch_no+'</td> </tr>';
@@ -809,11 +828,10 @@
                                                 alert(res ? 'Done' : 'Canceled');                              
                                           });
                                     };
-                             cfpLoadingBar.complete();
-                        }, function (err) { 
-                        });
-                  }, 200);
-                  }                 
+                                    cfpLoadingBar.complete();
+                              }, function (err) { 
+                              });
+                  }, 200);                 
             };
             // implemented by anuj singh 28-06-17
             $scope.markAttendenceByQRCode = function() {

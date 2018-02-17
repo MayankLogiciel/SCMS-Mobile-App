@@ -2947,6 +2947,7 @@
 	bottom: auto;
 	@media(max-width: 480px) {
 		top: -58px;
+		right:0;
 	}
 }
 .status-filter {
@@ -2965,4 +2966,17 @@
 			padding-left: 5px;
 		}
 	}
+}
+.platform-android .letter-form {
+	height: 260px !important;
+	top: 50%;
+    margin-top: -130px !important;
+    @media(max-width: 480px) {
+    	.letter-header-top {
+    		top: 89px !important;
+    	}
+    	height: 240px !important;
+		top: 50%;
+	    margin-top: -120px !important;
+    }
 }
