@@ -60,6 +60,7 @@
                         $scope.nominals = []; 
                         if(res.rows.length > 0) {
                               for(var i= 0; i<res.rows.length; i++) { 
+                                    res.rows.item(i).status = (res.rows.item(i).status == 'approved')?'Approved':res.rows.item(i).status;
                                     $scope.nominals.push(res.rows.item(i));
                                     $scope.tempData.push(res.rows.item(i)); 
                               }  
