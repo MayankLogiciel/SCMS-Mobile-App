@@ -159,6 +159,8 @@
 
                                           var mId = $scope.nominalRollsData.incharge_id;
                                           var fId = $scope.nominalRollsData.incharge_female_id;
+                                          mId = (!mId || mId==0 || mId=='0' || mId==null || mId=='null' || mId=='undefined')?null:mId;
+                                          fId = (!fId || fId==0 || fId=='0' || fId==null || fId=='null' || fId=='undefined')?null:fId;
                                           if(mId == null && fId == null) {
                                                 if(sewadar.gender == 'M') {
                                                       var query = "UPDATE nominal_roles SET name = '"+sewadar.name+"', contact_no = '"+sewadar.sewadar_contact+"', incharge_id = '"+sewadar.id+"', incharge_type = '"+incharge_type+"' WHERE id = '"+$scope.nominal_id+"'";

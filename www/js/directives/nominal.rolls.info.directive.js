@@ -28,6 +28,7 @@ angular.module('SCMS_ATTENDANCE')
             var getFemaleIncharge = function() {
                 if(
                     (($scope.nominalRolesData.incharge_id == 'null') ||
+                    ($scope.nominalRolesData.incharge_id == 0) ||
                     ($scope.nominalRolesData.incharge_id == null)) &&  
                     (($scope.nominalRolesData.incharge_female_type != null ||
                     $scope.nominalRolesData.incharge_female_type != 'null'))
