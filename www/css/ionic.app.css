@@ -9855,6 +9855,9 @@ a.button {
         font-size: 14px; } }
   .pre-url input {
     padding-left: 55px; }
+    @media (max-width: 480px) {
+      .pre-url input {
+        padding-left: 40px; } }
 
 .placehoder-text-change::-webkit-input-placeholder {
   text-transform: capitalize !important; }
@@ -9866,6 +9869,9 @@ a.button {
   border-radius: 50px; }
   .button.button-icon.button-add .plus-icon:before {
     font-size: 22px; }
+
+.f-btn {
+  display: block !important; }
 
 .pre-url-size {
   font-size: 20px; }
@@ -10338,7 +10344,7 @@ a.button {
   .modal-padding h4 {
     font-size: 20px;
     margin-left: 15px;
-    line-height: 2.5; }
+    line-height: 2; }
     .modal-padding h4 .col {
       padding-left: 0; }
     @media (min-width: 1025px) {
@@ -11015,7 +11021,8 @@ a.button {
   font-weight: bold !important; }
 
 .approval-title {
-  margin-left: 10%; }
+  margin-left: 0;
+  text-align: left; }
 
 .checkbox input:disabled:checked:before, .checkbox input:disabled:checked + .checkbox-icon:before {
   background: #952425; }
@@ -11940,7 +11947,116 @@ a.button {
   body.nominal-rolls-popup-open .ionic_datepicker_popup .popup-buttons .button_close {
     display: none; }
   .nominal-less-data {
-    padding: 7px 0 0 0 !important; } }
+    padding: 7px 0 0 0 !important; }
+  .nominal-sewa-detail-modal {
+    background: #ccc;
+    margin-right: 25px;
+    text-align: center; } }
+
+@media (min-width: 480px) and (max-width: 767px) {
+  .sync-pic {
+    margin-top: 5%; }
+  .modal-padding h4 {
+    line-height: 1.8; }
+    .modal-padding h4 span {
+      font-size: 18px;
+      padding: 0; }
+    .modal-padding h4 img {
+      width: 150px; }
+    .modal-padding h4 label {
+      font-size: 18px; }
+  .modal-image img {
+    float: right;
+    height: 200px !important;
+    width: 200px !important; }
+  .camera-model-button {
+    padding-left: 15px;
+    padding-right: 15px;
+    border-radius: 50%;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    left: auto;
+    bottom: -30px;
+    position: absolute !important;
+    right: 8px; }
+  .sat-att-list-edit {
+    font-size: 0 !important; }
+  .date-count a .button.button-assertive {
+    left: 76%; }
+  .nominal-roll-add-btn {
+    font-size: 0 !important;
+    top: -4px;
+    background: transparent !important;
+    left: 25px !important; }
+  .nominal-list-mob h4 label {
+    font-size: 17px !important;
+    padding-left: 15px !important;
+    margin-right: 10px;
+    width: auto; }
+  .nominal-list-mob h4 span {
+    font-size: 16px !important;
+    padding-left: 2px !important;
+    font-weight: 400; }
+  .driver-data label {
+    width: auto !important;
+    display: inline-block;
+    margin-right: 10px; }
+  .list-nominal-add:before {
+    font-size: 50px;
+    margin-top: 30px; }
+  .date-popover {
+    height: 23%; }
+  .floating-btn-for-list {
+    display: block; }
+  .on-mob-display-none {
+    display: none !important; }
+  .jatha-member .sewa-name {
+    width: 100%; }
+  .ionic_datepicker_popup.popup-container .popup .date_col {
+    padding-left: 0;
+    padding-right: 0; }
+  .btn-sect-app {
+    font-size: 0 !important; }
+  .list-margin-sec {
+    padding-top: 20px !important; }
+  .action-sheet-wrapper .action-sheet-has-icons .icon {
+    right: 35% !important; }
+  .name-badge-button-popover.active {
+    opacity: 1 !important; }
+  .name-badge-button-popover {
+    left: 500px !important; }
+  .srch-width {
+    width: 92%; }
+  .modal-padding h4 span {
+    color: rgba(68, 68, 68, 0.77); }
+  .n-modal-padding h4 {
+    line-height: 1.5 !important; }
+    .n-modal-padding h4 label {
+      font-size: 16px !important; }
+    .n-modal-padding h4 span {
+      font-size: 15px !important; }
+  .n-modal-padding .nominal-sewa-detail-modal {
+    background: #ccc;
+    margin-right: 25px;
+    text-align: center; }
+  .login-wraper .custom-text input {
+    font-size: 18px; }
+  .option-sewa select {
+    font-size: 18px; } }
+
+.badge-status {
+  background-color: #387 !important;
+  color: #fff !important;
+  padding-left: 9px !important;
+  padding-right: 9px !important;
+  padding-bottom: 3px !important;
+  padding-top: 3px !important;
+  display: inline-block !important;
+  border-radius: 5px !important;
+  float: right; }
+  @media (max-width: 480px) {
+    .badge-status {
+      font-size: 12px !important; } }
 
 @media (max-width: 480px) {
   .platform-ios .search-wrapper {
@@ -12000,6 +12116,43 @@ a.button {
     top: 65px !important; }
   .platform-ios .name-badge-button-popover {
     top: 130px !important; } }
+
+.status-button-popover .scroll-content {
+  margin-top: 0;
+  top: -66px;
+  bottom: auto; }
+  @media (max-width: 480px) {
+    .status-button-popover .scroll-content {
+      top: -58px;
+      right: 0; } }
+
+.status-filter {
+  text-align: right !important;
+  text-transform: capitalize;
+  font-size: 17px !important; }
+  @media (max-width: 480px) {
+    .status-filter {
+      max-width: 44%;
+      top: -2px !important;
+      font-size: 14px !important;
+      position: relative; }
+      .status-filter i {
+        position: absolute;
+        right: -8px !important;
+        top: 5px;
+        padding-left: 5px; } }
+
+.platform-android .letter-form {
+  height: 260px !important;
+  top: 50%;
+  margin-top: -130px !important; }
+  @media (max-width: 480px) {
+    .platform-android .letter-form {
+      height: 240px !important;
+      top: 50%;
+      margin-top: -120px !important; }
+      .platform-android .letter-form .letter-header-top {
+        top: 89px !important; } }
 
 #loading-bar, #loading-bar-spinner {
   pointer-events: none;
