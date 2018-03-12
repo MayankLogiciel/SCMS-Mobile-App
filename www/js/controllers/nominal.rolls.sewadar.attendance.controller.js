@@ -349,6 +349,9 @@
             }
 
             $scope.addTempSewadar = function(TempSewadarData) {
+                  TempSewadarData.name = angular.uppercase(TempSewadarData.name);
+                  TempSewadarData.guardian = angular.uppercase(TempSewadarData.guardian);
+                  TempSewadarData.address = angular.uppercase(TempSewadarData.address);
                   if(TempSewadarData.age < 5) {
                         $scope.showAge = true;
                         return;
