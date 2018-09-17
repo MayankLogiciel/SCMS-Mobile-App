@@ -79,7 +79,7 @@
 .satsang-day-view-btn {
 	margin-top: -386px !important;
 	@media (max-width: 480px) { 
-		margin-top: -225px !important;
+		margin-top: -213px !important;
 	}
 }
 .satsang-date-today {
@@ -293,9 +293,10 @@
 	width: 50%;
 	margin: auto;
 	@media(max-width: 480px) {
-    	display: block !important;
-		width: 70% !important;
-		margin: auto !important;
+    	display: inline-block !important;
+		width: 49% !important;
+		margin-top: 10px !important;
+		// margin: auto !important;
     }
 
 }
@@ -333,7 +334,7 @@
     padding-left: 3%;
     background: #ddd;
     @media(max-width: 480px) {
-    	font-size: 16px !important;
+    	font-size: 13px !important;
     	padding: 5px !important;
     }
 }
@@ -343,9 +344,9 @@
     padding-left: 3%;
     background: #ddd;
     @media(max-width: 480px) {
-    	font-size: 16px !important;
+    	font-size: 13px !important;
     	padding: 5px !important;
-    	margin-top: -21px !important;
+    	margin-top: -24px !important;
     }
 }
 .ion-arrow-swap {
@@ -2979,4 +2980,12 @@
 		top: 50%;
 	    margin-top: -120px !important;
     }
+}
+.upload-icon-sync {
+	&:before {
+		font-size: 30px;
+		@media(max-width: 480px) {
+			font-size: 24px;
+		}
+	}
 }

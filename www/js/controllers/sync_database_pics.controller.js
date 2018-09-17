@@ -3,7 +3,7 @@
       /**
       * Sync DB Controller
       **/
-      var SyncDBPicsController = function($log, $scope, $ionicHistory, $cordovaSQLite, $ionicLoading, authService, $cordovaFileTransfer, $timeout, $cordovaFile, $filter, $rootScope, picAndDatabaseTransferService, $cordovaToast, $state, $cordovaNetwork, SCMS_SERVER_UPLOAD_URL, SCMS_SERVER_IMAGE_UPLOAD_URL, SCMS_SERVER_IMAGE_DOWNLOAD_URL, $cordovaZip, SCMS_SERVER_DOWNLOAD_URL, requestIntercepter) {
+      var SyncDBPicsController = function($log, $scope, $ionicHistory, $cordovaSQLite, $ionicLoading, authService, $cordovaFileTransfer, $timeout, $cordovaFile, $filter, $rootScope, picAndDatabaseTransferService, $cordovaToast, $state, $cordovaNetwork, SCMS_SERVER_UPLOAD_URL, SCMS_SERVER_IMAGE_UPLOAD_URL, SCMS_SERVER_IMAGE_DOWNLOAD_URL, $cordovaZip, SCMS_SERVER_DOWNLOAD_URL, requestIntercepter, SCMS_SERVER_UPLOAD_SDA_URL) {
             var setup = function() {
                   $log.debug("Sync DB Controller");
                   $scope.pictures = [];
@@ -23,6 +23,7 @@
                   $scope.currentDate =  $filter('date')(new Date(), 'yyyy-MM-dd');
                   $scope.syncDateAndTime = picAndDatabaseTransferService.getLastImagesDownloadedTime();
                   $scope.abortTransferRequest = null;
+                  $scope.sync_type = '';
             }; 
  
             $scope.goBack = function() {
@@ -198,26 +199,41 @@
                   });
             }
 
-            $scope.uploadDatabase = function() {
+                   
+
+            $scope.uploadDatabase = function(type) {
                   if($cordovaNetwork.isOffline()){
                         $cordovaToast.show('Please Check your network connection', 'short', 'center');
                         return;
-                  }else if(!angular.isDefined($scope.serverURlPrefix) || 
+                  }                  
+                  if(!angular.isDefined($scope.serverURlPrefix) || 
                         $scope.serverURlPrefix == null || 
                         $scope.serverURlPrefix.serverURL =='' ||
                         $scope.serverURlPrefix.serverURL ==null) {
                         $cordovaToast.show('Please enter valid server url', 'short', 'center');
                         return;
-                  }else if($scope.getToken == null || $scope.getToken == '') {
-                        $scope.syncingDatabase('Uploading database (0%)');
-                        getToken('database');
-                  }else
-                  if($scope.attendanceCount <=0 && $scope.nominalCount <= 0) {
-                        $cordovaToast.show('No data available to sync', 'short', 'center');
-                        return;
+                  }
+                  $scope.sync_type = type;
+                  if(type == 'sda') {                         
+                        if($scope.attendanceCount <=0) {
+                              $cordovaToast.show('No data available to sync', 'short', 'center');
+                              return;
+                        }else {
+                              $scope.syncingDatabase('Uploading database (0%)');
+                              $scope.createExportFolder();                       
+                        }
                   }else {
-                        $scope.syncingDatabase('Uploading database (0%)');
-                        $scope.createExportFolder();                       
+                        if($scope.getToken == null || $scope.getToken == '') {
+                              $scope.syncingDatabase('Uploading database (0%)');
+                              getToken('database');
+                        }else
+                        if($scope.nominalCount <= 0) {
+                              $cordovaToast.show('No data available to sync', 'short', 'center');
+                              return;
+                        }else {
+                              $scope.syncingDatabase('Uploading database (0%)');
+                              $scope.createExportFolder();                       
+                        }
                   }
             };
             /**
@@ -260,45 +276,94 @@
 
             }
 
-            var copiedDataInExport = function(path,dbName) {
-                  var trustAllHosts = true;
-                  var url = encodeURI($scope.preServerUrl + $scope.serverURlPrefix.serverURL + SCMS_SERVER_UPLOAD_URL);
-                  var targetPath = path + dbName;
-                  var filename = targetPath.split("/").pop();
-                  var options = {
-                        fileKey: "upload",
-                        fileName: filename,
-                        chunkedMode: false,
-                        mimeType: "application/x-sqlite3",
-                        httpMethod: "POST",
-                        ignoreLoadingBar: true
-                  };
-                  var headers={'Authorization': $scope.getToken};
-                  options.headers = headers;
-                  $scope.abortTransferRequest  =  $cordovaFileTransfer.upload(url, targetPath, options, trustAllHosts);
-                  $scope.abortTransferRequest.then(function(result) {
-                        $scope.import();
-                  }, function(err) {
-                        $timeout(function() {
-                              switch(err.http_status) {
-                                    case 401:
-                                          getToken('database');
-                                          return;
-                                    case 400:
-                                          getToken('database');
-                                          return;
-                                    default:
-                                          requestIntercepter.responseError(err);
-                                          $scope.cancelLoading();
-                                    } 
-                        }, 500);                                   
-                  }, function (progress) {
-                        $timeout(function () {
-                              $scope.downloadProgress = Math.floor((progress.loaded / progress.total) * 100);
-                              $ionicLoading.show({ scope: $scope, template: '<div class="btn-animation-sync" style="color: #FFFFFF;"><ion-spinner icon="lines" class="spinner-calm"></ion-spinner><br><span style="vertical-align: middle;">&nbsp;&nbsp;Uploading database ('+$scope.downloadProgress+'%)</span><br><br><br><button class ="button button-clear cancel-btn" ng-click="cancelLoading()"><i class="icon ion-close"></i>&nbsp;&nbsp;Cancel</button></div>'});
 
-                        })
-                  });
+
+            var copiedDataInExport = function(path,dbName) {
+
+                  if($scope.sync_type == 'sda') {
+
+                        var trustAllHosts = true;
+                        var url = encodeURI($scope.preServerUrl + $scope.serverURlPrefix.serverURL + SCMS_SERVER_UPLOAD_SDA_URL);
+                        var targetPath = path + dbName;
+                        var filename = targetPath.split("/").pop();
+                        var options = {
+                              fileKey: "upload",
+                              fileName: filename,
+                              chunkedMode: false,
+                              mimeType: "application/x-sqlite3",
+                              httpMethod: "POST",
+                              ignoreLoadingBar: true
+                        };
+                        var headers={
+                              'Authorization': $scope.getToken,
+                              'Accept': 'application/json'
+                        };
+                        options.headers = headers;
+                        console.log(options);
+                        $scope.abortTransferRequest  =  $cordovaFileTransfer.upload(url, targetPath, options, trustAllHosts);
+                        $scope.abortTransferRequest.then(function(result) {
+                              $cordovaToast.show('Satsang day attendance sync successfully.', 'short', 'center');
+                              $scope.cancelLoading();
+                              deleteAttendance();
+                        }, function(err) {
+                              requestIntercepter.responseError(err);
+                              $scope.cancelLoading();
+                        }, function (progress) {
+                              $timeout(function () {
+                                    $scope.downloadProgress = Math.floor((progress.loaded / progress.total) * 100);
+                                    $ionicLoading.show({ scope: $scope, template: '<div class="btn-animation-sync" style="color: #FFFFFF;"><ion-spinner icon="lines" class="spinner-calm"></ion-spinner><br><span style="vertical-align: middle;">&nbsp;&nbsp;Uploading database ('+$scope.downloadProgress+'%)</span><br><br><br><button class ="button button-clear cancel-btn" ng-click="cancelLoading()"><i class="icon ion-close"></i>&nbsp;&nbsp;Cancel</button></div>'});
+
+                              })
+                        });
+                  }else {
+
+                        var trustAllHosts = true;
+                        var url = encodeURI($scope.preServerUrl + $scope.serverURlPrefix.serverURL + SCMS_SERVER_UPLOAD_URL);
+                        var targetPath = path + dbName;
+                        var filename = targetPath.split("/").pop();
+                        var options = {
+                              fileKey: "upload",
+                              fileName: filename,
+                              chunkedMode: false,
+                              mimeType: "application/x-sqlite3",
+                              httpMethod: "POST",
+                              ignoreLoadingBar: true
+                        };
+                        var headers={'Authorization': $scope.getToken};
+                        options.headers = headers;
+                        $scope.abortTransferRequest  =  $cordovaFileTransfer.upload(url, targetPath, options, trustAllHosts);
+                        $scope.abortTransferRequest.then(function(result) {
+                              $scope.import();
+                        }, function(err) {
+                              $timeout(function() {
+                                    switch(err.http_status) {
+                                          case 401:
+                                                getToken('database');
+                                                return;
+                                          case 400:
+                                                getToken('database');
+                                                return;
+                                          default:
+                                                requestIntercepter.responseError(err);
+                                                $scope.cancelLoading();
+                                          } 
+                              }, 500);                                   
+                        }, function (progress) {
+                              $timeout(function () {
+                                    $scope.downloadProgress = Math.floor((progress.loaded / progress.total) * 100);
+                                    $ionicLoading.show({ scope: $scope, template: '<div class="btn-animation-sync" style="color: #FFFFFF;"><ion-spinner icon="lines" class="spinner-calm"></ion-spinner><br><span style="vertical-align: middle;">&nbsp;&nbsp;Uploading database ('+$scope.downloadProgress+'%)</span><br><br><br><button class ="button button-clear cancel-btn" ng-click="cancelLoading()"><i class="icon ion-close"></i>&nbsp;&nbsp;Cancel</button></div>'});
+
+                              })
+                        });
+                  }
+
+            }
+
+            var deleteAttendance = function() {
+                  var query = "DELETE FROM attendances WHERE attendances.nominal_roll_id = 'null'";
+                  $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
+                        $scope.attendanceCount = 0;
+                  }, function(err) {});  
             }
 
             $scope.import = function() { 
@@ -375,8 +440,7 @@
             }            
 
 
-            $scope.importImagesFromServer = function(requestType) {
-                  $scope.importImagesProcessing();
+            $scope.importImagesFromServer = function(requestType) {                  
                   if($cordovaNetwork.isOffline()){
                         $cordovaToast.show('Please Check your network connection', 'short', 'center');
                         return;
@@ -410,37 +474,37 @@
 
                         });
                   }
-
+                  $scope.importImagesProcessing();
                   var unzip = function() {
-                  var path = $rootScope.baseAppDir + 'sewadar.zip';
-                  $cordovaZip
-                  .unzip(
-                        path, 
-                        $rootScope.baseAppDir 
-                        ).then(function (res) {
-                              if(requestType == 'all') {
-                                    deletePictureDir('all');
-                              }else{
-                                    var tempPath = $rootScope.baseAppDir + 'sewadar_pics/';
-                                    window.resolveLocalFileSystemURL(tempPath,
-                                    function (fileSystem) {
-                                          var reader = fileSystem.createReader();
-                                          reader.readEntries(
-                                                function (entries) {
-                                                      copySewadarPicsToImport(entries);
-                                                      deletePictureDir();
-                                                },
-                                                function (err) {
-                                                });
-                                          }, function (err) {
-                                          });     
-                              }
-                        }, function (err) {
+                        var path = $rootScope.baseAppDir + 'sewadar.zip';
+                        $cordovaZip
+                        .unzip(
+                              path, 
+                              $rootScope.baseAppDir 
+                              ).then(function (res) {
+                                    if(requestType == 'all') {
+                                          deletePictureDir('all');
+                                    }else{
+                                          var tempPath = $rootScope.baseAppDir + 'sewadar_pics/';
+                                          window.resolveLocalFileSystemURL(tempPath,
+                                          function (fileSystem) {
+                                                var reader = fileSystem.createReader();
+                                                reader.readEntries(
+                                                      function (entries) {
+                                                            copySewadarPicsToImport(entries);
+                                                            deletePictureDir();
+                                                      },
+                                                      function (err) {
+                                                      });
+                                                }, function (err) {
+                                                });     
+                                    }
+                              }, function (err) {
 
-                        }, function (progressEvent) {
-                              $scope.unZipProgress = (progressEvent.loaded / progressEvent.total) * 100;
+                              }, function (progressEvent) {
+                                    $scope.unZipProgress = (progressEvent.loaded / progressEvent.total) * 100;
 
-                        });                
+                              });                
                   }
 
                   var deletePictureDir = function(str) {
@@ -493,7 +557,7 @@
             }
             setup();
       };
-      SyncDBPicsController.$inject  = ['$log', '$scope', '$ionicHistory', '$cordovaSQLite', '$ionicLoading', 'authService', '$cordovaFileTransfer', '$timeout', '$cordovaFile', '$filter', '$rootScope', 'picAndDatabaseTransferService', '$cordovaToast', '$state', '$cordovaNetwork', 'SCMS_SERVER_UPLOAD_URL', 'SCMS_SERVER_IMAGE_UPLOAD_URL', 'SCMS_SERVER_IMAGE_DOWNLOAD_URL', '$cordovaZip', 'SCMS_SERVER_DOWNLOAD_URL', 'requestIntercepter'];
+      SyncDBPicsController.$inject  = ['$log', '$scope', '$ionicHistory', '$cordovaSQLite', '$ionicLoading', 'authService', '$cordovaFileTransfer', '$timeout', '$cordovaFile', '$filter', '$rootScope', 'picAndDatabaseTransferService', '$cordovaToast', '$state', '$cordovaNetwork', 'SCMS_SERVER_UPLOAD_URL', 'SCMS_SERVER_IMAGE_UPLOAD_URL', 'SCMS_SERVER_IMAGE_DOWNLOAD_URL', '$cordovaZip', 'SCMS_SERVER_DOWNLOAD_URL', 'requestIntercepter', 'SCMS_SERVER_UPLOAD_SDA_URL'];
       angular
       .module('SCMS_ATTENDANCE')
       .controller("SyncDBPicsController", SyncDBPicsController);
