@@ -302,6 +302,9 @@
 }
 .all-img {
 	margin-top: 0;
+	@media(max-width: 480px) {
+		margin-left: 2px !important;
+	}
 }
 .sync-date {
 	padding-right: 15px;
@@ -2987,5 +2990,15 @@
 		@media(max-width: 480px) {
 			font-size: 24px;
 		}
+	}
+}
+.import-db-text-line {
+	@media(max-width: 480px) {
+		line-height: 33px !important;
+	}
+}
+.import-db-btn-line {
+	@media(max-width: 480px) {
+		line-height: 19px !important;
 	}
 }

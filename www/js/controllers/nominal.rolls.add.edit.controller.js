@@ -69,7 +69,7 @@
                   var toDate = new Date(stringToDateTo);
                   var eDate = $filter('date')((toDate),'dd-MM-yyyy');
 
-                  if(nominalData.sewa_name != "Misc Sewa"){
+                  if(nominalData.sewa_id != 14){
                         $scope.newEntryDisabled = true;
                         nominalData.new_sewa = 'N/A';
                   }else {
@@ -136,7 +136,7 @@
 
             $scope.selectedSewa = function(sewa) {
                   $scope.sewaId =  sewa.sewa_id; 
-                  if(sewa.sewa_name == "Misc Sewa") {
+                  if (sewa.sewa_id == 14) {
                         $scope.newEntryDisabled = false;
                   } else {
                         $scope.newEntryDisabled = true;
