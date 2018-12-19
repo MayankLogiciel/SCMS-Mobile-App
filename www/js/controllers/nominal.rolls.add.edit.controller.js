@@ -264,7 +264,7 @@
                        $scope.nominal.date_from =  $filter('date')(($scope.selectedDate),'dd-MM-yyyy');
                   },
                   disabledDates: [],
-                  from: new Date(), //Optional
+                  from: new Date(2016, 1, 1), //Optional
                   to: new Date(2020, 10, 30), //Optional
                   inputDate: new Date(),      //Optional
                   mondayFirst: true,          //Optional
@@ -278,7 +278,7 @@
                         $scope.nominal.date_to =  $filter('date')(($scope.selectedDate),'dd-MM-yyyy');
                   },
                   disabledDates: [],
-                  from: new Date(), //Optional
+                  from: new Date(2016, 1, 1), //Optional
                   to: new Date(2020, 10, 30), //Optional
                   inputDate: new Date(),      //Optional
                   mondayFirst: true,          //Optional
