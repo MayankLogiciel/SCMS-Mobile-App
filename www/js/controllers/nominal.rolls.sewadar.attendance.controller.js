@@ -32,7 +32,7 @@
                         }else {
                               $scope.nominalRollsData.incharge_id = $scope.nominalRollsData.incharge_id;
                         }                      
-                        if($scope.nominalRollsData.sewa_name == 'Misc Sewa') {
+                        if($scope.nominalRollsData.sewa_id == 14) {
                               $scope.nominalRollsData.sewa_name = $scope.nominalRollsData.new_sewa;  
                         } else {
                               $scope.nominalRollsData.sewa_name = $scope.nominalRollsData.sewa_name; 
