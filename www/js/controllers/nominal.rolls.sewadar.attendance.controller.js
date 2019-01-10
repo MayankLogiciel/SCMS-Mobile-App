@@ -18,6 +18,7 @@
                   $scope.sewadar ={}; 
                   $scope.start = 10;
                   $scope.end = $scope.start+10;
+                  $scope.type = 'nominal_roll';
                   $scope.currentDate =  $filter('date')(new Date(), 'yyyy-MM-dd');  
                   $scope.issueDate =  $filter('date')(new Date(), 'dd-MM-yyyy');                               
                   if($scope.nominal_id) {                      

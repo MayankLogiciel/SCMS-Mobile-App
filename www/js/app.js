@@ -250,6 +250,24 @@ angular.module('SCMS_ATTENDANCE', ['ionic', 'ngCordova', 'validation', 'validati
             templateUrl: 'templates/satsang_day.html',
             controller: 'SatsangDayController'
       })
+      .state('home_center_attendance_list', {
+            cache: false,
+            url: '/home_center_attendance_list',
+            templateUrl: 'templates/home.attendance.list.html',
+            controller: 'HomeCenterAttendanceListController'
+      })
+      .state('home_center_attendance', {
+            cache: false,
+            url: '/home_center_attendance',
+            templateUrl: 'templates/home.certer.attendance.html',
+            controller: 'HomeCenterController'
+      })
+      .state('home-center-date-list', {
+            cache: false,
+            url: '/home-center-date-list',
+            templateUrl: 'templates/home.center.date.list.html',
+            controller: 'HomeCenterListController'
+      })
       .state('nominal_rolls', {
             cache: false,
             url: '/nominal_rolls',

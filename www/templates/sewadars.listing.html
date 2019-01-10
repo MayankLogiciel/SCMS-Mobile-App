@@ -1,5 +1,5 @@
 <div sewadar-detail-modal-diretive class="list" >
-    <a class="item item-avatar listing-attend" ng-if="stateName!='satsang_day_attendance'" ng-repeat="sewadar in sewadarAttendance" on-hold = "stateName=='satsang_day_attendance'? '':markAsIncharge(sewadar)">
+    <a class="item item-avatar listing-attend" ng-if="stateName!='satsang_day_attendance' && stateName!='home_center_attendance_list'" ng-repeat="sewadar in sewadarAttendance" on-hold = "stateName=='satsang_day_attendance'? '':markAsIncharge(sewadar)">
       	<img class="list-avtar" ng-if='sewadar.photo && sewadar.isImageFound' ng-src="{{imagePath + sewadar.photo}}?{{timeStampPhoto}}"/>
 		<img class="list-avtar" ng-if='!sewadar.photo || !sewadar.isImageFound' ng-src="{{defaultImage}}"/>
       	<h2 class="row list-avtar-wrapper">  
@@ -29,7 +29,7 @@
 				</h2>
       		</div>
 	      	<div class="col col-10">
-				<i class="icon ion-trash-a list-trash" on-tap="deleteSewadar(sewadar)"></i>
+				<i class="icon ion-trash-a list-trash" on-tap="deleteSewadar(sewadar, type)"></i>
 			</div>
       	</h2>
     </a>
@@ -53,10 +53,51 @@
 				</h2>
       		</div>
       		<div class="col col-10" ng-if="isCurrentDate && !isAttendaceClosed">
-				<i class="icon ion-trash-a list-trash" on-tap="deleteSewadar(sewadar)"></i>
+				<i class="icon ion-trash-a list-trash" on-tap="deleteSewadar(sewadar, type)"></i>
 			</div>
       	</h2>
-    </a>
+		</a>
+		
+		<a class="item item-avatar listing-attend" ng-if="stateName=='home_center_attendance_list'" ng-repeat="sewadar in sewadarAttendance | filter: searchQuery">
+			<img class="list-avtar" ng-if='sewadar.photo && sewadar.isImageFound' ng-src="{{imagePath + sewadar.photo}}?{{timeStampPhoto}}"
+			/>
+			<img class="list-avtar" ng-if='!sewadar.photo || !sewadar.isImageFound' ng-src="{{defaultImage}}" />
+			<h2 class="row list-avtar-wrapper">
+				<div class="col col-90 list-margin-sewadar" on-tap="selectedSewadarDetail(sewadar,'viewSewadar')">
+					<h2 ng-if="sewadar.batch_no" class="list-content-avtar">
+						<span ng-bind="sewadar.name" class="text-transform-capital"></span>
+					</h2>
+					<h2 ng-if="sewadar.batch_no" class="list-content-avtar-content">
+						<span ng-bind="sewadar.guardian" class="text-transform-capital"></span>
+						<span ng-if="sewadar.batch_no"> | </span>
+						<span ng-bind="sewadar.batch_no"></span>
+						<span ng-if="sewadar.gender" class="hide-dept-on-mob"> | </span>
+						<br class="display-block-dept-on-mob">
+						<span ng-bind="(sewadar.gender=='M')?'Male':'Female'"></span>
+						<span ng-if="sewadar.department_name"> | </span>
+						<span ng-bind="sewadar.department_name" class="text-transform-capital"></span>
+					</h2>
+					<h2 ng-if="sewadar.batch_no" class="list-content-avtar-content">
+						<span class="text-transform-capital" ng-if="sewadar.time_in != 'null'">TIME IN: {{sewadar.time_in}}</span>
+						<span ng-if="sewadar.time_out != 'null'"> | </span>	
+						<span class="text-transform-capital" ng-if="sewadar.time_out != 'null'"> TIME OUT: {{sewadar.time_out}}</span>
+					</h2>
+					<h2 ng-if="sewadar.batch_no && sewadar.time_out != 'null' && sewadar.time_in != 'null'" class="list-content-avtar-content">
+						<span class="text-transform-capital">
+							Total hours: {{sewadar.th}}
+						</span>
+					</h2>
+				</div>
+				<div class="col col-10" ng-if="isCurrentDate && !isAttendaceClosed">
+					<div>
+						<i class="icon ion-trash-a list-trash" on-tap="deleteSewadar(sewadar, type)"></i>
+					</div>
+						<div>
+							<i class="icon ion-clock list-trash" on-tap="showConfirm(sewadar)"></i>
+						</div>
+				</div>
+			</h2>
+		</a>
 	<ion-infinite-scroll ng-if="totalRows >= 20" on-infinite="loadMore()" distance="1" immediate-check="false">
 	</ion-infinite-scroll>
 </div>

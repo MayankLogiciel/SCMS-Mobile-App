@@ -72,7 +72,7 @@
             }
 
             var getSatsangAttendanceCount = function() {
-                  var q = "select * from attendances where attendances.type = 'satsang_day'";
+                  var q = "select * from attendances where attendances.type = 'satsang_day' OR attendances.type = 'home_center'";
                   $cordovaSQLite.execute($rootScope.db, q).then(function(res) {
                         $scope.attendanceCount = res.rows.length;
                   });

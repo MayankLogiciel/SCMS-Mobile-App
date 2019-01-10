@@ -17,6 +17,7 @@
                   $scope.getListFromSewadarsForAttendance('load'); 
                   $scope.isBatchNumber = true; 
                   $scope.stateName = $state.current.name;
+                  $scope.type = 'satsang_day';
                   if(profilePicService.getTimeOfPic()=='') {
                         $scope.timeStampPhoto = '';
                   }else {
@@ -126,7 +127,7 @@
                   if(angular.isDefined(action) || action == 'load'){
                         cfpLoadingBar.start();
                   } 
-                  var query = "SELECT sewadars.* FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where attendances.date= '"+$scope.getDate+"' AND attendances.nominal_roll_id= '"+null+"' ORDER BY attendances.created_at Desc LIMIT "+$scope.limit+" offset "+$scope.offset;
+                  var query = "SELECT sewadars.* FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id= '" + null +"' AND type = 'satsang_day'  ORDER BY attendances.created_at Desc LIMIT "+$scope.limit+" offset "+$scope.offset;
                   getSewadarData(query);
             };              
             setup();

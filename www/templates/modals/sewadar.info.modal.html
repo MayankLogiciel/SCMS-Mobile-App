@@ -8,8 +8,8 @@
 			<div class='modal-padding'>	
 				<div class="modal-image">
 					<img ng-if='sewadar.photo && !isImageNotAvailable' ng-src="{{imagePath + sewadar.photo}}?{{timeStampPhoto || ''}}"/>
-	                <img ng-if='!sewadar.photo || isImageNotAvailable' ng-src="{{defaultImage}}" height="300" width="300"/>
-	                <button class="button button-assertive ion-camera camera-model-button" on-tap="clickPhoto()" ng-if="showCameraOption"></button>
+					<img ng-if='!sewadar.photo || isImageNotAvailable' ng-src="{{defaultImage}}" height="300" width="300"/>
+					<button class="button button-assertive ion-camera camera-model-button" on-tap="clickPhoto()" ng-if="showCameraOption"></button>
 				</div>		
 				<div class="modal-content-left">					
 					<h4>
@@ -52,14 +52,13 @@
 						<span ng-bind="sewadar.address"></span>
 					</h4>	
 				</div>	
-				
 			</div>					
 		</ion-list>
 	</ion-content>
 	<div class="bar bar-footer custom-footer">		
 		<div class="button-bar">
 			<a class="button button-assertive" ng-click="closeModalForSewadarDetail(); SaveDataToAttandanceTable(sewadar);closePopoverForSewadar();" ng-bind="buttonTextForSewadarModel" ng-if="buttonTextForSewadarModel=='MARK ATTENDANCE'"></a>
-			<a class="button button-balanced" ng-click="deleteSewadar(sewadar);" ng-bind="buttonTextForSewadarModel" ng-if="buttonTextForSewadarModel !='MARK ATTENDANCE' && isCurrentDate && !isAttendaceClosed" ></a>
+			<a class="button button-balanced" ng-click="deleteSewadar(sewadar, type);" ng-bind="buttonTextForSewadarModel" ng-if="buttonTextForSewadarModel !='MARK ATTENDANCE' && isCurrentDate && !isAttendaceClosed" ></a>
 			<a class="button button-stable" ng-click="closeModalForSewadarDetail();">CANCEL</a>
 		</div>	
 	</div>

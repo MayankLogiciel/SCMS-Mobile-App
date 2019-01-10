@@ -1,0 +1,34 @@
+<ion-view class="login-home-body">
+  <ion-header-bar class="bar-balanced custom-header-bar">
+    <div class="buttons left-button row home-Header ios-header-css">
+      <button class="button button-icon button-stable ion-chevron-left col-10" on-tap="goBack()">
+      </button>
+      <span class='col col-90 satsang-date-today'>Home Center Attendance ({{today}})</span>
+    </div>
+  </ion-header-bar>
+  <div>
+    <div class="list search-wrapper" ng-if="isBatchNumber">
+      <label class="item item-input srch-width">
+        <i class="icon ion-search placeholder-icon search-icon"></i>
+        <input type="tel" placeholder="Search Sewadar by Badge No." autocomplete="off" class="text-transform-capital placehoder-text-change att-search"
+          ng-model="searchQuery.batch_no" ng-model-options="{debounce : 300}" spellcheck="false" ng-change="search(searchQuery)"
+          action-enter="search(searchQuery)" set-focus-directive>
+      </label>
+      <span class="button ion-arrow-swap swap-btn" on-tap="openNameOrBadgePopover()"></span>
+    </div>
+    <div class="list search-wrapper" ng-if="!isBatchNumber">
+      <label class="item item-input srch-width">
+        <i class="icon ion-search placeholder-icon search-icon"></i>
+        <input type="search" placeholder="Search Sewadar by Name" autocomplete="off" class="text-transform-capital placehoder-text-change att-search"
+          ng-model="searchQuery.name" ng-model-options="{debounce : 300}" spellcheck="false" ng-change="search(searchQuery)"
+          action-enter="search(searchQuery)" set-focus-directive>
+      </label>
+      <span class="button ion-arrow-swap swap-btn" on-tap="openNameOrBadgePopover()"></span>
+    </div>
+  </div>
+  <ion-content has-bouncing="false" class="stop-scroll">
+    <div class="common-search-wrapper">
+      <sewadars-listing-directive></sewadars-listing-directive>
+    </div>
+  </ion-content>
+</ion-view>

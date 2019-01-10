@@ -46,7 +46,8 @@
             
             $scope.getDateWiseListFromAttendance = function() {
                   cfpLoadingBar.start();
-                  var query = "SELECT DISTINCT attendances.date from attendances where attendances.nominal_roll_id= '"+null+"'";
+                  var type = 'satsang_day';
+                  var query = "SELECT DISTINCT date(attendances.date) as date from attendances where attendances.nominal_roll_id= '" + null + "'  AND type ='" + type + "'";
                   $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
                         if(res.rows.length > 0) {
                               $scope.dateWiseAttendanceList = []; 
@@ -66,8 +67,9 @@
             }; 
 
             $scope.getTotalAttendeesOnPerticularDate = function(data) {
+                  var type = 'satsang_day';
                   angular.forEach(data, function(val){
-                        var query = "SELECT COUNT(DISTINCT id) as count FROM attendances WHERE attendances.date = '"+val.date+"' AND attendances.nominal_roll_id= '"+null+"'";
+                        var query = "SELECT COUNT(DISTINCT id) as count FROM attendances WHERE date(attendances.date) = '" + val.date + "' AND attendances.nominal_roll_id= '" + null + "'  AND type ='" + type + "'";
                         $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
                               for(var i= 0; i<res.rows.length; i++) { 
                                     val.attendeesCount = res.rows.item(i).count;

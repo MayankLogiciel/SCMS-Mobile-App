@@ -91,11 +91,11 @@
                               $scope.modal.remove();
                         });
 
-                        $scope.deleteSewadar = function(sewadar) {
+                        $scope.deleteSewadar = function(sewadar, type) {
                               if(isModalOpen) {
                                     $scope.modal.hide();
                               }
-                              showDeleteConfirm(sewadar);                
+                              showDeleteConfirm(sewadar, type);                
                         };   
 
 
@@ -110,7 +110,7 @@
                         }
 
 
-                        var showDeleteConfirm = function(sewadar) { 
+                        var showDeleteConfirm = function(sewadar, type) { 
                               $ionicPopup.confirm({
                                     title: 'Please Confirm',
                                     template: 'Are you sure you want to detete '+sewadar.name+' from attendees list? ',
@@ -135,10 +135,10 @@
                                                 $scope.modal.hide();
                                           }
                                           if($scope.nominal_id) {
-                                                var query = "DELETE FROM attendances WHERE sewadar_id = '"+sewadar.id+"' AND nominal_roll_id = "+$scope.nominal_id;
+                                                var query = "DELETE FROM attendances WHERE sewadar_id = '" + sewadar.id + "' AND attendances.type = '" + type +"' AND nominal_roll_id = "+$scope.nominal_id;
                                           } 
                                           else {
-                                                var query = "DELETE FROM attendances WHERE sewadar_id = '"+sewadar.id+"' AND attendances.nominal_roll_id = 'null'";
+                                                var query = "DELETE FROM attendances WHERE sewadar_id = '" + sewadar.id + "' AND attendances.type = '" + type +"' AND attendances.nominal_roll_id = 'null'";
                                           }                            
                                           $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
                                                 for(var i=0; i < $scope.sewadarAttendance.length; i++) {
