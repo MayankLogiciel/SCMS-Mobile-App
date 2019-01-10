@@ -155,8 +155,8 @@
     };
 
     var updateTime = function (sewadar) {
-      var time_in = $filter('date')(new Date($scope.inOut.time_in), 'HH:mm:ss');
-      var time_out = $filter('date')(new Date($scope.inOut.time_out), 'HH:mm:ss'); 
+      var time_in = $filter('date')(new Date($scope.inOut.time_in), 'hh:mm:ss');
+      var time_out = $filter('date')(new Date($scope.inOut.time_out), 'hh:mm:ss'); 
       var c = diff_hours($scope.inOut.time_out, $scope.inOut.time_in)     
       if(c < 0) {
         $cordovaToast.show('Out date should be graeter', 'short', 'center');

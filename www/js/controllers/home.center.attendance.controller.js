@@ -7,7 +7,7 @@
     var setup = function () {
       $log.debug("Satsang_Day Controller");
       $scope.currentAttDate = $filter('date')(new Date(), 'yyyy-MM-dd hh:mm:ss');
-      $scope.currentAttTime = $filter('date')(new Date(), 'HH:mm:ss');
+      $scope.currentAttTime = $filter('date')(new Date(), 'hh:mm:ss');
       $scope.currentDate = $filter('date')(new Date(), 'yyyy-MM-dd');
       $scope.today = $filter('date')((new Date()), 'EEE, d MMM, y');
       $scope.count = 0;
