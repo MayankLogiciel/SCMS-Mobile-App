@@ -20,6 +20,7 @@
             });
             return _defer.promise;   
         }; 
+
         this.getTokenFromServer = function(email, password, config, serverUrl) {
             var _defer  = $q.defer();
             $http({
@@ -63,8 +64,22 @@
             }else {
                 return null;
             }
-        };        
+        }; 
         
+        this.resetSync = function (data) {
+            var _defer = $q.defer();
+            $http({
+                method: 'get',
+                url: data.url,
+                headers: data.headers,
+                timeout: _defer.promise
+            }).then(function (response) {
+                _defer.resolve(response);
+            }, function (err) {
+                _defer.reject(err);
+            });
+            return _defer.promise;
+        }; 
     };
 
     picAndDatabaseTransferService.$inject  = ['$q', '$http'];

@@ -1,9 +1,12 @@
 <ion-view class="login-home-body"> 
     <ion-header-bar class="bar-balanced custom-header-bar">
         <div class="buttons left-button row ios-header-css">
-            <button class="button button-icon button-stable ion-chevron-left col-10" on-tap="goBack()">
+            <button class="button button-icon button-stable ion-chevron-left col-20" on-tap="goBack()">
             </button>
-            <span class='col col-90 header-title'>Sync To Server</span>
+            <span class='col col-60 header-title'>Sync To Server</span>
+            <button class="button button-icon button-add col-20 nominal-roll-add-btn" on-tap="resetSync()">
+                <i class="icon ion-ios7-refresh plus-icon"></i> Reset
+            </button>
         </div>
     </ion-header-bar>
     <ion-content class="stop-scrol-sync">

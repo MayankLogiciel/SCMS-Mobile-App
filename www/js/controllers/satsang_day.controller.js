@@ -73,7 +73,7 @@
                   var CheckQuery = "SELECT sewadar_id FROM attendances where sewadar_id ='" + sewadar.id + "' AND date(date) = '" + $scope.currentDate + "' AND nominal_roll_id = '" + null + "' AND type = 'satsang_day'";
                   $cordovaSQLite.execute($rootScope.db, CheckQuery).then(function(res) {
                         if(res.rows.length == 0) {
-                              var sewa_id = 6;
+                              var sewa_id = 24;
                               $scope.current = $filter('date')(new Date(), 'yyyy-MM-dd h:mm:ss');
                               var nominal_roll_id = null;
                               var reference_id = null

@@ -9886,7 +9886,7 @@ a.button {
   margin-top: -386px !important; }
   @media (max-width: 480px) {
     .satsang-day-view-btn {
-      margin-top: -225px !important; } }
+      margin-top: -213px !important; } }
 
 .satsang-date-today {
   font-size: 25px !important; }
@@ -10067,12 +10067,15 @@ a.button {
   margin: auto; }
   @media (max-width: 480px) {
     .download-images-from-db {
-      display: block !important;
-      width: 70% !important;
-      margin: auto !important; } }
+      display: inline-block !important;
+      width: 49% !important;
+      margin-top: 10px !important; } }
 
 .all-img {
   margin-top: 0; }
+  @media (max-width: 480px) {
+    .all-img {
+      margin-left: 2px !important; } }
 
 .sync-date {
   padding-right: 15px;
@@ -10105,7 +10108,7 @@ a.button {
   background: #ddd; }
   @media (max-width: 480px) {
     .download-img {
-      font-size: 16px !important;
+      font-size: 13px !important;
       padding: 5px !important; } }
 
 .upload-data {
@@ -10115,9 +10118,9 @@ a.button {
   background: #ddd; }
   @media (max-width: 480px) {
     .upload-data {
-      font-size: 16px !important;
+      font-size: 13px !important;
       padding: 5px !important;
-      margin-top: -21px !important; } }
+      margin-top: -24px !important; } }
 
 .ion-arrow-swap {
   right: 0; }
@@ -12153,6 +12156,20 @@ a.button {
       margin-top: -120px !important; }
       .platform-android .letter-form .letter-header-top {
         top: 89px !important; } }
+
+.upload-icon-sync:before {
+  font-size: 30px; }
+  @media (max-width: 480px) {
+    .upload-icon-sync:before {
+      font-size: 24px; } }
+
+@media (max-width: 480px) {
+  .import-db-text-line {
+    line-height: 33px !important; } }
+
+@media (max-width: 480px) {
+  .import-db-btn-line {
+    line-height: 19px !important; } }
 
 #loading-bar, #loading-bar-spinner {
   pointer-events: none;

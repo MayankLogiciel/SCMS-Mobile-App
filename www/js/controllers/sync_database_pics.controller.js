@@ -3,7 +3,7 @@
       /**
       * Sync DB Controller
       **/
-      var SyncDBPicsController = function($log, $scope, $ionicHistory, $cordovaSQLite, $ionicLoading, authService, $cordovaFileTransfer, $timeout, $cordovaFile, $filter, $rootScope, picAndDatabaseTransferService, $cordovaToast, $state, $cordovaNetwork, SCMS_SERVER_UPLOAD_URL, SCMS_SERVER_IMAGE_UPLOAD_URL, SCMS_SERVER_IMAGE_DOWNLOAD_URL, $cordovaZip, SCMS_SERVER_DOWNLOAD_URL, requestIntercepter, SCMS_SERVER_UPLOAD_SDA_URL) {
+      var SyncDBPicsController = function ($log, $scope, $ionicHistory, $cordovaSQLite, $ionicLoading, authService, $cordovaFileTransfer, $timeout, $cordovaFile, $filter, $rootScope, picAndDatabaseTransferService, $cordovaToast, $state, $cordovaNetwork, SCMS_SERVER_UPLOAD_URL, SCMS_SERVER_IMAGE_UPLOAD_URL, SCMS_SERVER_IMAGE_DOWNLOAD_URL, $cordovaZip, SCMS_SERVER_DOWNLOAD_URL, requestIntercepter, SCMS_SERVER_UPLOAD_SDA_URL, SCMS_SERVER_SYNC_RESET) {
             var setup = function() {
                   $log.debug("Sync DB Controller");
                   $scope.pictures = [];
@@ -386,6 +386,20 @@
                         $ionicLoading.show({ scope: $scope, template: '<div class="btn-animation-sync" style="color: #FFFFFF;"><ion-spinner icon="lines" class="spinner-calm"></ion-spinner><br><span style="vertical-align: middle;">&nbsp;&nbsp;Downloading ('+$scope.downloadProgressDB+'%)</span><br><br><br><button class ="button button-clear cancel-btn" ng-click="cancelLoading()"><i class="icon ion-close"></i>&nbsp;&nbsp;Cancel</button></div>'});
                   });
                   authService.setToken(accessToken);
+            }  
+            
+            $scope.resetSync = function () {
+                  var accessToken = "bearer " + $scope.getToken;
+                  var headers = { 'Authorization': accessToken };
+                  var data = {
+                        headers: headers,
+                        url: $scope.preServerUrl + $scope.serverURlPrefix.serverURL + SCMS_SERVER_SYNC_RESET
+                  }
+                  picAndDatabaseTransferService.resetSync(data).then(function (result) {
+                        $cordovaToast.show(result.data.message, 'short', 'center');
+                  }, function (err) {
+                        requestIntercepter.responseError(err);
+                  });
             }     
 
             var CopyPicturesandDatabaseToImport = function() {
@@ -557,7 +571,7 @@
             }
             setup();
       };
-      SyncDBPicsController.$inject  = ['$log', '$scope', '$ionicHistory', '$cordovaSQLite', '$ionicLoading', 'authService', '$cordovaFileTransfer', '$timeout', '$cordovaFile', '$filter', '$rootScope', 'picAndDatabaseTransferService', '$cordovaToast', '$state', '$cordovaNetwork', 'SCMS_SERVER_UPLOAD_URL', 'SCMS_SERVER_IMAGE_UPLOAD_URL', 'SCMS_SERVER_IMAGE_DOWNLOAD_URL', '$cordovaZip', 'SCMS_SERVER_DOWNLOAD_URL', 'requestIntercepter', 'SCMS_SERVER_UPLOAD_SDA_URL'];
+      SyncDBPicsController.$inject = ['$log', '$scope', '$ionicHistory', '$cordovaSQLite', '$ionicLoading', 'authService', '$cordovaFileTransfer', '$timeout', '$cordovaFile', '$filter', '$rootScope', 'picAndDatabaseTransferService', '$cordovaToast', '$state', '$cordovaNetwork', 'SCMS_SERVER_UPLOAD_URL', 'SCMS_SERVER_IMAGE_UPLOAD_URL', 'SCMS_SERVER_IMAGE_DOWNLOAD_URL', '$cordovaZip', 'SCMS_SERVER_DOWNLOAD_URL', 'requestIntercepter', 'SCMS_SERVER_UPLOAD_SDA_URL', 'SCMS_SERVER_SYNC_RESET'];
       angular
       .module('SCMS_ATTENDANCE')
       .controller("SyncDBPicsController", SyncDBPicsController);
