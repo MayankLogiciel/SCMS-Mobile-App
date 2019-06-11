@@ -251,7 +251,7 @@
 		}
 	}
 	.button.btn-padding.col {
-		height: 250px;
+		height: 180px;
 		margin: 15px;
 		font-size: 25px;
 		font-weight: normal;
@@ -1174,7 +1174,10 @@
   	}
   	.button-bar > .button:first-child {
   		border-right: 1px solid #fff;
-  	}
+		}
+		.button-bar .filter-home:nth-child(2) {
+			border-right: 1px solid #fff;
+		}
 }
 .sort-by-sewa {
 		width:100%;

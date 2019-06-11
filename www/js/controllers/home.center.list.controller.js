@@ -3,7 +3,7 @@
   /**
   * Satsang_Day_Attendance Controller
   **/
-  var HomeCenterAttendanceListController = function ($log, $cordovaFile, $scope, $rootScope, $ionicHistory, $cordovaSQLite, $ionicPopover, $ionicModal, $filter, $cordovaToast, cfpLoadingBar, satsangDayAttendanceListService, $ionicPopup, $timeout, profilePicService, satsangDayAttendanceService, $state, $document, $ionicActionSheet) {
+  var HomeCenterAttendanceListController = function ($log, $cordovaFile, $scope, $rootScope, $ionicHistory, $cordovaSQLite, $ionicPopover, $ionicModal, $filter, $cordovaToast, cfpLoadingBar, satsangDayAttendanceListService, $ionicPopup, $timeout, profilePicService, satsangDayAttendanceService, $state, $document, $ionicActionSheet, $stateParams) {
     var setup = function () {
       $log.debug("Home Center Controller");
       $scope.sewadarAttendance = [];
@@ -154,6 +154,28 @@
       });
     };
 
+    $scope.timeFilter = function(type) {
+      $scope.sewadarAttendance = [];
+      var query = '';
+      var sewa_type_id = $stateParams.type == 'day' ? 24 : 5;
+      cfpLoadingBar.start();
+      switch (type) {
+        case 'in':
+          query = "SELECT sewadars.*, attendances.time_in, attendances.time_out, attendances.sewa_type_id FROM sewadars LEFT JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type='home_center' AND attendances.time_in<>'" + null + "' AND attendances.sewa_type_id = '" + sewa_type_id + "' ORDER BY attendances.created_at Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
+          getSewadarData(query);
+          break;
+          case 'out':
+          query = "SELECT sewadars.*, attendances.time_in, attendances.time_out, attendances.sewa_type_id FROM sewadars LEFT JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type='home_center' AND attendances.time_out<>'" + null + "' AND attendances.sewa_type_id = '" + sewa_type_id + "' ORDER BY attendances.created_at Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
+          getSewadarData(query);
+          break;
+          case 'both':
+          query = "SELECT sewadars.*, attendances.time_in, attendances.time_out, attendances.sewa_type_id FROM sewadars LEFT JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type='home_center' AND attendances.sewa_type_id = '" + sewa_type_id + "' ORDER BY attendances.created_at Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
+          getSewadarData(query);
+          
+          break;
+      }
+    }
+
     var updateTime = function (sewadar) {
       var time_in = $filter('date')(new Date($scope.inOut.time_in), 'hh:mm:ss');
       var time_out = $filter('date')(new Date($scope.inOut.time_out), 'hh:mm:ss'); 
@@ -190,16 +212,17 @@
     }
 
     $scope.getListFromSewadarsForAttendance = function (action) {
+      var sewa_type_id = $stateParams.type == 'day' ? 24 : 5;
       if (angular.isDefined(action) || action == 'load') {
         cfpLoadingBar.start();
       }
-      var query = "SELECT sewadars.*, attendances.time_in, attendances.time_out FROM sewadars LEFT JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type='home_center' ORDER BY attendances.created_at Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
+      var query = "SELECT sewadars.*, attendances.time_in, attendances.time_out, attendances.sewa_type_id FROM sewadars LEFT JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type='home_center' AND attendances.sewa_type_id = '" + sewa_type_id +"' ORDER BY attendances.created_at Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
       getSewadarData(query);
     };
     setup();
   };
 
-  HomeCenterAttendanceListController.$inject = ['$log', '$cordovaFile', '$scope', '$rootScope', '$ionicHistory', '$cordovaSQLite', '$ionicPopover', '$ionicModal', '$filter', '$cordovaToast', 'cfpLoadingBar', 'satsangDayAttendanceListService', '$ionicPopup', '$timeout', 'profilePicService', 'satsangDayAttendanceService', '$state', '$document', '$ionicActionSheet'];
+  HomeCenterAttendanceListController.$inject = ['$log', '$cordovaFile', '$scope', '$rootScope', '$ionicHistory', '$cordovaSQLite', '$ionicPopover', '$ionicModal', '$filter', '$cordovaToast', 'cfpLoadingBar', 'satsangDayAttendanceListService', '$ionicPopup', '$timeout', 'profilePicService', 'satsangDayAttendanceService', '$state', '$document', '$ionicActionSheet', '$stateParams'];
   angular
     .module('SCMS_ATTENDANCE')
     .controller("HomeCenterAttendanceListController", HomeCenterAttendanceListController);

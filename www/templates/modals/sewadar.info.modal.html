@@ -55,10 +55,17 @@
 			</div>					
 		</ion-list>
 	</ion-content>
-	<div class="bar bar-footer custom-footer">		
+	<div class="bar bar-footer custom-footer" ng-if="stateName=='satsang_day_attendance'">		
 		<div class="button-bar">
 			<a class="button button-assertive" ng-click="closeModalForSewadarDetail(); SaveDataToAttandanceTable(sewadar);closePopoverForSewadar();" ng-bind="buttonTextForSewadarModel" ng-if="buttonTextForSewadarModel=='MARK ATTENDANCE'"></a>
 			<a class="button button-balanced" ng-click="deleteSewadar(sewadar, type);" ng-bind="buttonTextForSewadarModel" ng-if="buttonTextForSewadarModel !='MARK ATTENDANCE' && isCurrentDate && !isAttendaceClosed" ></a>
+			<a class="button button-stable" ng-click="closeModalForSewadarDetail();">CANCEL</a>
+		</div>	
+	</div>
+	<div class="bar bar-footer custom-footer" ng-if="stateName!='satsang_day_attendance'">		
+		<div class="button-bar">
+			<a class="button button-assertive" ng-click="closeModalForSewadarDetail(); SaveDataToAttandanceTable(sewadar);closePopoverForSewadar();" ng-if="buttonTextForSewadarModel=='MARK ATTENDANCE'">MARK ENTRY</a>
+			<a class="button button-balanced" ng-click="deleteSewadar(sewadar, type);" ng-if="buttonTextForSewadarModel !='MARK ATTENDANCE' && isCurrentDate && !isAttendaceClosed" >REMOVE ENTRY</a>
 			<a class="button button-stable" ng-click="closeModalForSewadarDetail();">CANCEL</a>
 		</div>	
 	</div>

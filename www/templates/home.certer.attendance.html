@@ -1,9 +1,12 @@
 <ion-view class="login-home-body home-popup">
   <ion-header-bar class="bar-balanced custom-header-bar">
-    <div class="buttons left-button row home-Header ios-header-css">
-      <button class="button button-icon button-stable ion-chevron-left col-10" on-tap="goBack()">
+    <div class="buttons left-button row ios-header-css">
+      <button class="button button-icon button-stable ion-chevron-left col-20" on-tap="goBack()">
       </button>
-      <span class='col col-90 satsang-date-today'>Home Center ({{today}})</span>
+      <span class='col col-60 header-title'>Home Center ({{today}})</span>
+      <button class="button button-icon button-add col-20 nominal-roll-add-btn" on-tap="goToDateList()">
+        <i class="icon ion-eye btn-icon-day-attendance"></i> Date wise
+      </button>
     </div>
   </ion-header-bar>
   <div class="list search-wrapper" ng-if="isBatchNumber">

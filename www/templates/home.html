@@ -32,15 +32,21 @@
 				</button>
 			</div> 
 			<div class="row">
+				<button class="button button-block button-royal btn-padding col" on-tap="goToHomeCenterPage('day')">
+					<i class="icon ion-home"></i>
+					<span>Home Center Day <br>Attendance</span>
+				</button>
+				<button class="button button-block button-royal btn-padding col" on-tap="goToHomeCenterPage('night')">
+					<i class="icon ion-home"></i>
+					<span>Home Center Night Attendance</span>
+				</button>
+			</div> 
+			<div class="row">
 				<button class="button button-block button-assertive btn-padding col" on-tap="syncDatabase()">
 					<i class="icon ion-android-sync"></i>
 					<span>Sync Data</span>
 				</button>	
-				<button class="button button-block button-royal btn-padding col" ui-sref="home-center-date-list">
-					<i class="icon ion-home"></i>
-					<span>Home Center Attendance</span>
-				</button>
-			</div> 
+			</div>
 		</div>
 	</ion-content>
 </ion-view>

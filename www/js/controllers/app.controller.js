@@ -26,6 +26,10 @@
                   $state.go("login");
             }
 
+            $scope.goToHomeCenterPage = function(type) {
+                  $state.go('home_center_attendance', { type: type });
+            }
+
             /**
             * syncDataPopup function used to open sync database popup
             **/
