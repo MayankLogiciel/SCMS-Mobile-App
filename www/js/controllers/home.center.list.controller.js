@@ -169,7 +169,7 @@
           getSewadarData(query);
           break;
           case 'both':
-          query = "SELECT sewadars.*, attendances.time_in, attendances.time_out, attendances.sewa_type_id FROM sewadars LEFT JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type='home_center' AND attendances.sewa_type_id = '" + sewa_type_id + "' ORDER BY attendances.created_at Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
+          query = "SELECT sewadars.*, attendances.time_in, attendances.time_out, attendances.sewa_type_id FROM sewadars LEFT JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type='home_center' AND attendances.time_out<>'" + null + "' AND attendances.time_in<>'" + null + "' AND attendances.sewa_type_id = '" + sewa_type_id + "' ORDER BY attendances.created_at Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
           getSewadarData(query);
           
           break;

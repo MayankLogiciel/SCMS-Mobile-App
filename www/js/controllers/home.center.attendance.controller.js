@@ -85,13 +85,13 @@
       var type = 'home_center';
       var batch_type = 'permanent';
       var sewadar_type = 'permanent';
-      var CheckQuery = "SELECT sewadar_id FROM attendances where sewadar_id ='" + sewadar.id + "' AND date(date) = '" + $scope.currentDate + "' AND nominal_roll_id = '" + null + "' AND type = 'home_center'";
+      var CheckQuery = "SELECT sewadar_id FROM attendances where sewadar_id ='" + sewadar.id + "' AND date(date) = '" + $scope.currentDate + "' AND nominal_roll_id = '" + null + "' AND type = 'home_center' AND sewa_type_id = '" + sewa_type_id + "'";
       $cordovaSQLite.execute($rootScope.db, CheckQuery).then(function (res) {
         var time = $filter('date')(new Date(), 'h:mm:ss');
         if (res.rows.length == 0) {
           var Insertquery = "INSERT INTO attendances('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id', 'time_in', 'time_out', 'sewa_type_id') VALUES ('" + $scope.currentDate + "','" + sewadar.id + "','" + sewa_id + "', '" + reference_id + "', '" + type + "', '" + batch_type + "','" + $scope.current + "','" + $scope.current + "', '" + sewadar_type + "','" + nominal_roll_id + "', '" + time + "', '" + null + "', '" + sewa_type_id + "')";
           $cordovaSQLite.execute($rootScope.db, Insertquery).then(function (res) {
-            $cordovaToast.show('Attendance marked successfully', 'short', 'center');
+            $cordovaToast.show('Entry marked successfully', 'short', 'center');
             $scope.count = $scope.count + 1;
             if (fromQR == 'QR') {
               $timeout(function () {
@@ -101,12 +101,12 @@
           }, function (err) {
           });
         } else {
-          var CheckQuery = "SELECT sewa_type_id, sewadar_id FROM attendances where sewadar_id ='" + sewadar.id + "' AND date(date) = '" + $scope.currentDate + "' AND nominal_roll_id = '" + null + "' AND type = 'home_center'";
+          var CheckQuery = "SELECT sewa_type_id, sewadar_id FROM attendances where sewadar_id ='" + sewadar.id + "' AND date(date) = '" + $scope.currentDate + "' AND nominal_roll_id = '" + null + "' AND type = 'home_center' AND sewa_type_id = '" + sewa_type_id + "'";
           $cordovaSQLite.execute($rootScope.db, CheckQuery).then(function (res) {
             if (res.rows.item(0).sewa_type_id == sewa_type_id) {
               var query = "UPDATE attendances SET time_out = '" + time + "' WHERE sewadar_id = '" + sewadar.id + "' AND sewa_type_id = '" + sewa_type_id + "'";
               $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
-                $cordovaToast.show('Attendance saved successfully', 'short', 'center');
+                $cordovaToast.show('Entry updated successfully', 'short', 'center');
               });
               if (fromQR == 'QR') {
                 $timeout(function () {
@@ -116,7 +116,7 @@
             }else {
               var Insertquery = "INSERT INTO attendances('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id', 'time_in', 'time_out', 'sewa_type_id') VALUES ('" + $scope.currentDate + "','" + sewadar.id + "','" + sewa_id + "', '" + reference_id + "', '" + type + "', '" + batch_type + "','" + $scope.current + "','" + $scope.current + "', '" + sewadar_type + "','" + nominal_roll_id + "', '" + time + "', '" + null + "', '" + sewa_type_id + "')";
               $cordovaSQLite.execute($rootScope.db, Insertquery).then(function (res) {
-                $cordovaToast.show('Attendance marked successfully', 'short', 'center');
+                $cordovaToast.show('Entry marked successfully', 'short', 'center');
                 $scope.count = $scope.count + 1;
                 if (fromQR == 'QR') {
                   $timeout(function () {

@@ -10034,7 +10034,7 @@ a.button {
         width: 70%;
         margin: auto; } }
   .scms-home .button.btn-padding.col {
-    height: 250px;
+    height: 180px;
     margin: 15px;
     font-size: 25px;
     font-weight: normal; }
@@ -10803,6 +10803,8 @@ a.button {
   .fixed-outside .button-bar > .button {
     border-radius: 0; }
   .fixed-outside .button-bar > .button:first-child {
+    border-right: 1px solid #fff; }
+  .fixed-outside .button-bar .filter-home:nth-child(2) {
     border-right: 1px solid #fff; }
 
 .sort-by-sewa {
