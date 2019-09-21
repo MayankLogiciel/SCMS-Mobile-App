@@ -82,6 +82,13 @@
 		margin-top: -213px !important;
 	}
 }
+
+.home-day-view-btn {
+	margin-top: -178px !important;
+	@media (max-width: 480px) { 
+		margin-top: -178px !important;
+	}
+}
 .satsang-date-today {
 	font-size: 25px !important;
 	@media (max-width: 480px) {
@@ -3004,4 +3011,24 @@
 	@media(max-width: 480px) {
 		line-height: 19px !important;
 	}
+}
+
+.search-wrapper-home {
+	top: 62px;
+	.row {
+		padding: 0;
+	}
+	.col {
+		padding: 0;
+	}
+}
+.checkbox-dimension-time {
+	padding: 25px !important;
+	span {
+		padding-left: 30px; 
+		font-size: 20px;
+	}
+}
+.search-wrapper-home-center {
+	top: 142px !important;
 }

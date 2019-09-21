@@ -13,6 +13,7 @@
                   getSatsangAttendanceCount();
                   $scope.userData = authService.getLoggedInUserData(); 
                   $scope.getToken = authService.getToken();
+
                   $scope.preServerUrl = 'http://';
                   $scope.serverURlPrefix = authService.getSansangPlaceInfo();
                   $scope.picturesCount = 0;
@@ -103,6 +104,7 @@
                   var config = 1;
                   var path = $scope.preServerUrl + $scope.serverURlPrefix.serverURL;
                   var pass = $scope.userData.userPassword;
+
                   picAndDatabaseTransferService.getTokenFromServer($scope.userData.email, pass, config, path).then(function(result) {
                         $scope.getToken = 'bearer ' + result.data.signature;
                         authService.setToken('bearer ' + result.data.signature);
@@ -219,6 +221,7 @@
                               $cordovaToast.show('No data available to sync', 'short', 'center');
                               return;
                         }else {
+                              getToken('database');
                               $scope.syncingDatabase('Uploading database (0%)');
                               $scope.createExportFolder();                       
                         }

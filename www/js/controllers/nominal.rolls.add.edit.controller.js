@@ -243,8 +243,8 @@
 
                               $scope.schedule = ($scope.schedule=='Scheduled') ? 1 : 0;
                         }
-                        var status = 'pending'; 
-                        var approved_by = 0;
+                        var status = 'approved'; 
+                        var approved_by = 2;
                         var incharge_id = null;
                         var incharge_type = null;
                         var incharge_female_id = null;

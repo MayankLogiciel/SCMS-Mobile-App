@@ -118,86 +118,40 @@
       $scope.searchQuery = searchQuery;
     }    
 
-    $scope.showConfirm = function (sewadar) {
-      if (sewadar.time_in == 'null' && sewadar.time_out == 'null') {
-        var date = $filter('date')(new Date(), 'yyyy, MM, dd, hh, mm, ss');
-        var a11 = date.split(',');
-        $scope.inOut.time_in = new Date(Number(a11[0]), Number(a11[1]), Number(a11[2]), Number(a11[3]), Number(a11[4]), Number(a11[5]));
-        $scope.inOut.time_out = new Date(Number(a11[0]), Number(a11[1]), Number(a11[2]), Number(a11[3]), Number(a11[4]), Number(a11[5]));
-      }else {
-        var d = $filter('date')(new Date(sewadar.updated_at), 'yyyy-MM-dd')
-        var a1 = d.split('-');
-        var a2 = sewadar.time_in.split(':');
-        var a3 = sewadar.time_out.split(':');
-        $scope.inOut.time_in = new Date(Number(a1[0]), Number(a1[1]), Number(a1[2]), Number(a2[0]), Number(a2[1]), Number(a2[2]))
-        $scope.inOut.time_out = new Date(Number(a1[0]), Number(a1[1]), Number(a1[2]), Number(a3[0]), Number(a3[1]), Number(a3[2]))
-      }
-      $ionicPopup.confirm({
-        title: 'Please Enter IN-OUT Time',
-        templateUrl: 'templates/popups/time.in.out.popup.html',
-        cssClass: 'confirm-delete',
-        scope: $scope,
-        buttons: [
-          {
-            text: "Cancel",
-            type: 'button-balanced',
-            onTap: function () {
-            }
-          },
-          {
-            text: 'OK',
-            type: 'button-positive',
-            onTap: function () {
-              updateTime(sewadar);
-            }
-          }]
-      });
-    };
-
     $scope.timeFilter = function(type) {
       $scope.sewadarAttendance = [];
       var query = '';
-      var sewa_type_id = $stateParams.type == 'day' ? 24 : 5;
+      var sewa_id = $stateParams.type == 'day' ? 24 : 5;
       cfpLoadingBar.start();
       switch (type) {
         case 'in':
-          query = "SELECT sewadars.*, attendances.time_in, attendances.time_out, attendances.sewa_type_id FROM sewadars LEFT JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type='home_center' AND attendances.time_in<>'" + null + "' AND attendances.sewa_type_id = '" + sewa_type_id + "' ORDER BY attendances.created_at Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
+          query = "SELECT sewadars.*, attendances.time_in, attendances.time_out, attendances.sewa_id FROM sewadars LEFT JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type='home_center' AND attendances.time_in<>'" + null + "' AND attendances.sewa_id = '" + sewa_id + "' ORDER BY attendances.created_at Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
           getSewadarData(query);
           break;
           case 'out':
-          query = "SELECT sewadars.*, attendances.time_in, attendances.time_out, attendances.sewa_type_id FROM sewadars LEFT JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type='home_center' AND attendances.time_out<>'" + null + "' AND attendances.sewa_type_id = '" + sewa_type_id + "' ORDER BY attendances.created_at Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
+          query = "SELECT sewadars.*, attendances.time_in, attendances.time_out, attendances.sewa_id FROM sewadars LEFT JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type='home_center' AND attendances.time_out<>'" + null + "' AND attendances.sewa_id = '" + sewa_id + "' ORDER BY attendances.created_at Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
           getSewadarData(query);
           break;
           case 'both':
-          query = "SELECT sewadars.*, attendances.time_in, attendances.time_out, attendances.sewa_type_id FROM sewadars LEFT JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type='home_center' AND attendances.time_out<>'" + null + "' AND attendances.time_in<>'" + null + "' AND attendances.sewa_type_id = '" + sewa_type_id + "' ORDER BY attendances.created_at Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
+          query = "SELECT sewadars.*, attendances.time_in, attendances.time_out, attendances.sewa_id FROM sewadars LEFT JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type='home_center' AND attendances.time_out<>'" + null + "' AND attendances.time_in<>'" + null + "' AND attendances.sewa_id = '" + sewa_id + "' ORDER BY attendances.created_at Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
           getSewadarData(query);
           
           break;
       }
     }
 
-    var updateTime = function (sewadar) {
-      var time_in = $filter('date')(new Date($scope.inOut.time_in), 'hh:mm:ss');
-      var time_out = $filter('date')(new Date($scope.inOut.time_out), 'hh:mm:ss'); 
-      var c = diff_hours($scope.inOut.time_out, $scope.inOut.time_in)     
-      if(c < 0) {
-        $cordovaToast.show('Out date should be graeter', 'short', 'center');
-        $scope.showConfirm(sewadar);
-        return;
-      }
-      sewadar.th = c;
-      var query = "UPDATE attendances SET time_in = '" + time_in + "', time_out = '" + time_out + "' WHERE sewadar_id = '" + sewadar.id + "'";
-      $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
-        $cordovaToast.show('Attendance saved successfully', 'short', 'center');
-        sewadar.time_in = time_in;
-        sewadar.time_out = time_out;
-      });
-    }
-
     function diff_hours(dt2, dt1) {
       var diff = (dt2.getTime() - dt1.getTime()) / 1000;
       diff /= (60 * 60);
-      return Math.round(diff);
+      if (Math.round(diff) <= 2) {
+        return 2;
+      }
+      if (Math.round(diff) <= 4) {
+        return 4;
+      }
+      if (Math.round(diff) <= 8) {
+        return 8;
+      }
     }
 
     var findImage = function () {
@@ -212,11 +166,11 @@
     }
 
     $scope.getListFromSewadarsForAttendance = function (action) {
-      var sewa_type_id = $stateParams.type == 'day' ? 24 : 5;
+      var sewa_id = $stateParams.type == 'day' ? 24 : 5;
       if (angular.isDefined(action) || action == 'load') {
         cfpLoadingBar.start();
       }
-      var query = "SELECT sewadars.*, attendances.time_in, attendances.time_out, attendances.sewa_type_id FROM sewadars LEFT JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type='home_center' AND attendances.sewa_type_id = '" + sewa_type_id +"' ORDER BY attendances.created_at Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
+      var query = "SELECT sewadars.*, attendances.id as s_id, attendances.time_in, attendances.time_out, attendances.sewa_id FROM sewadars LEFT JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type='home_center' AND attendances.sewa_id = '" + sewa_id +"' ORDER BY attendances.created_at Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
       getSewadarData(query);
     };
     setup();

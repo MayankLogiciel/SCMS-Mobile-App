@@ -9,7 +9,7 @@
       </button>
     </div>
   </ion-header-bar>
-  <div class="list search-wrapper" ng-if="isBatchNumber">
+  <div class="list search-wrapper search-wrapper-home-center" ng-if="isBatchNumber">
     <label class="item item-input search-box srch-width">
       <i class="icon ion-search placeholder-icon search-icon"></i>
       <input type="tel" placeholder="Search Sewadar by Badge No." autocomplete="off" class="text-transform-capital placehoder-text-change att-search1"
@@ -18,7 +18,7 @@
     </label>
     <span class="button ion-arrow-swap swap-btn" on-tap="openNameOrBadgePopover()"></span>
   </div>
-  <div class="list search-wrapper" ng-if="!isBatchNumber">
+  <div class="list search-wrapper search-wrapper-home-center" ng-if="!isBatchNumber">
     <label class="item item-input srch-width">
       <i class="icon ion-search placeholder-icon search-icon"></i>
       <input type="search" placeholder="Search Sewadar by Name" autocomplete="off" class="text-transform-capital placehoder-text-change att-search1"
@@ -27,12 +27,26 @@
     </label>
     <span class="button ion-arrow-swap swap-btn" on-tap="openNameOrBadgePopover()"></span>
   </div>
+  <div class="list search-wrapper-home">
+    <div class="row">
+      <div class="col">
+        <ion-checkbox ng-model="in" ng-change="timeTypeSelection('in')" class="checkbox-dimension-time">
+          <span>TIME IN</span>
+        </ion-checkbox>
+      </div>
+      <div class="col">
+        <ion-checkbox ng-model="out" ng-change="timeTypeSelection('out')" class="checkbox-dimension-time">
+          <span>TIME OUT</span>
+        </ion-checkbox>
+      </div>
+    </div>
+  </div>
   <ion-content has-bouncing="false">
-    <div class="list scms-home satsang-day-view-btn">
+    <div class="list scms-home home-day-view-btn">
       <div class="row">
         <button class="button button-block button-calm btn-padding col" on-tap="showPresentSewadar()">
           <i class="icon ion-ios-calendar"></i>
-          <span>Home Center Attendance</span>
+          <span>View Attendance</span>
           <span class="total-attendees">Total Sewadar Present {{count}}</span>
         </button>
       </div>
@@ -44,11 +58,11 @@
       </div> -->
     </div>
   </ion-content>
-  <div>
+  <!-- <div>
     <span class="height-fix-scan-btn">
       <a class="scan-btn-qr" scan-qr-directive on-update="SaveDataToAttandanceTable(sewadar,'QR')" show-scanner="dirCrtl">
         <i class="icon ion-qr-scanner scan-btn-bottom"> </i>
       </a>
     </span>
-  </div>
+  </div> -->
 </ion-view>

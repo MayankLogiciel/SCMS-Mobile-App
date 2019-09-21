@@ -35,17 +35,22 @@
                                           var userData= res.rows.item(i);
                                           var userType = res.rows.item(i).group_name;
                                           bcrypt.compare(loginData.password, res.rows.item(i).password, function(err, result) {
-                                                if(result && userType=='User') {
-                                                      $cordovaToast.show('Logged in successfully', 'short', 'center');
-                                                      $state.go("app");
-                                                      saveUserToLocalStoarge(userData,loginData.password);
-                                                } else if(result && userType=='Secretary') {
+                                                if (result && userType == 'Secretary') {
                                                       $cordovaToast.show('Logged in successfully', 'short', 'center');
                                                       $state.go("secretary-home");
                                                       saveUserToLocalStoarge(userData);
-                                                }else {
-                                                      $cordovaToast.show('Invalid password', 'short', 'center');
+                                                      return; 
                                                 }
+
+                                                if(result) {
+                                                      $cordovaToast.show('Logged in successfully', 'short', 'center');
+                                                      $state.go("app");
+                                                      saveUserToLocalStoarge(userData, loginData.password);
+                                                      return;
+                                                }
+
+                                                $cordovaToast.show('Invalid password', 'short', 'center');
+                                               
                                           });
                                     }
                                     cfpLoadingBar.complete();

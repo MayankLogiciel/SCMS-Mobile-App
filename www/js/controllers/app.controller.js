@@ -7,6 +7,7 @@
             var setup = function() {
                   $log.debug("App Controller");
                   if($state.current.name == "app") {
+                        $scope.user = authService.getLoggedInUserData();
                         $timeout(function(){
                               $ionicHistory.clearCache();
                               $ionicHistory.clearHistory();

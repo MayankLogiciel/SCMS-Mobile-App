@@ -111,7 +111,6 @@
 
 
                         var showDeleteConfirm = function(sewadar, type) { 
-                              console.log(sewadar);
                               $ionicPopup.confirm({
                                     title: 'Please Confirm',
                                     template: 'Are you sure you want to detete '+sewadar.name+' from attendees list? ',
@@ -137,44 +136,54 @@
                                           }
                                           if($scope.nominal_id) {
                                                 var query = "DELETE FROM attendances WHERE sewadar_id = '" + sewadar.id + "' AND attendances.type = '" + type +"' AND nominal_roll_id = "+$scope.nominal_id;
+                                                $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
+                                                      for(var i=0; i < $scope.sewadarAttendance.length; i++) {
+                                                            if($scope.sewadarAttendance[i].id == sewadar.id) {
+                                                                  $scope.sewadarAttendance.splice(i,true);
+                                                                  removeDeletedIncharge($scope.nominal_id, sewadar);
+                                                                  $cordovaToast.show('Sewadar removed', 'short', 'center');                                                            
+                                                                  return;
+                                                            }
+                                                      }
+                                                      
+                                                }, function(err) {
+                                                });  
                                           } 
                                           else {
                                                 if (type == "home_center") {
-                                                      var query = "DELETE FROM attendances WHERE sewadar_id = '" + sewadar.id + "' AND attendances.type = '" + type + "' AND attendances.sewa_type_id = '" + sewadar.sewa_type_id +"' AND attendances.nominal_roll_id = 'null'";
-                                                }else {
-                                                      var query = "DELETE FROM attendances WHERE sewadar_id = '" + sewadar.id + "' AND attendances.type = '" + type +"' AND attendances.nominal_roll_id = 'null'";
-                                                } 
-                                          }                            
-                                          $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
-                                                for(var i=0; i < $scope.sewadarAttendance.length; i++) {
-                                                      if($scope.sewadarAttendance[i].id == sewadar.id) {
-                                                            $scope.sewadarAttendance.splice(i,true);
-                                                            if($scope.nominal_id) {
-                                                                  removeDeletedIncharge($scope.nominal_id, sewadar);
-                                                                  $cordovaToast.show('Sewadar removed', 'short', 'center');                                                            
-
-                                                            } else {
-                                                                  if (type == "home_center") {
+                                                      var query = "DELETE FROM attendances WHERE attendances.id = '" + sewadar.s_id +"'";
+                                                      $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
+                                                            for (var i = 0; i < $scope.sewadarAttendance.length; i++) {
+                                                                  if ($scope.sewadarAttendance[i].s_id == sewadar.s_id) {
+                                                                        $scope.sewadarAttendance.splice(i, true);
                                                                         $cordovaToast.show('Entry removed successfully', 'short', 'center');
-                                                                  }else {
-                                                                        $cordovaToast.show('Attendance unmarked successfully', 'short', 'center');
+                                                                        return;
                                                                   }
                                                             }
-                                                            return;
-                                                      }
-                                                }
-                                                
-                                          }, function(err) {
-                                          });  
+
+                                                      }, function (err) {
+                                                      });  
+                                                }else {
+                                                      var query = "DELETE FROM attendances WHERE sewadar_id = '" + sewadar.id + "' AND attendances.type = '" + type +"' AND attendances.nominal_roll_id = 'null'";
+                                                      $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
+                                                            for (var i = 0; i < $scope.sewadarAttendance.length; i++) {
+                                                                  if ($scope.sewadarAttendance[i].id == sewadar.id) {
+                                                                        $scope.sewadarAttendance.splice(i, true);
+                                                                        $cordovaToast.show('Attendance unmarked successfully', 'short', 'center');
+                       
+                                                                  }
+                                                            }
+
+                                                      }, function (err) {
+                                                      });  
+                                                } 
+                                          }                            
 
 
                                     }
                               }]
                         });                
                         };  
-
-
-
                        
                         $scope.selectedSewadarDetail = function(sewadar, str, warn) {
                               var isStateNameSewadars = $state.current.name;
