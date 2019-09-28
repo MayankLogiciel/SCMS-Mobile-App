@@ -140,18 +140,11 @@
       }
     }
 
-    function diff_hours(dt2, dt1) {
-      var diff = (dt2.getTime() - dt1.getTime()) / 1000;
-      diff /= (60 * 60);
-      if (Math.round(diff) <= 2) {
-        return 2;
-      }
-      if (Math.round(diff) <= 4) {
-        return 4;
-      }
-      if (Math.round(diff) <= 8) {
-        return 8;
-      }
+    function diff_hours(dt1, dt2) {
+      var diff = Math.abs(dt1 - dt2) / 36e5;
+      if (diff <= 2) return 2;
+      if (diff <= 4) return 4;
+      if (diff <= 8) return 8;
     }
 
     var findImage = function () {
