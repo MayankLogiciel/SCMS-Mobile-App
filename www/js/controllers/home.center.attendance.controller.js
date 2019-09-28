@@ -116,7 +116,7 @@
         $cordovaSQLite.execute($rootScope.db, Insertquery).then(function (res) {
           $cordovaToast.show('Entry marked successfully', 'short', 'center');
           $scope.currentAttendees();
-          $scope.count = $scope.count + 1;
+          $scope.totalAttendees();
         }, function (err) {
         });
       }
