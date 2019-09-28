@@ -14,6 +14,7 @@
       $scope.dirCrtl = {};
       $scope.isBatchNumber = true;
       $scope.totalAttendees();
+      $scope.currentAttendees();
       $scope.in = true;
       $scope.out = false;
     };
@@ -40,6 +41,16 @@
       $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
         for (var i = 0; i < res.rows.length; i++) {
           $scope.count = res.rows.item(i).count;
+        }
+      });
+    }
+
+    $scope.currentAttendees = function () {
+      var sewa_id = $stateParams.type == 'day' ? 24 : 5;
+      var query = "SELECT COUNT(DISTINCT id) as count FROM attendances WHERE date(attendances.date) = '" + $scope.currentDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.time_in<> '" + null + "' AND attendances.time_out= '" + null + "' AND attendances.type= 'home_center' AND attendances.sewa_id = '" + sewa_id + "'";
+      $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
+        for (var i = 0; i < res.rows.length; i++) {
+          $scope.curent_count = res.rows.item(i).count;
         }
       });
     }
@@ -103,6 +114,7 @@
         var Insertquery = "INSERT INTO attendances('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id', 'time_in', 'time_out') VALUES ('" + $scope.currentDate + "','" + sewadar.id + "','" + sewa_id + "', '" + reference_id + "', '" + type + "', '" + batch_type + "','" + $scope.current + "','" + $scope.current + "', '" + sewadar_type + "','" + nominal_roll_id + "', '" + time + "', '" + null + "')";
         $cordovaSQLite.execute($rootScope.db, Insertquery).then(function (res) {
           $cordovaToast.show('Entry marked successfully', 'short', 'center');
+          $scope.currentAttendees();
           $scope.count = $scope.count + 1;
         }, function (err) {
         });

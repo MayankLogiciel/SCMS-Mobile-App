@@ -44,25 +44,13 @@
   <ion-content has-bouncing="false">
     <div class="list scms-home home-day-view-btn">
       <div class="row">
-        <button class="button button-block button-calm btn-padding col" on-tap="showPresentSewadar()">
+        <button class="button button-block button-calm btn-padding col home-center-btn-wrap" on-tap="showPresentSewadar()">
           <i class="icon ion-ios-calendar"></i>
           <span>View Attendance</span>
           <span class="total-attendees">Total Sewadar Present {{count}}</span>
+          <span class="total-attendees">Current Sewadar Present {{curent_count}}</span>
         </button>
       </div>
-      <!-- <div class="row">
-        <button class="button button-block button-assertive btn-padding col" on-tap="closeDayAttendace()">
-          <i class="icon ion-ios-stopwatch"></i>
-          <span>Close Attendance For Day</span>
-        </button>
-      </div> -->
     </div>
   </ion-content>
-  <!-- <div>
-    <span class="height-fix-scan-btn">
-      <a class="scan-btn-qr" scan-qr-directive on-update="SaveDataToAttandanceTable(sewadar,'QR')" show-scanner="dirCrtl">
-        <i class="icon ion-qr-scanner scan-btn-bottom"> </i>
-      </a>
-    </span>
-  </div> -->
 </ion-view>
