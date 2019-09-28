@@ -10,7 +10,7 @@
                         $scope.isImageNotAvailable = false;
                         $scope.nominal_id = $stateParams.id; 
                         var isModalOpen = false;
-                       
+                     
                         $scope.openModalForSewadarDetail = function() {
                               $ionicModal.fromTemplateUrl('templates/modals/sewadar.info.modal.html', {
                                     scope: $scope,
@@ -140,8 +140,9 @@
                                                       for(var i=0; i < $scope.sewadarAttendance.length; i++) {
                                                             if($scope.sewadarAttendance[i].id == sewadar.id) {
                                                                   $scope.sewadarAttendance.splice(i,true);
+                                                                  $scope.sewadarsCount();
                                                                   removeDeletedIncharge($scope.nominal_id, sewadar);
-                                                                  $cordovaToast.show('Sewadar removed', 'short', 'center');                                                            
+                                                                  $cordovaToast.show('Sewadar removed', 'short', 'center'); 
                                                                   return;
                                                             }
                                                       }
@@ -210,6 +211,7 @@
                                     $scope.openModalForSewadarDetail();                  
                               }
                         }  
+
                         var removeDeletedIncharge = function(id, sewadar) {
                               var checkIncharge = "select incharge_id, incharge_female_id, incharge_female_type from nominal_roles where id = "+$scope.nominal_id;
                               $cordovaSQLite.execute($rootScope.db, checkIncharge).then(function(ressult) {

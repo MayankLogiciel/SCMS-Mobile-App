@@ -2518,6 +2518,10 @@
 	.floating-btn-for-list {
 		display: none;	
 	}
+
+	.floating-btn-for-list-nominal {
+		display: block;	
+	}
 	.nominal-list-on-tab {
 		padding: 0 5px !important;
 	}
@@ -2779,8 +2783,8 @@
     	height: 23%;
     }
     .floating-btn-for-list {
-		display: block;	
-	}
+			display: block;	
+		}
 
 	.on-mob-display-none {
 		display: none !important;
@@ -3031,4 +3035,12 @@
 }
 .search-wrapper-home-center {
 	top: 142px !important;
+}
+.male-female-count {
+	margin-top: 17px;
+	span {
+		margin-right: 10px;
+		font-size:	20px;  
+		font-weight: 500;
+	}
 }

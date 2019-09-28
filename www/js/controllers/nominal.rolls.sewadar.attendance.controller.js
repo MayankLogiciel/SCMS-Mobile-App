@@ -72,6 +72,7 @@
                   $scope.LetterNumber =  {}; 
                   $scope.refId = (new Date())/1000|0;
                   $scope.isBatchNumber = true;
+                  $scope.sewadarsCount();
             };
             $scope.$on('$ionicView.enter', function() {
                   $scope.getListFromSewadarsForAttendance();
@@ -311,7 +312,8 @@
                                     Insertquery = "INSERT INTO attendances('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id') VALUES ('"+date+"','"+sewadar.id+"','"+$scope.nominalRollsData.sewa_id+"', '"+reference_id+"', '"+type+"', '"+batch_type+"','"+$scope.current+"','"+$scope.current+"', '"+sewadar_type+"','"+$scope.nominal_id+"')";
                                     $cordovaSQLite.execute($rootScope.db, Insertquery).then(function(res) {
                                           $scope.sewadarAttendance.unshift(sewadar);                              
-                                          $cordovaToast.show('Sewadar added', 'short', 'center');
+                                          $scope.sewadarsCount();
+                                          $cordovaToast.show('Sewadar addedd', 'short', 'center');
                                     }, function(err) {                  
                                     });                           
                               } else {
@@ -347,6 +349,27 @@
                         $scope.TempSewadarData.gender = 'F';
                         return;
                   }
+            }
+
+            $scope.sewadarsCount = function () {
+                  var query = `Select sum(case when gender = 'M' then 1 else 0 end) Male,sum(case when gender = 'F' then 1 else 0 end) Female from (SELECT DISTINCT sewadars.id, sewadars.gender,attendances.sewadar_id as att_id, 
+                  attendances.nominal_roll_id 
+                  FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id 
+                  where attendances.nominal_roll_id = '1' 
+                  AND attendances.sewadar_type = 'permanent' 
+                  AND attendances.status <> 'deleted'  
+                  UNION SELECT DISTINCT temp_sewadars.id, temp_sewadars.gender,
+                  attendances.sewadar_id as att_id, attendances.nominal_roll_id 
+                  FROM temp_sewadars 
+                  INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id 
+                  where attendances.nominal_roll_id = '1' AND attendances.sewadar_type = 'temporary' AND attendances.status <> 'deleted'  group by att_id)`;
+                  $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
+                        for (var i = 0; i < res.rows.length; i++) {
+                              $scope.MaleCounts = res.rows.item(i).Male;
+                              $scope.FemaleCounts = res.rows.item(i).Female;
+                        }
+                  }, function (err) {
+                  });
             }
 
             $scope.addTempSewadar = function(TempSewadarData) {
@@ -388,10 +411,10 @@
                                           }
                                     }
                               })
-
+                              
                         }
                         $scope.closePopoverForTempSewadar();
-                        setFocus();
+                        setFocus();                        
                   }
             };
 
@@ -419,7 +442,8 @@
                                     $cordovaSQLite.execute($rootScope.db, insertAttedanceForTempSewadar).then(function(res) {
                                           $scope.sewadarAttendance.unshift(TempSewadarData);
                                           $scope.TempSewadarData = {};
-                                          $cordovaToast.show('Sewadar added', 'short', 'center');                              
+                                          $scope.sewadarsCount();                            
+                                          $cordovaToast.show('Sewadar added', 'short', 'center');  
                                     }, function(err) {
 
                                     }); 
@@ -431,11 +455,11 @@
                   }else{
                         insertAttedanceForTempSewadar = "INSERT INTO attendances ('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id') VALUES ('"+nominalAttendanceDate+"','"+TempSewadarData.id+"','"+$scope.nominalRollsData.sewa_id+"', '"+reference_id+"', '"+type+"', '"+batch_type+"','"+$scope.current+"', '"+$scope.current+"', '"+sewadar_type+"','"+$scope.nominal_id+"')";
                         $cordovaSQLite.execute($rootScope.db, insertAttedanceForTempSewadar).then(function(res) {
-                                    $scope.sewadarAttendance.unshift(TempSewadarData);
-                                    $scope.TempSewadarData = {};
-                                    $cordovaToast.show('Sewadar added', 'short', 'center');                              
+                              $scope.sewadarAttendance.unshift(TempSewadarData);
+                              $scope.TempSewadarData = {};
+                              $cordovaToast.show('Sewadar added', 'short', 'center');
                         }, function(err) {
-
+                              
                         });                         
                   }
                   $scope.TempSewadarData = {};

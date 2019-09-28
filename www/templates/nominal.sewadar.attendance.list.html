@@ -5,10 +5,13 @@
                 <span class='header-title nominal-att-title' ng-bind="(nominal_id)? nominalRollsData.sewa_name : 'Add New Nominal Roll'"></span>
             </button>
         </div>
-        <div class='right rt-buttons'>
-            <button class="button button-icon button-add add-jatha-member on-mob-display-none" on-tap="openJathaMembers()"><i class="icon ion-plus plus-icon"></i> Jatha Members</button>
-            <button class="button button-icon button-add on-mob-display-none" on-tap="openPopoverForTempSewadar()"><i class="icon ion-plus plus-icon"></i> Open Sewadar</button>
-            <button class="button icon ion-printer icon-before on-mob-display-none" on-tap="openPopoverLetterNumber()"></button>
+        <div class='right rt-buttons male-female-count'>
+            <span>
+                Male: <span>{{MaleCounts==undefined ? 0 : MaleCounts}}</span> 
+            </span>
+            <span>
+                Female: <span>{{FemaleCounts==undefined ? 0 : FemaleCounts}}</span>
+            </span>
         </div>
     </div>
         
@@ -52,7 +55,7 @@
         </label>  
         <span class="button ion-arrow-swap swap-btn" on-tap="openNameOrBadgePopover()"></span>          
     </div>   
-    <ion-floating-menu backdrop="true" class = "floating-btn-for-list">
+    <ion-floating-menu backdrop="true" class = "floating-btn-for-list-nominal">
         <ion-floating-item class="print-class" ng-click="openPopoverLetterNumber()" icon="ion-printer" text="Print"></ion-floating-item>
         <ion-floating-item class="open-sewadar-class" ng-click="openPopoverForTempSewadar()" icon="ion-plus" text="Open Sewadar" menu-open-icon = "ion-plus"></ion-floating-item>
         <ion-floating-item class="jatha-class" ng-click="openJathaMembers()" icon="ion-plus" text="Jatha Members"></ion-floating-item>
