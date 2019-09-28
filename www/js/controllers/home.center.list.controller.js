@@ -20,6 +20,7 @@
       $scope.today = $filter('date')(($scope.getDate), 'EEE, d MMM, y');
       $scope.getListFromSewadarsForAttendance('load');
       $scope.isBatchNumber = true;
+      $scope.isMark = $stateParams.action == 'mark' ? true : false;
       $scope.stateName = $state.current.name;
       $scope.type = 'home_center';
       if (profilePicService.getTimeOfPic() == '') {
@@ -99,10 +100,15 @@
         $scope.totalRows = res.rows.length;
         if (res.rows.length > 0) {
           for (var i = 0; i < res.rows.length; i++) {
-            var d = $filter('date')(new Date(res.rows.item(i).updated_at), 'yyyy-MM-dd')
-            var dti = d +' '+res.rows.item(i).time_in;
-            var dto = d +' '+res.rows.item(i).time_out;
-            res.rows.item(i).th = diff_hours(new Date(dto), new Date(dti));
+            res.rows.item(i).time_out = res.rows.item(i).time_out;
+            if (res.rows.item(i).time_out != 'null') {
+              res.rows.item(i).th = diff_hours(
+                $filter('date')(new Date(res.rows.item(i).time_in), 'yyyy-MM-dd H:mm:ss'), 
+                $filter('date')(new Date(res.rows.item(i).time_out), 'yyyy-MM-dd H:mm:ss')
+              );
+              res.rows.item(i).time_out = $filter('date')(new Date(res.rows.item(i).time_out), 'H:mm:ss');
+            }
+            res.rows.item(i).time_in = $filter('date')(new Date(res.rows.item(i).time_in), 'H:mm:ss');
             $scope.sewadarAttendance = $scope.sewadarAttendance.concat(res.rows.item(i));
           }
         }
@@ -140,12 +146,20 @@
       }
     }
 
-    function diff_hours(dt1, dt2) {
+    function diff_hours(date1, date2) {
+
+      var dt1 = new Date(date1);
+      var dt2 = new Date(date2);
       var diff = Math.abs(dt1 - dt2) / 36e5;
+
+      var hour = 0;
       if (diff < 1.5) return 0;
-      if (diff >= 1.5) return 2;
-      if (diff <= 4) return 4;
-      if (diff <= 8) return 8;
+
+      if (diff >= 1.5) hour = 2;
+      if (diff > 2) hour = 4;
+      if (diff > 4) hour = 8;
+
+      return hour;
     }
 
     var findImage = function () {
@@ -164,7 +178,7 @@
       if (angular.isDefined(action) || action == 'load') {
         cfpLoadingBar.start();
       }
-      var query = "SELECT sewadars.*, attendances.id as s_id, attendances.time_in, attendances.time_out, attendances.sewa_id FROM sewadars LEFT JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type='home_center' AND attendances.sewa_id = '" + sewa_id +"' ORDER BY attendances.created_at Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
+      var query = "SELECT sewadars.*, attendances.id as s_id, attendances.time_in, attendances.time_out, attendances.sewa_id FROM sewadars LEFT JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND  attendances.nominal_roll_id= '" + null + "' AND attendances.type='home_center'  AND attendances.sewa_id = '" + sewa_id + "' GROUP BY attendances.sewadar_id ORDER BY attendances.created_at Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
       getSewadarData(query);
     };
     setup();

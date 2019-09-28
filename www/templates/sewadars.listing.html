@@ -88,13 +88,15 @@
 						</span>
 					</h2>
 				</div>
-				<div class="col col-10" ng-if="isCurrentDate && !isAttendaceClosed">
+				<div class="col col-10" ng-if="!isMark && sewadar.time_out == 'null'">
+					<div>
+						<i class="icon ion-log-out list-trash" on-tap="updateOutTime(sewadar, type)"></i>
+					</div>
+				</div>
+				<div class="col col-10" ng-if="isMark && isCurrentDate && !isAttendaceClosed">
 					<div>
 						<i class="icon ion-trash-a list-trash" on-tap="deleteSewadar(sewadar, type)"></i>
 					</div>
-						<!-- <div>
-							<i class="icon ion-clock list-trash" on-tap="showConfirm(sewadar)"></i>
-						</div> -->
 				</div>
 			</h2>
 		</a>

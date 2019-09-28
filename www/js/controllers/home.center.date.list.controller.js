@@ -20,23 +20,8 @@
     };
 
     $scope.viewAttendees = function (date, action) {
-      if (date == $scope.todayDate && !angular.isDefined(action) && ($scope.editRequired == null || $scope.editRequired == 'null')) {
-        $state.go('home_center_attendance', { type: $stateParams.type });
-      } else if (date == $scope.todayDate && (angular.isDefined(action) || action == 'edit')) {
-        localStorage.removeItem('SCMS_AttendaceClosedForDay');
-        satsangDayAttendanceListService.setSatsangAttendanceDate(date);
-        $state.go('home_center_attendance', { type: $stateParams.type });
-      } else if (date == $scope.todayDate && ($scope.editRequired != null || $scope.editRequired != 'null') && $scope.todayDate == $scope.editRequired) {
-        $state.go('home_center_attendance_list', { type: $stateParams.type });
-        satsangDayAttendanceListService.setSatsangAttendanceDate(date);
-      } else if (date == $scope.todayDate && ($scope.editRequired != null || $scope.editRequired != 'null') && $scope.todayDate != $scope.editRequired) {
-        localStorage.removeItem('SCMS_AttendaceClosedForDay');
-        $state.go('home_center_attendance', { type: $stateParams.type });
-        satsangDayAttendanceListService.setSatsangAttendanceDate(date);
-      } else {
-        $state.go('home_center_attendance_list', { type: $stateParams.type });
-        satsangDayAttendanceListService.setSatsangAttendanceDate(date);
-      }
+      $state.go('home_center_attendance_list', { type: $stateParams.type, action: 'out' });
+      satsangDayAttendanceListService.setSatsangAttendanceDate(date);
     }
 
     //refreshing page 

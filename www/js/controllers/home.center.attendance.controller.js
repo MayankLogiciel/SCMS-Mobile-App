@@ -37,7 +37,7 @@
 
     $scope.totalAttendees = function () {
       var sewa_id = $stateParams.type == 'day' ? 24 : 5;
-      var query = "SELECT COUNT(DISTINCT id) as count FROM attendances WHERE date(attendances.date) = '" + $scope.currentDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type= 'home_center' AND attendances.sewa_id = '" + sewa_id +"'";
+      var query = "SELECT COUNT(DISTINCT sewadar_id) as count FROM attendances WHERE date(attendances.date) = '" + $scope.currentDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type= 'home_center' AND attendances.sewa_id = '" + sewa_id +"'";
       $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
         for (var i = 0; i < res.rows.length; i++) {
           $scope.count = res.rows.item(i).count;
@@ -47,7 +47,7 @@
 
     $scope.currentAttendees = function () {
       var sewa_id = $stateParams.type == 'day' ? 24 : 5;
-      var query = "SELECT COUNT(DISTINCT id) as count FROM attendances WHERE date(attendances.date) = '" + $scope.currentDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.time_in<> '" + null + "' AND attendances.time_out= '" + null + "' AND attendances.type= 'home_center' AND attendances.sewa_id = '" + sewa_id + "'";
+      var query = "SELECT COUNT(DISTINCT sewadar_id) as count FROM attendances WHERE date(attendances.date) = '" + $scope.currentDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.time_in<> '" + null + "' AND attendances.time_out= '" + null + "' AND attendances.type= 'home_center' AND attendances.sewa_id = '" + sewa_id + "'";
       $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
         for (var i = 0; i < res.rows.length; i++) {
           $scope.curent_count = res.rows.item(i).count;
@@ -60,7 +60,7 @@
         $cordovaToast.show('There is no sewadar present today', 'short', 'center');
       } else {
         satsangDayAttendanceListService.setSatsangAttendanceDate($scope.currentDate);
-        $state.go('home_center_attendance_list', { type: $stateParams.type });
+        $state.go('home_center_attendance_list', { type: $stateParams.type, action: 'mark' });
       }
     }
 
@@ -109,7 +109,8 @@
       var type = 'home_center';
       var batch_type = 'permanent';
       var sewadar_type = 'permanent';
-      var time = $filter('date')(new Date(), 'h:mm:ss');
+      var time = $filter('date')(new Date(), 'yyyy-MM-dd H:mm:ss');
+      
       if ($scope.in) {
         var Insertquery = "INSERT INTO attendances('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id', 'time_in', 'time_out') VALUES ('" + $scope.currentDate + "','" + sewadar.id + "','" + sewa_id + "', '" + reference_id + "', '" + type + "', '" + batch_type + "','" + $scope.current + "','" + $scope.current + "', '" + sewadar_type + "','" + nominal_roll_id + "', '" + time + "', '" + null + "')";
         $cordovaSQLite.execute($rootScope.db, Insertquery).then(function (res) {
@@ -119,40 +120,11 @@
         }, function (err) {
         });
       }
-
-      if($scope.out) {
-        var ids = [];
-        var CheckQuery = "SELECT id, sewa_id, sewadar_id FROM attendances where sewadar_id ='" + sewadar.id + "' AND date(date) = '" + $scope.currentDate + "' AND nominal_roll_id = '" + null + "' AND type = 'home_center' AND sewa_id = '" + sewa_id + "'";
-        $cordovaSQLite.execute($rootScope.db, CheckQuery).then(function (res) {
-          for (var i = 0; i < res.rows.length; i++) {
-            ids.push(res.rows.item(i).id);
-          }
-        });
-        $timeout(function () {
-          if(ids.length <= 0) {
-            $cordovaToast.show('Please enter in time first.', 'short', 'center');
-            return;
-          }
-          var Checktime = "SELECT time_out FROM attendances where sewadar_id ='" + sewadar.id + "' AND date(date) = '" + $scope.currentDate + "' AND nominal_roll_id = '" + null + "' AND type = 'home_center' AND sewa_id = '" + sewa_id + "' AND id = '" + ids[ids.length - 1] + "'";
-          $cordovaSQLite.execute($rootScope.db, Checktime).then(function (res) {
-            if (res.rows.item(0).time_out == 'null') {
-              var query = "UPDATE attendances SET time_out = '" + time + "' WHERE sewadar_id = '" + sewadar.id + "' AND id = '" + ids[ids.length - 1] + "'";
-                $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
-                  $scope.currentAttendees();
-                  $cordovaToast.show('Out time entey saved', 'short', 'center');
-                }, function (err) {})  
-                return;          
-            }
-            $cordovaToast.show('Please enter in time first.', 'short', 'center');
-          })
-        }, 500);
-      }
     };
 
     $scope.openNameOrBadgePopover = function ($event) {
       $ionicPopover.fromTemplateUrl('templates/popovers/nameorbadgebutton.popover.html', {
         scope: $scope,
-        //backdropClickToClose: false                  
       }).then(function (popover) {
         $scope.popover = popover;
         $scope.popover.show($event);
