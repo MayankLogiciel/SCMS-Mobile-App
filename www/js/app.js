@@ -252,7 +252,7 @@ angular.module('SCMS_ATTENDANCE', ['ionic', 'ngCordova', 'validation', 'validati
       })
       .state('home_center_attendance_list', {
             cache: false,
-            url: '/home_center_attendance_list/:type',
+            url: '/home_center_attendance_list/:type/:action',
             templateUrl: 'templates/home.attendance.list.html',
             controller: 'HomeCenterAttendanceListController'
       })
