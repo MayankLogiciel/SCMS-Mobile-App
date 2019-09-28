@@ -138,6 +138,7 @@
             if (res.rows.item(0).time_out == 'null') {
               var query = "UPDATE attendances SET time_out = '" + time + "' WHERE sewadar_id = '" + sewadar.id + "' AND id = '" + ids[ids.length - 1] + "'";
                 $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
+                  $scope.currentAttendees();
                   $cordovaToast.show('Out time entey saved', 'short', 'center');
                 }, function (err) {})  
                 return;          

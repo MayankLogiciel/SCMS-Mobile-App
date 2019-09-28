@@ -142,7 +142,8 @@
 
     function diff_hours(dt1, dt2) {
       var diff = Math.abs(dt1 - dt2) / 36e5;
-      if (diff <= 2) return 2;
+      if (diff < 1.5) return 0;
+      if (diff >= 1.5) return 2;
       if (diff <= 4) return 4;
       if (diff <= 8) return 8;
     }

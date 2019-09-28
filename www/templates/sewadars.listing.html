@@ -83,7 +83,7 @@
 						<span class="text-transform-capital" ng-if="sewadar.time_out != 'null'"> TIME OUT: {{sewadar.time_out}}</span>
 					</h2>
 					<h2 ng-if="sewadar.batch_no && sewadar.time_out != 'null' && sewadar.time_in != 'null'" class="list-content-avtar-content">
-						<span class="text-transform-capital">
+						<span class="text-transform-capital" ng-if="sewadar.th != 0">
 							Total hours: {{sewadar.th}}
 						</span>
 					</h2>
