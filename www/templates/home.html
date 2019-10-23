@@ -11,40 +11,55 @@
 	</ion-header-bar>   
 	<ion-content has-bouncing = "false">
 		<div class="list scms-home">
-			<div class="row">
-				<button class="button button-block button-energized btn-padding col" ui-sref="nominal_rolls" ng-if="user.group_id==4">
-					<i class="icon ion-ios-calendar-outline"></i>
-					<span>Nominal Rolls</span>
-				</button>
-				<button class="button button-block button-calm btn-padding col" ui-sref="satsang-attendance-list" ng-if="user.group_id==5">
-					<i class="icon ion-ios-calendar"></i>
-					<span>Satsang Day Attendance</span>
-				</button>
-				<button class="button button-block button-royal btn-padding col" ui-sref="satsang-place">
-					<i class="icon ion-location"></i>
-					<span>Satsang Place Information</span>
-				</button>
-			</div> 
-			<div class="row" ng-if="user.group_id==4">
-				<button class="button button-block button-royal btn-padding col" on-tap="goToHomeCenterPage('day')">
-					<i class="icon ion-home"></i>
-					<span>Home Center Day <br>Attendance</span>
-				</button>
-				<button class="button button-block button-royal btn-padding col" on-tap="goToHomeCenterPage('night')">
-					<i class="icon ion-home"></i>
-					<span>Home Center Night Attendance</span>
-				</button>
-			</div> 
-			<div class="row">
-				<button class="button button-block button-assertive btn-padding col" ui-sref="sewadars">
-					<i class="icon ion-ios-people"></i>
-					<span>Sewadar Data</span>
-				</button>
-				<button class="button button-block button-assertive btn-padding col" on-tap="syncDatabase()">
-					<i class="icon ion-android-sync"></i>
-					<span>Sync Data</span>
-				</button>	
+			<div ng-if="user.group_id==4">
+				<div class="row">
+					<button class="button button-block button-energized btn-padding col" ui-sref="nominal_rolls">
+						<i class="icon ion-ios-calendar-outline"></i>
+						<span>Nominal Rolls</span>
+					</button>
+					
+					<button class="button button-block button-royal btn-padding col" ui-sref="satsang-place">
+						<i class="icon ion-location"></i>
+						<span>Satsang Place Information</span>
+					</button>
+				</div> 
+				<div class="row">
+					<button class="button button-block button-royal btn-padding col" on-tap="goToHomeCenterPage('day')">
+						<i class="icon ion-home"></i>
+						<span>Home Center Day <br>Attendance</span>
+					</button>
+					<button class="button button-block button-royal btn-padding col" on-tap="goToHomeCenterPage('night')">
+						<i class="icon ion-home"></i>
+						<span>Home Center Night <br>Attendance</span>
+					</button>
+				</div> 
 			</div>
+
+			<div ng-if="user.group_id==5">
+				<div class="row" >
+					<button class="button button-block button-calm btn-padding col" ui-sref="satsang-attendance-list">
+						<i class="icon ion-ios-calendar"></i>
+						<span>Satsang Day Attendance</span>
+					</button>
+				</div>
+				<div class="row" >
+					<button class="button button-block button-royal btn-padding col" ui-sref="satsang-place">
+						<i class="icon ion-location"></i>
+						<span>Satsang Place Information</span>
+					</button>
+				</div>
+				<div class="row">
+					<!-- <button class="button button-block button-assertive btn-padding col" ui-sref="sewadars">
+						<i class="icon ion-ios-people"></i>
+						<span>Sewadar Data</span>
+					</button> -->
+					<button class="button button-block button-assertive btn-padding col" on-tap="syncDatabase()">
+						<i class="icon ion-android-sync"></i>
+						<span>Sync Data</span>
+					</button>	
+				</div>
+			</div>
+
 		</div>
 	</ion-content>
 </ion-view>
