@@ -3027,14 +3027,15 @@
 	}
 }
 .checkbox-dimension-time {
-	padding: 25px !important;
-	span {
-		padding-left: 30px; 
-		font-size: 20px;
-	}
+	padding: 20px !important;
+  font-size: 25px;
+	// span {
+	// 	padding-left: 30px; 
+	// 	font-size: 20px;
+	// }
 }
 .search-wrapper-home-center {
-	top: 142px !important;
+	top: 125px !important;
 }
 .male-female-count {
 	margin-top: 17px;
@@ -3046,4 +3047,7 @@
 }
 .home-center-btn-wrap {
 	height: 250px !important;
+}
+.common-search-wrapper-home {
+	margin-top: 60px !important;
 }

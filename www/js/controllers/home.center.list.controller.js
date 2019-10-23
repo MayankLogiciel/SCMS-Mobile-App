@@ -43,6 +43,9 @@
       } else {
         $scope.isAttendaceClosed = false;
       }
+      $scope.totalAttendees();
+      $scope.currentAttendees();
+      $scope.in = true;
     };
     $scope.openNameOrBadgePopover = function ($event) {
       $ionicPopover.fromTemplateUrl('templates/popovers/nameorbadgebutton.popover.html', {
@@ -95,6 +98,7 @@
     var refreshListpage = function () {
       $rootScope.$broadcast('refreshPage');
     }
+
     var getSewadarData = function (query) {
       $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
         $scope.totalRows = res.rows.length;
@@ -131,11 +135,11 @@
       cfpLoadingBar.start();
       switch (type) {
         case 'in':
-          query = "SELECT sewadars.*, attendances.time_in, attendances.time_out, attendances.sewa_id FROM sewadars LEFT JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type='home_center' AND attendances.time_in<>'" + null + "' AND attendances.sewa_id = '" + sewa_id + "' ORDER BY attendances.created_at Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
+          query = "SELECT sewadars.*, attendances.time_in, attendances.time_out, attendances.sewa_id FROM sewadars LEFT JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type='home_center' AND attendances.time_in<>'" + null + "' AND attendances.sewa_id = '" + sewa_id + "' GROUP BY attendances.sewadar_id ORDER BY attendances.created_at Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
           getSewadarData(query);
           break;
           case 'out':
-          query = "SELECT sewadars.*, attendances.time_in, attendances.time_out, attendances.sewa_id FROM sewadars LEFT JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type='home_center' AND attendances.time_out<>'" + null + "' AND attendances.sewa_id = '" + sewa_id + "' ORDER BY attendances.created_at Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
+          query = "SELECT sewadars.*, attendances.time_in, attendances.time_out, attendances.sewa_id FROM sewadars LEFT JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type='home_center' AND attendances.time_out<>'" + null + "' AND attendances.sewa_id = '" + sewa_id + "' GROUP BY attendances.sewadar_id ORDER BY attendances.created_at Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
           getSewadarData(query);
           break;
           case 'both':
@@ -172,6 +176,49 @@
           });
       });
     }
+
+    $scope.totalAttendees = function () {
+      var sewa_id = $stateParams.type == 'day' ? 24 : 5;
+      var query = "SELECT COUNT(DISTINCT sewadar_id) as count FROM attendances WHERE date(attendances.date) = '" + $scope.currentDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type= 'home_center' AND attendances.sewa_id = '" + sewa_id + "'";
+      $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
+        for (var i = 0; i < res.rows.length; i++) {
+          $scope.count = res.rows.item(i).count;
+        }
+      });
+    }
+
+    $scope.currentAttendees = function () {
+      var sewa_id = $stateParams.type == 'day' ? 24 : 5;
+      var query = "SELECT COUNT(DISTINCT sewadar_id) as count FROM attendances WHERE date(attendances.date) = '" + $scope.currentDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.time_in<> '" + null + "' AND attendances.time_out= '" + null + "' AND attendances.type= 'home_center' AND attendances.sewa_id = '" + sewa_id + "'";
+      $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
+        for (var i = 0; i < res.rows.length; i++) {
+          $scope.curent_count = res.rows.item(i).count;
+        }
+      });
+    }
+
+    $scope.SaveDataToAttandanceTable = function (sewadar, fromQR) {
+      $scope.sewadarAttendance = [];
+      var sewa_id = $stateParams.type == 'day' ? 24 : 5;
+      $scope.current = $filter('date')(new Date(), 'yyyy-MM-dd h:mm:ss');
+      var nominal_roll_id = null;
+      var reference_id = null
+      var type = 'home_center';
+      var batch_type = 'permanent';
+      var sewadar_type = 'permanent';
+      var time = $filter('date')(new Date(), 'yyyy-MM-dd H:mm:ss');
+
+      if ($scope.in) {
+        var Insertquery = "INSERT INTO attendances('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id', 'time_in', 'time_out') VALUES ('" + $scope.currentDate + "','" + sewadar.id + "','" + sewa_id + "', '" + reference_id + "', '" + type + "', '" + batch_type + "','" + $scope.current + "','" + $scope.current + "', '" + sewadar_type + "','" + nominal_roll_id + "', '" + time + "', '" + null + "')";
+        $cordovaSQLite.execute($rootScope.db, Insertquery).then(function (res) {
+          $cordovaToast.show('Entry marked successfully', 'short', 'center');
+          $scope.currentAttendees();
+          $scope.totalAttendees();
+          $scope.getListFromSewadarsForAttendance();
+        }, function (err) {
+        });
+      }
+    };
 
     $scope.getListFromSewadarsForAttendance = function (action) {
       var sewa_id = $stateParams.type == 'day' ? 24 : 5;

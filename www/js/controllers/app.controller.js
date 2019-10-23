@@ -3,7 +3,7 @@
       /**
       * App Controller
       **/
-      var AppController = function($log, $scope, $timeout, $ionicHistory, $state, $ionicPopup, $cordovaToast, $cordovaFile, $filter, authService, picAndDatabaseTransferService) {
+      var AppController = function ($log, $scope, $timeout, $ionicHistory, $state, $ionicPopup, $cordovaToast, $cordovaFile, $filter, authService, picAndDatabaseTransferService, satsangDayAttendanceListService) {
             var setup = function() {
                   $log.debug("App Controller");
                   if($state.current.name == "app") {
@@ -13,6 +13,7 @@
                               $ionicHistory.clearHistory();
                         },500);
                   }  
+                  $scope.currentDate = $filter('date')(new Date(), 'yyyy-MM-dd');
             }; 
             
             /**
@@ -27,8 +28,10 @@
                   $state.go("login");
             }
 
-            $scope.goToHomeCenterPage = function(type) {
-                  $state.go('home_center_attendance', { type: type });
+            $scope.goToHomeCenterPage = function(t) {
+                  // $state.go('home_center_attendance', { type: type });
+                  satsangDayAttendanceListService.setSatsangAttendanceDate($scope.currentDate);
+                  $state.go('home_center_attendance_list', { type: t, action: 'mark' });
             }
 
             /**
@@ -68,6 +71,7 @@
                   });
             }
 
+
             /**
             * syncDatabase function used to sync database
             **/
@@ -82,7 +86,7 @@
             setup();
       };
 
-      AppController.$inject  = ['$log', '$scope', '$timeout', '$ionicHistory', '$state', '$ionicPopup', '$cordovaToast', '$cordovaFile', '$filter', 'authService', 'picAndDatabaseTransferService'];
+      AppController.$inject = ['$log', '$scope', '$timeout', '$ionicHistory', '$state', '$ionicPopup', '$cordovaToast', '$cordovaFile', '$filter', 'authService', 'picAndDatabaseTransferService', 'satsangDayAttendanceListService'];
 
       angular
       .module('SCMS_ATTENDANCE')
