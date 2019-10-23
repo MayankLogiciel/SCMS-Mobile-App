@@ -14,7 +14,11 @@
 				</h4>
 				<h4 class="g-name com-padding-modal nominal-info-modal-misc"  ng-class="{'final-diable':nominalRolesData.new_sewa == 'null'}">
 					<label>Misc Sewa Place:</label>
-					<span>{{(nominalRolesData.new_sewa == 'null' || nominalRolesData.new_sewa == '') ? 'N/A' : nominalRolesData.new_sewa}}</span>
+					<!-- <span>{{(nominalRolesData.new_sewa == 'null' || nominalRolesData.new_sewa == '') ? 'N/A' : nominalRolesData.new_sewa}}</span> -->
+
+					<span>
+						{{(nominal.new_sewa == 'null') ? 'N/A' : (nominalData.new_sewa == '' || nominalData.new_sewa == undefined || nominalData.new_sewa == 'undefined' ? ' ' : nominal.new_sewa)}}
+					</span>
 				</h4>
 				<div class="row nominal-info-modal-other">
 					<div class="col col-50">

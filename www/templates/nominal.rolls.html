@@ -39,7 +39,7 @@
 						<h4 class="sewa-place-misc" ng-hide="nominal.new_sewa == 'null' || nominal.new_sewa == 'N/A' || nominal.new_sewa == ''" ng-class="{'final-diable':nominal.new_sewa == 'null' || nominal.new_sewa == 'N/A' || nominal.new_sewa == ''}">
 							<label>Misc Sewa Place:</label>
 							<span class="text-transform-capital">
-								{{(nominal.new_sewa == 'null' || nominal.new_sewa == '') ? 'N/A' : nominal.new_sewa}}
+								{{(nominal.new_sewa == 'null') ? 'N/A' : (nominalData.new_sewa == '' || nominalData.new_sewa == undefined || nominalData.new_sewa == 'undefined' ? ' ' : nominal.new_sewa)}}
 							</span>
 						</h4>
 						<div class="row other-nominal-info"> 

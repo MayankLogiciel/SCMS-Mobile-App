@@ -160,11 +160,7 @@
             }
 
             $scope.miscSewa = function(misc) { 
-                  if(misc != '' && misc.length > 0) {
-                        $scope.isValidMiscSewa = true;
-                  }else {
-                        $scope.isValidMiscSewa = false;
-                  }
+                  if(misc != '' && misc.length > 0) $scope.isValidMiscSewa = true;
             }
             
             $scope.addEditNominal = function(nominalData) {
@@ -193,12 +189,12 @@
                              $scope.isNotValidNumber = false; 
                         }
                   }
-                  if(!$scope.newEntryDisabled && (!angular.isDefined(nominalData.new_sewa)|| nominalData.new_sewa == '' || nominalData.new_sewa == 'N/A')) {
-                        $scope.isValidMiscSewa = false;
-                        return;
-                  }else {
-                        $scope.isValidMiscSewa = true;
-                  }
+                  // if(!$scope.newEntryDisabled && (!angular.isDefined(nominalData.new_sewa)|| nominalData.new_sewa == '' || nominalData.new_sewa == 'N/A')) {
+                  //       $scope.isValidMiscSewa = false;
+                  //       return;
+                  // }else {
+                  //       $scope.isValidMiscSewa = true;
+                  // }
                  
                   if(startDateForNominalRoll > endDateForNominalRoll) {
                        $cordovaToast.show('End date should be greater or equal to start date ', 'short', 'center');
