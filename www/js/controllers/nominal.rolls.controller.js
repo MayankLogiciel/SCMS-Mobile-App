@@ -69,12 +69,11 @@
                   switch(nominal.status){
                         case 'Approved':
                         case 'approved':
+                        case 'dispatched':
                               nominalRollsService.setNominalRollsData(nominal);
                               $state.go('nominal_rolls-list', {id: nominal.id, status: nominal.status});
                               return true;
-                        case 'dispatched':
-                              $cordovaToast.show('Nominal Roll Already Dispatched ', 'short', 'center');                        
-                              return true;
+                              
                         default:
                               $cordovaToast.show('You cannot add sewadar until approved ', 'short', 'center');                        
                   }
@@ -229,8 +228,9 @@
                               {text : '<i class="icon ion-paper-airplane"></i> Mark As Dispatched'}
                         ];
                   } else if(nominal.status == 'Dispatched' || nominal.status == 'dispatched') {
-                        $cordovaToast.show('Nominal Roll Already Dispatched ', 'short', 'center');                        
-                        return;
+                        $scope.buttonText = [
+                              { text: '<i class="icon ion-checkmark-circled"></i> Mark As Approved' }
+                        ];                    
                   }else {
                         $scope.buttonText = [
                         {text : '<i class="icon ion-edit"></i> Edit Nominal Roll '}
@@ -258,6 +258,9 @@
                                     case '<i class="icon ion-edit"></i> Edit Nominal Roll ' :
                                           nominalRollsService.setNominalRollsData(nominal);
                                           $state.go('addedit-nominal_rolls', {action: 'edit',id: nominal.id, user: ''});
+                                          return true;
+                                    case '<i class="icon ion-checkmark-circled"></i> Mark As Approved' :
+                                          markNominalRollApproved(nominal);
                                           return true;
                                     case '<i class="icon ion-paper-airplane"></i> Mark As Dispatched' :
                                           if(
@@ -300,6 +303,15 @@
             var markAsDispatched = function(nominal) {
                   nominal.status = 'dispatched';
                   var query = "UPDATE nominal_roles SET status = 'dispatched' WHERE id ="+nominal.id;
+                  $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
+                        nominalRollsService.setNominalRollsData(nominal);
+                  }, function(err){
+                  });
+            }
+
+            var markNominalRollApproved = function(nominal) {
+                  nominal.status = 'approved';
+                  var query = "UPDATE nominal_roles SET status = 'approved' WHERE id ="+nominal.id;
                   $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
                         nominalRollsService.setNominalRollsData(nominal);
                   }, function(err){

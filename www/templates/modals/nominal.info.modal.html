@@ -193,6 +193,7 @@
 		<div class="button-bar">
 			<a class="button button-assertive" ng-if="(nominalRolesData.status =='Approved' || nominalRolesData.status =='approved') && isSecrectary == false" on-tap="viewAndMarkAttendanceNominal(nominalRolesData)">Add Sewadars</a>
 			<a class="button button-balanced" ng-hide="nominalRolesData.status == 'dispatched' || nominalRolesData.status == 'Dispatched'" on-tap="editNominal(nominalRolesData)">Edit</a>
+			<a class="button button-assertive" ng-if="(nominalRolesData.status =='Approved' || nominalRolesData.status =='approved') && isSecrectary == false" on-tap="dispatchNominalRole(nominalRolesData)">Dispatch</a>
 			<a class="button button-stable" on-tap="closeModalForNominalDetail()">CANCEL</a>
 		</div>	
 	</div>

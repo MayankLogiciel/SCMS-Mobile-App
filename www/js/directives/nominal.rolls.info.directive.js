@@ -1,5 +1,5 @@
 angular.module('SCMS_ATTENDANCE')
-.directive('nominalRollsInfoDirective', function(nominalRollsService, $log, $ionicModal, $state, $cordovaSQLite, $rootScope, $timeout){
+    .directive('nominalRollsInfoDirective', function (nominalRollsService, $log, $ionicModal, $state, $cordovaSQLite, $rootScope, $timeout, $ionicPopup){
     return {
         restrict: "A",
         scope: {
@@ -63,6 +63,44 @@ angular.module('SCMS_ATTENDANCE')
                 $state.go('nominal_rolls-list', {id:  nominal.id, status:  nominal.status});
                 $scope.closeModalForNominalDetail();
             };  
+
+
+            $scope.dispatchNominalRole = function(nominal) {
+                var msgDispatched = "After dispached you will not able to add more sewadars or modify this nominal roll. Confirm to Proceed. ";
+                showConfirm(msgDispatched, nominal);
+            };  
+
+            var showConfirm = function (str, nominal) {
+                $ionicPopup.confirm({
+                    title: 'Please Confirm',
+                    template: str,
+                    cssClass: 'confirm-delete',
+                    buttons: [
+                        {
+                            text: "Cancel",
+                            type: 'button-balanced',
+                            onTap: function () {
+                            }
+                        },
+                        {
+                            text: 'OK',
+                            type: 'button-positive',
+                            onTap: function () {
+                                markAsDispatched(nominal);
+                            }
+                        }]
+                });
+            };
+
+            var markAsDispatched = function (nominal) {
+                nominal.status = 'dispatched';
+                var query = "UPDATE nominal_roles SET status = 'dispatched' WHERE id =" + nominal.id;
+                $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
+                    nominalRollsService.setNominalRollsData(nominal);
+                    $scope.closeModalForNominalDetail();
+                }, function (err) {
+                });
+            }
 
 
             $scope.editNominal = function(nominal) {

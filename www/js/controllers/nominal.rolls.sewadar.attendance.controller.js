@@ -292,6 +292,10 @@
             }
             
             $scope.SaveDataToAttandanceTable = function(sewadar) {
+                  if ($scope.nominalRollsData.status == 'dispatched') {
+                        $cordovaToast.show('You cannot add or update sewadar.', 'short', 'center');
+                        return;
+                  }
                   if(!sewadar.batch_no) {
                         if(sewadar.id) {
                              addTempSewadarNested(sewadar);
@@ -353,7 +357,6 @@
 
             $scope.sewadarsCount = function () {
                   var query = "Select sum(case when gender = 'M' then 1 else 0 end) Male,sum(case when gender = 'F' then 1 else 0 end) Female from (SELECT DISTINCT sewadars.id, sewadars.gender,attendances.sewadar_id as att_id, attendances.nominal_roll_id FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where attendances.nominal_roll_id ='" + $scope.nominal_id + "' AND attendances.sewadar_type = 'permanent' AND attendances.status <> 'deleted'  UNION SELECT DISTINCT temp_sewadars.id, temp_sewadars.gender, attendances.sewadar_id as att_id, attendances.nominal_roll_id FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where attendances.nominal_roll_id='" + $scope.nominal_id +"' AND attendances.sewadar_type = 'temporary' AND attendances.status <> 'deleted'  group by att_id)";
-                  console.log(query);
                   $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
                         for (var i = 0; i < res.rows.length; i++) {
                               $scope.MaleCounts = res.rows.item(i).Male;
@@ -364,6 +367,10 @@
             }
 
             $scope.addTempSewadar = function(TempSewadarData) {
+                  if ($scope.nominalRollsData.status == 'dispatched') {
+                        $cordovaToast.show('You cannot add or update sewadar.', 'short', 'center');
+                        return;
+                  }
                   TempSewadarData.name = angular.uppercase(TempSewadarData.name);
                   TempSewadarData.guardian = angular.uppercase(TempSewadarData.guardian);
                   TempSewadarData.address = angular.uppercase(TempSewadarData.address);
@@ -538,6 +545,11 @@
             };
 
             $scope.openPopoverLetterNumber = function($event) {
+                  if ($scope.nominalRollsData.status != 'dispatched') {
+                        $cordovaToast.show('Please dispach the nominal role first.', 'short', 'center');
+                        return;
+                  }
+
                   if($scope.sewadarAttendance.length <= 0) {
                         $cordovaToast.show('There is no sewadar to print', 'short', 'center');
                         return;
