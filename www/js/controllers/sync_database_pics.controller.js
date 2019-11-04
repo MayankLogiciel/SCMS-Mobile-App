@@ -302,7 +302,6 @@
                               'Accept': 'application/json'
                         };
                         options.headers = headers;
-                        console.log(options);
                         $scope.abortTransferRequest  =  $cordovaFileTransfer.upload(url, targetPath, options, trustAllHosts);
                         $scope.abortTransferRequest.then(function(result) {
                               $cordovaToast.show('Satsang day attendance sync successfully.', 'short', 'center');

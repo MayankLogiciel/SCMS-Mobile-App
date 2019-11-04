@@ -98,40 +98,6 @@
                               showDeleteConfirm(sewadar, type);                
                         };  
 
-                        $scope.updateOutTime = function(sewadar, type) {
-                              var time = $filter('date')(new Date(), 'yyyy-MM-dd H:mm:ss');
-                              var ids = [];
-                              
-                              var CheckQuery = "SELECT id, sewa_id, sewadar_id FROM attendances where sewadar_id ='" + sewadar.id + "' AND nominal_roll_id = '" + null + "' AND type = 'home_center' AND sewa_id = '" + sewadar.sewa_id + "'";
-
-                              $cordovaSQLite.execute($rootScope.db, CheckQuery).then(function (res) {
-                              
-                                    for (var i = 0; i < res.rows.length; i++) {
-                                    ids.push(res.rows.item(i).id);
-                              }
-                              });
-
-                              $timeout(function () {
-                              if(ids.length <= 0) {
-                                    $cordovaToast.show('Please enter in time first.', 'short', 'center');
-                                    return;
-                              }
-                              var Checktime = "SELECT time_out FROM attendances where sewadar_id ='" + sewadar.id + "' AND nominal_roll_id = '" + null + "' AND type = 'home_center' AND sewa_id = '" + sewadar.sewa_id + "' AND id = '" + ids[ids.length - 1] + "'";
-
-                              $cordovaSQLite.execute($rootScope.db, Checktime).then(function (res) {
-                                    if (res.rows.item(0).time_out == 'null') {
-                                    var query = "UPDATE attendances SET time_out = '" + time + "' WHERE sewadar_id = '" + sewadar.id + "' AND id = '" + ids[ids.length - 1] + "'";
-                                    $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
-                                          $cordovaToast.show('Out time entey saved', 'short', 'center');
-                                    }, function (err) {})  
-                                    return;          
-                                    }
-                                    $cordovaToast.show('Please enter in time first.', 'short', 'center');
-                              })
-                              }, 500);
-                        };   
-
-
                         function setFocus() {
                               //Set focus on input textbox;
                               $timeout(function() {
@@ -191,6 +157,8 @@
                                                                   if ($scope.sewadarAttendance[i].s_id == sewadar.s_id) {
                                                                         $scope.sewadarAttendance.splice(i, true);
                                                                         $cordovaToast.show('Entry removed successfully', 'short', 'center');
+                                                                        $scope.currentAttendees();
+                                                                        $scope.totalAttendees();
                                                                         return;
                                                                   }
                                                             }

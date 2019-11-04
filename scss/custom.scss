@@ -3035,7 +3035,14 @@
 	// }
 }
 .search-wrapper-home-center {
-	top: 125px !important;
+	top: 120px;
+	.col {
+		padding: 0;
+		padding-right: 5px;
+	}
+	.swap-btn {
+		position: relative;
+	}
 }
 .male-female-count {
 	margin-top: 17px;
@@ -3049,5 +3056,23 @@
 	height: 250px !important;
 }
 .common-search-wrapper-home {
-	margin-top: 60px !important;
+	top: 195px;
+}
+.content-with-footer {
+	bottom: 65px;
+}
+.align-self-center {
+	align-self: center;
+	.list-trash {
+		&:before {
+			margin-top: 5px;
+			margin-bottom: 5px;
+			font-size: 35px;
+		}
+	}
+}
+.floating-btn-for-home-center {
+	#floating-menu {
+		bottom: 75px !important;
+	}
 }

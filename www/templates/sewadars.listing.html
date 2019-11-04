@@ -1,7 +1,7 @@
 <div sewadar-detail-modal-diretive class="list" >
     <a class="item item-avatar listing-attend" ng-if="stateName!='satsang_day_attendance' && stateName!='home_center_attendance_list'" ng-repeat="sewadar in sewadarAttendance" on-hold = "stateName=='satsang_day_attendance'? '':markAsIncharge(sewadar)">
       	<img class="list-avtar" ng-if='sewadar.photo && sewadar.isImageFound' ng-src="{{imagePath + sewadar.photo}}?{{timeStampPhoto}}"/>
-		<img class="list-avtar" ng-if='!sewadar.photo || !sewadar.isImageFound' ng-src="{{defaultImage}}"/>
+				<img class="list-avtar" ng-if='!sewadar.photo || !sewadar.isImageFound' ng-src="{{defaultImage}}"/>
       	<h2 class="row list-avtar-wrapper">  
       		<div class="col col-90 list-margin-sewadar" on-tap="selectedSewadarDetail(sewadar,'viewSewadar')">    		
 		      	<h2 ng-if="sewadar.batch_no" class="list-content-avtar">
@@ -58,9 +58,9 @@
       	</h2>
 		</a>
 		
-		<a class="item item-avatar listing-attend" ng-if="stateName=='home_center_attendance_list'" ng-repeat="sewadar in sewadarAttendance | filter: searchQuery">
-			<img class="list-avtar" ng-if='sewadar.photo && sewadar.isImageFound' ng-src="{{imagePath + sewadar.photo}}?{{timeStampPhoto}}"
-			/>
+		<a class="item item-avatar listing-attend" ng-if="stateName=='home_center_attendance_list'" ng-repeat="sewadar in sewadarAttendance | filter: searchQuery1">
+			<img class="list-avtar" ng-if='sewadar.photo && sewadar.isImageFound'
+				ng-src="{{imagePath + sewadar.photo}}?{{timeStampPhoto}}" />
 			<img class="list-avtar" ng-if='!sewadar.photo || !sewadar.isImageFound' ng-src="{{defaultImage}}" />
 			<h2 class="row list-avtar-wrapper">
 				<div class="col col-90 list-margin-sewadar" on-tap="selectedSewadarDetail(sewadar,'viewSewadar')">
@@ -77,31 +77,38 @@
 						<span ng-if="sewadar.department_name"> | </span>
 						<span ng-bind="sewadar.department_name" class="text-transform-capital"></span>
 					</h2>
-					<h2 ng-if="sewadar.batch_no" class="list-content-avtar-content">
+					<h2 ng-if="!sewadar.batch_no" class="list-content-avtar">
+						<span ng-bind="sewadar.name" class="text-transform-capital"></span>
+					</h2>
+					<h2 ng-if="!sewadar.batch_no" class="list-content-avtar-content">
+						<span ng-bind="sewadar.guardian" class="text-transform-capital"></span>
+						<span> | </span>
+						<span ng-bind="(sewadar.gender=='M')?'Male':'Female'"></span>
+						<span> | </span>
+						<span ng-bind="sewadar.address"></span>
+					</h2>
+
+					<h2 class="list-content-avtar-content">
 						<span class="text-transform-capital" ng-if="sewadar.time_in != 'null'">TIME IN: {{sewadar.time_in}}</span>
-						<span ng-if="sewadar.time_out != 'null'"> | </span>	
+						<span ng-if="sewadar.time_out != 'null'"> | </span>
 						<span class="text-transform-capital" ng-if="sewadar.time_out != 'null'"> TIME OUT: {{sewadar.time_out}}</span>
 					</h2>
-					<h2 ng-if="sewadar.batch_no && sewadar.time_out != 'null' && sewadar.time_in != 'null'" class="list-content-avtar-content">
+					<h2 ng-if="sewadar.time_out != 'null' && sewadar.time_in != 'null'"
+						class="list-content-avtar-content">
 						<span class="text-transform-capital" ng-if="sewadar.th != 0">
 							Total hours: {{sewadar.th}}
 						</span>
 					</h2>
 				</div>
-				<!-- ng-if="!isMark && sewadar.time_out == 'null'" -->
-				<div class="col col-10">
+				<div class="col col-10 align-self-center">
 					<div>
-						<i class="icon ion-log-out list-trash" on-tap="updateOutTime(sewadar, type)"></i>
-						<i class="icon ion-trash-a list-trash" on-tap="deleteSewadar(sewadar, type)"></i>
-					</div>
-				</div>
-				<div class="col col-10" ng-if="isMark && isCurrentDate && !isAttendaceClosed">
-					<div>
+						<i class="icon ion-log-out list-trash" on-tap="updateOutTime(sewadar, type)"
+							ng-if="sewadar.sewa_id == 24 && sewadar.time_out == 'null'"></i>
 						<i class="icon ion-trash-a list-trash" on-tap="deleteSewadar(sewadar, type)"></i>
 					</div>
 				</div>
 			</h2>
 		</a>
-	<ion-infinite-scroll ng-if="totalRows >= 20" on-infinite="loadMore()" distance="1" immediate-check="false">
-	</ion-infinite-scroll>
+		<ion-infinite-scroll ng-if="totalRows >= 20" on-infinite="loadMore()" distance="1" immediate-check="false">
+		</ion-infinite-scroll>
 </div>

@@ -47,6 +47,7 @@
       $scope.currentAttendees();
       $scope.in = true;
     };
+
     $scope.openNameOrBadgePopover = function ($event) {
       $ionicPopover.fromTemplateUrl('templates/popovers/nameorbadgebutton.popover.html', {
         scope: $scope,
@@ -95,6 +96,7 @@
       $scope.offset = $scope.offset + 20;
       $scope.getListFromSewadarsForAttendance();
     }
+
     var refreshListpage = function () {
       $rootScope.$broadcast('refreshPage');
     }
@@ -125,8 +127,49 @@
     };
 
     $scope.search = function (searchQuery) {
-      $scope.searchQuery = searchQuery;
-    }    
+      $scope.searchQuery1 = searchQuery;
+      if (searchQuery.batch_no == ""){
+        $scope.searchQuery1.batch_no = undefined
+      } 
+    }  
+    
+    $scope.updateOutTime = function (sewadar, type) {
+      var time = $filter('date')(new Date(), 'yyyy-MM-dd H:mm:ss');
+      var ids = [];
+
+      var CheckQuery = "SELECT id, sewa_id, sewadar_id FROM attendances where sewadar_id ='" + sewadar.id + "' AND nominal_roll_id = '" + null + "' AND type = 'home_center' AND sewa_id = '" + sewadar.sewa_id + "'";
+
+      $cordovaSQLite.execute($rootScope.db, CheckQuery).then(function (res) {
+
+        for (var i = 0; i < res.rows.length; i++) {
+          ids.push(res.rows.item(i).id);
+        }
+      });
+
+      $timeout(function () {
+        if (ids.length <= 0) {
+          $cordovaToast.show('Please enter in time first.', 'short', 'center');
+          return;
+        }
+        var Checktime = "SELECT time_out FROM attendances where sewadar_id ='" + sewadar.id + "' AND nominal_roll_id = '" + null + "' AND type = 'home_center' AND sewa_id = '" + sewadar.sewa_id + "' AND id = '" + ids[ids.length - 1] + "'";
+
+        $cordovaSQLite.execute($rootScope.db, Checktime).then(function (res) {
+          if (res.rows.item(0).time_out == 'null') {
+            var query = "UPDATE attendances SET time_out = '" + time + "' WHERE sewadar_id = '" + sewadar.id + "' AND id = '" + ids[ids.length - 1] + "'";
+            $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
+              $cordovaToast.show('Out time entey saved', 'short', 'center');
+              setup();
+            }, function (err) { })
+            return;
+          }
+          $cordovaToast.show('Please enter in time first.', 'short', 'center');
+        })
+      }, 500);
+    };   
+
+    $scope.goToDateList = function () {
+      $state.go('home-center-date-list', { type: $stateParams.type });
+    }
 
     $scope.timeFilter = function(type) {
       $scope.sewadarAttendance = [];
@@ -177,6 +220,106 @@
       });
     }
 
+    $scope.openPopoverForTempSewadar = function ($event, sewadar) {
+      $ionicPopover.fromTemplateUrl('templates/popovers/temp.sewadar.popover.html', {
+        scope: $scope,
+        backdropClickToClose: false
+      }).then(function (popover) {
+        $scope.popover = popover;
+        $scope.popover.show($event);
+        $scope.openSewadarPopoverTitle = "Add Open Sewadar";
+        $scope.ButtonValue = 'MARK ENTRY';
+      });
+    };
+
+    $scope.closePopoverForTempSewadar = function () {
+      $scope.popover.hide();
+      $scope.TempSewadarData = {};
+    };
+    $scope.$on('popover.hidden', function () {
+      $scope.popover.remove();
+    });
+
+    $scope.CheckedGender = function (gender) {
+      switch (gender) {
+        case 'Male':
+          $scope.TempSewadarData.Female = false;
+          $scope.TempSewadarData.Male = true;
+          return;
+        case 'Female':
+          $scope.TempSewadarData.Female = true;
+          $scope.TempSewadarData.Male = false;
+          return;
+      }
+    }
+
+    $scope.addTempSewadar = function (TempSewadarData) {
+      TempSewadarData.name = angular.uppercase(TempSewadarData.name);
+      TempSewadarData.guardian = angular.uppercase(TempSewadarData.guardian);
+      TempSewadarData.address = angular.uppercase(TempSewadarData.address);
+      
+      $scope.current = $filter('date')(new Date(), 'yyyy-MM-dd h:mm:ss');
+      
+      if (TempSewadarData.age < 5) {
+        $scope.showAge = true;
+        return;
+      }
+      
+      $scope.showAge = false;
+      if (!angular.isDefined(TempSewadarData.Male) && !angular.isDefined(TempSewadarData.Female)) {
+        $scope.showError = true;
+        return;
+      }
+      TempSewadarData.gender = TempSewadarData.Female ? 'F' : 'M';
+
+
+      var CheckQuery = "SELECT * FROM temp_sewadars where name ='" + TempSewadarData.name + "' AND guardian ='" + TempSewadarData.guardian + "' AND gender ='" + TempSewadarData.gender + "' AND address ='" + TempSewadarData.address + "' AND age ='" + TempSewadarData.age + "'";
+
+      $cordovaSQLite.execute($rootScope.db, CheckQuery).then(function (res) {
+        if (res.rows.length == 0) {
+          var Insertquery = "INSERT INTO temp_sewadars('name', 'guardian', 'gender', 'address', 'age', 'created_at', 'updated_at') VALUES ('" + TempSewadarData.name + "','" + TempSewadarData.guardian + "','" + TempSewadarData.gender + "', '" + TempSewadarData.address + "', '" + TempSewadarData.age + "','" + $scope.current + "','" + $scope.current + "')";
+          $cordovaSQLite.execute($rootScope.db, Insertquery).then(function (resTemp) {
+            TempSewadarData.id = resTemp.insertId;
+            addTempSewadarNested(TempSewadarData);
+          }, function (err) {});
+          return;
+        }
+
+        for (var i = 0; i < res.rows.length; i++) {
+          addTempSewadarNested(res.rows.item(i));
+        }
+      })
+      $scope.closePopoverForTempSewadar();
+      setFocus();
+    };
+
+    var addTempSewadarNested = function (TempSewadarData) {
+      var sewa_id = $stateParams.type == 'day' ? 24 : 5;
+      $scope.current = $filter('date')(new Date(), 'yyyy-MM-dd h:mm:ss');
+      var nominal_roll_id = null;
+      var reference_id = null
+      var type = 'home_center';
+      var batch_type = 'temporary';
+      var sewadar_type = 'temporary';
+      var time = $filter('date')(new Date(), 'yyyy-MM-dd H:mm:ss');
+     
+      var insertAttedanceForTempSewadar;
+
+      if (angular.isDefined(TempSewadarData.id) && $scope.in) {
+        insertAttedanceForTempSewadar = "INSERT INTO attendances ('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id', 'time_in', 'time_out') VALUES ('" + $scope.currentDate + "','" + TempSewadarData.id + "','" + sewa_id + "', '" + reference_id + "', '" + type + "', '" + batch_type + "','" + $scope.current + "', '" + $scope.current + "', '" + sewadar_type + "','" + nominal_roll_id + "', '" + time + "', '" + null + "')";
+        $cordovaSQLite.execute($rootScope.db, insertAttedanceForTempSewadar).then(function (res) {
+          $scope.sewadarAttendance.unshift(TempSewadarData);
+          $scope.TempSewadarData = {};
+          $scope.currentAttendees();
+          $scope.totalAttendees();
+          $scope.getListFromSewadarsForAttendance();
+          $cordovaToast.show('Entry marked successfully', 'short', 'center');
+        }, function (err) {
+
+        });       
+      }
+    };
+
     $scope.totalAttendees = function () {
       var sewa_id = $stateParams.type == 'day' ? 24 : 5;
       var query = "SELECT COUNT(DISTINCT sewadar_id) as count FROM attendances WHERE date(attendances.date) = '" + $scope.currentDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type= 'home_center' AND attendances.sewa_id = '" + sewa_id + "'";
@@ -210,6 +353,9 @@
 
       if ($scope.in) {
         var Insertquery = "INSERT INTO attendances('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id', 'time_in', 'time_out') VALUES ('" + $scope.currentDate + "','" + sewadar.id + "','" + sewa_id + "', '" + reference_id + "', '" + type + "', '" + batch_type + "','" + $scope.current + "','" + $scope.current + "', '" + sewadar_type + "','" + nominal_roll_id + "', '" + time + "', '" + null + "')";
+
+        console.log(Insertquery);
+
         $cordovaSQLite.execute($rootScope.db, Insertquery).then(function (res) {
           $cordovaToast.show('Entry marked successfully', 'short', 'center');
           $scope.currentAttendees();
@@ -225,7 +371,8 @@
       if (angular.isDefined(action) || action == 'load') {
         cfpLoadingBar.start();
       }
-      var query = "SELECT sewadars.*, attendances.id as s_id, attendances.time_in, attendances.time_out, attendances.sewa_id FROM sewadars LEFT JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND  attendances.nominal_roll_id= '" + null + "' AND attendances.type='home_center'  AND attendances.sewa_id = '" + sewa_id + "' GROUP BY attendances.sewadar_id ORDER BY attendances.created_at Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
+      var query = "Select *  from (SELECT DISTINCT sewadars.id, sewadars.name, sewadars.gender,sewadars.address, sewadars.batch_no, sewadars.guardian, sewadars.age, sewadars.photo, sewadars.designation_name, sewadars.department_name, sewadars.dob, sewadars.sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, attendances.nominal_roll_id, attendances.sewadar_type, attendances.time_in, attendances.time_out, attendances.sewa_id, attendances.id as s_id FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "'  AND attendances.nominal_roll_id = '" + null + "' AND attendances.sewadar_type = 'permanent' AND attendances.type='home_center'  AND attendances.sewa_id = '" + sewa_id + "' UNION SELECT DISTINCT temp_sewadars.id, temp_sewadars.name, temp_sewadars.gender,temp_sewadars.address, NULL as batch_no, temp_sewadars.guardian, temp_sewadars.age, NULL as photo, NULL as designation_name, NULL as department_name, NULL as dob, NULL as sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, NULL as nominal_roll_id, attendances.sewadar_type, attendances.time_in, attendances.time_out, attendances.sewa_id, attendances.id as s_id FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id = '" + null + "' AND attendances.sewadar_type = 'temporary' AND attendances.type='home_center'  AND attendances.sewa_id = '" + sewa_id + "') att GROUP BY  att_id order by att_created_at Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
+      
       getSewadarData(query);
     };
     setup();
