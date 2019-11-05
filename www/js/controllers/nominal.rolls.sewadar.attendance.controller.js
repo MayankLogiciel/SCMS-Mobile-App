@@ -455,6 +455,7 @@
                         $cordovaSQLite.execute($rootScope.db, insertAttedanceForTempSewadar).then(function(res) {
                               $scope.sewadarAttendance.unshift(TempSewadarData);
                               $scope.TempSewadarData = {};
+                              $scope.sewadarsCount();
                               $cordovaToast.show('Sewadar added', 'short', 'center');
                         }, function(err) {
                               
@@ -553,7 +554,9 @@
                   if($scope.sewadarAttendance.length <= 0) {
                         $cordovaToast.show('There is no sewadar to print', 'short', 'center');
                         return;
-                  }else if(
+                  }
+
+                  if(
                         (!angular.isDefined($scope.nominalRollsData.incharge_id) || 
                         $scope.nominalRollsData.incharge_id == null || 
                         $scope.nominalRollsData.incharge_id == 'null' || 

@@ -17,8 +17,9 @@
       $scope.currentAttendees();
       $scope.in = true;
       $scope.out = false;
+      
     };
-
+        
     $scope.goBack = function () {
       $ionicHistory.goBack();
     };

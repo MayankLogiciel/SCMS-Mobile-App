@@ -55,7 +55,7 @@
     $scope.getTotalAttendeesOnPerticularDate = function (data) {
       var sewa_id = $stateParams.type == 'day' ? 24 : 5;
       angular.forEach(data, function (val) {
-        var query = "SELECT COUNT(DISTINCT sewadar_id) as count FROM attendances WHERE date(attendances.date) = '" + val.date + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type= 'home_center' AND attendances.sewa_id = '" + sewa_id +"'";
+        var query = "SELECT COUNT(DISTINCT sewadar_id) as count FROM attendances WHERE date(attendances.date) = '" + val.date + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type= 'home_center' AND attendances.status<> 'done' AND attendances.sewa_id = '" + sewa_id +"'";
         $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
           for (var i = 0; i < res.rows.length; i++) {
             val.attendeesCount = res.rows.item(i).count;
