@@ -379,7 +379,7 @@
                         return;
                   }else {                        
                         $scope.showAge = false;
-                        if(TempSewadarData.id){
+                        if (TempSewadarData.id && $scope.ButtonValue == 'Update Sewadar'){
                               var updateQuery = "UPDATE temp_sewadars SET name = '"+TempSewadarData.name+"', guardian = '"+TempSewadarData.guardian+"', gender = '"+TempSewadarData.gender+"', address = '"+TempSewadarData.address+"', age = '"+TempSewadarData.age+"' Where id = "+TempSewadarData.id ;
                               $cordovaSQLite.execute($rootScope.db, updateQuery).then(function(res) {
                                     $scope.TempSewadarData = {};
@@ -389,7 +389,7 @@
                               });   
                         }else {
                               $scope.current = $filter('date')(new Date(), 'yyyy-MM-dd h:mm:ss');
-                              if(!angular.isDefined(TempSewadarData.Male) && !angular.isDefined(TempSewadarData.Female)) {
+                              if (!angular.isDefined(TempSewadarData.gender) && !angular.isDefined(TempSewadarData.Male) && !angular.isDefined(TempSewadarData.Female)) {
                                     $scope.showError = true;
                                     return;
                               }
