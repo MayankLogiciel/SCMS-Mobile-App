@@ -44,10 +44,10 @@
                                     </ion-radio>           
                               </a>
                         </div>
-                        <div class="col col-10 tick-mark-attendance">
-                              <!-- <button class="button button-balanced" on-tap="SaveDataToAttandanceTable(sewadar); closePopoverForSewadar();">
-                                    Mark
-                              </button> -->
+                        <div class="col col-10 tick-mark-attendance" ng-if = "!sewadar.batch_no">
+                              <i class="icon ion-ios-checkmark list-mark" on-tap="addTempSewadar(sewadar); closePopoverForSewadar(curDate);"></i>
+                        </div>
+                        <div class="col col-10 tick-mark-attendance" ng-if = "sewadar.batch_no">
                               <i class="icon ion-ios-checkmark list-mark" on-tap="SaveDataToAttandanceTable(sewadar); closePopoverForSewadar(curDate);"></i>
                         </div>
                   </div>

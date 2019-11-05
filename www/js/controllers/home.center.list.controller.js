@@ -178,18 +178,18 @@
       cfpLoadingBar.start();
       switch (type) {
         case 'in':
-          query = "SELECT sewadars.*, attendances.time_in, attendances.time_out, attendances.sewa_id FROM sewadars LEFT JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type='home_center' AND attendances.time_in<>'" + null + "' AND attendances.sewa_id = '" + sewa_id + "' GROUP BY attendances.sewadar_id ORDER BY attendances.created_at Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
-          getSewadarData(query);
-          break;
+            var query = "Select *  from (SELECT DISTINCT sewadars.id, sewadars.name, sewadars.gender,sewadars.address, sewadars.batch_no, sewadars.guardian, sewadars.age, sewadars.photo, sewadars.designation_name, sewadars.department_name, sewadars.dob, sewadars.sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, attendances.nominal_roll_id, attendances.sewadar_type, attendances.time_in, attendances.time_out, attendances.sewa_id, attendances.id as s_id FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "'  AND attendances.nominal_roll_id = '" + null + "' AND attendances.sewadar_type = 'permanent' AND attendances.type='home_center' AND attendances.time_in<>'" + null + "'  AND attendances.sewa_id = '" + sewa_id + "' UNION SELECT DISTINCT temp_sewadars.id, temp_sewadars.name, temp_sewadars.gender,temp_sewadars.address, NULL as batch_no, temp_sewadars.guardian, temp_sewadars.age, NULL as photo, NULL as designation_name, NULL as department_name, NULL as dob, NULL as sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, NULL as nominal_roll_id, attendances.sewadar_type, attendances.time_in, attendances.time_out, attendances.sewa_id, attendances.id as s_id FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id = '" + null + "' AND attendances.sewadar_type = 'temporary' AND attendances.type='home_center' AND attendances.time_in<>'" + null + "'  AND attendances.sewa_id = '" + sewa_id + "') att GROUP BY  att_id order by att_created_at Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
+            getSewadarData(query);
+            break;
           case 'out':
-          query = "SELECT sewadars.*, attendances.time_in, attendances.time_out, attendances.sewa_id FROM sewadars LEFT JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type='home_center' AND attendances.time_out<>'" + null + "' AND attendances.sewa_id = '" + sewa_id + "' GROUP BY attendances.sewadar_id ORDER BY attendances.created_at Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
-          getSewadarData(query);
-          break;
+            var query = "Select *  from (SELECT DISTINCT sewadars.id, sewadars.name, sewadars.gender,sewadars.address, sewadars.batch_no, sewadars.guardian, sewadars.age, sewadars.photo, sewadars.designation_name, sewadars.department_name, sewadars.dob, sewadars.sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, attendances.nominal_roll_id, attendances.sewadar_type, attendances.time_in, attendances.time_out, attendances.sewa_id, attendances.id as s_id FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "'  AND attendances.nominal_roll_id = '" + null + "' AND attendances.sewadar_type = 'permanent' AND attendances.type='home_center' AND attendances.time_out<>'" + null + "'  AND attendances.sewa_id = '" + sewa_id + "' UNION SELECT DISTINCT temp_sewadars.id, temp_sewadars.name, temp_sewadars.gender,temp_sewadars.address, NULL as batch_no, temp_sewadars.guardian, temp_sewadars.age, NULL as photo, NULL as designation_name, NULL as department_name, NULL as dob, NULL as sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, NULL as nominal_roll_id, attendances.sewadar_type, attendances.time_in, attendances.time_out, attendances.sewa_id, attendances.id as s_id FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id = '" + null + "' AND attendances.sewadar_type = 'temporary' AND attendances.type='home_center' AND attendances.time_out<>'" + null + "'  AND attendances.sewa_id = '" + sewa_id + "') att GROUP BY  att_id order by att_created_at Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
+            getSewadarData(query);
+            break;
           case 'both':
-          query = "SELECT sewadars.*, attendances.time_in, attendances.time_out, attendances.sewa_id FROM sewadars LEFT JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type='home_center' AND attendances.time_out<>'" + null + "' AND attendances.time_in<>'" + null + "' AND attendances.sewa_id = '" + sewa_id + "' ORDER BY attendances.created_at Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
-          getSewadarData(query);
-          
-          break;
+            query = "SELECT sewadars.*, attendances.time_in, attendances.time_out, attendances.sewa_id FROM sewadars LEFT JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type='home_center' AND attendances.time_out<>'" + null + "' AND attendances.time_in<>'" + null + "' AND attendances.sewa_id = '" + sewa_id + "' ORDER BY attendances.created_at Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
+            getSewadarData(query);
+            
+            break;
       }
     }
 
@@ -257,6 +257,7 @@
       TempSewadarData.name = angular.uppercase(TempSewadarData.name);
       TempSewadarData.guardian = angular.uppercase(TempSewadarData.guardian);
       TempSewadarData.address = angular.uppercase(TempSewadarData.address);
+
       
       $scope.current = $filter('date')(new Date(), 'yyyy-MM-dd h:mm:ss');
       
@@ -266,12 +267,14 @@
       }
       
       $scope.showAge = false;
-      if (!angular.isDefined(TempSewadarData.Male) && !angular.isDefined(TempSewadarData.Female)) {
+      if (!TempSewadarData.gender && !angular.isDefined(TempSewadarData.Male) && !angular.isDefined(TempSewadarData.Female)) {
         $scope.showError = true;
         return;
       }
-      TempSewadarData.gender = TempSewadarData.Female ? 'F' : 'M';
 
+
+      TempSewadarData.gender = TempSewadarData.gender ? TempSewadarData.gender : (TempSewadarData.Female ? 'F' : 'M');
+     
 
       var CheckQuery = "SELECT * FROM temp_sewadars where name ='" + TempSewadarData.name + "' AND guardian ='" + TempSewadarData.guardian + "' AND gender ='" + TempSewadarData.gender + "' AND address ='" + TempSewadarData.address + "' AND age ='" + TempSewadarData.age + "'";
 
@@ -312,8 +315,8 @@
           $scope.TempSewadarData = {};
           $scope.currentAttendees();
           $scope.totalAttendees();
-          $scope.getListFromSewadarsForAttendance();
           $cordovaToast.show('Entry marked successfully', 'short', 'center');
+          setup();
         }, function (err) {
 
         });       
