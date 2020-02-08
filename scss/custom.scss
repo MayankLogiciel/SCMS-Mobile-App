@@ -3048,7 +3048,7 @@
 	margin-top: 17px;
 	span {
 		margin-right: 10px;
-		font-size:	20px;  
+		font-size:	19px;  
 		font-weight: 500;
 	}
 }
@@ -3074,5 +3074,10 @@
 .floating-btn-for-home-center {
 	#floating-menu {
 		bottom: 75px !important;
+	}
+	@media(max-width: 767px) {
+		#floating-menu {
+			bottom: 95px !important;
+		}
 	}
 }

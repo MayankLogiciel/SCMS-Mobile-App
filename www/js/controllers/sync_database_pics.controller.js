@@ -223,7 +223,7 @@
                         }else {
                               getToken('database');
                               $scope.syncingDatabase('Uploading database (0%)');
-                              $scope.createExportFolder();                       
+                              // $scope.createExportFolder();                       
                         }
                   }else {
                         if($scope.getToken == null || $scope.getToken == '') {

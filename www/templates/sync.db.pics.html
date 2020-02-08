@@ -18,6 +18,13 @@
                 <i class="icon ion-android-upload upload-icon-sync"></i> Sync Now
             </button>
         </div>
+        <div class="sync-pic" ng-if="userData.group_id==5">
+            <!-- <h4 class="profile-pic">Satsang Day attendance to sync: {{attendanceCount}}</h4> -->
+            <h4 class="profile-pic">Sync New Sewadars</h4>
+            <button class="button button-assertive profile-pic-sync-btn" on-tap="uploadDatabase('nominal')">
+                <i class="icon ion-android-upload upload-icon-sync"></i> Sync Now
+            </button>
+        </div>
         <div class="sync-pic" ng-if="userData.group_id==4">
             <!-- <h4 class="profile-pic">Satsang Day attendance to sync: {{attendanceCount}}</h4> -->
             <h4 class="profile-pic">Nominal Rolls to sync: {{nominalCount}}</h4>
