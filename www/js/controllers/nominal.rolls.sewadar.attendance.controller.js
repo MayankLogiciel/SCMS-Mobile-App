@@ -496,12 +496,15 @@
 
 
             $scope.closePopoverForTempSewadar = function() {
-                  $scope.popover.hide(); 
+                  $scope.popover.hide();
+                  angular.element(document.body).removeClass('popover-open');
+                  angular.element(document.body).removeClass('modal-open');
                   $scope.TempSewadarData = {};                 
             };
-            $scope.$on('popover.hidden', function() {
-                  $scope.popover.remove();
-            });
+
+            // $scope.$on('popover.hidden', function() {
+            //       $scope.popover.remove();
+            // });
 
             var setBlankRows = function(callback, incharge, femaleIncharge, maleIncharge) {
                   if( !angular.isDefined($scope.sewadarPrintList) 

@@ -29,7 +29,7 @@
 
                         var getSewadarList = function (str, searchQuery, type) {
                               if(type === 'open-sewadar') {
-                                    if(searchQuery.length > 1) {
+                                    if (searchQuery && searchQuery.length > 1) {
                                           var query = "select * from temp_sewadars where name  LIKE '"+searchQuery+'%'+"' OR name='"+searchQuery+"' order by name LIMIT "+$scope.sewadarLimit;
                                           searchPopoverData(query, str, type);
                                     }

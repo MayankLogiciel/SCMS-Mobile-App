@@ -233,9 +233,15 @@
     };
 
     $scope.closePopoverForTempSewadar = function () {
-      $scope.popover.hide();
-      $scope.TempSewadarData = {};
+      $timeout(function () {
+        $scope.popover.hide();
+        angular.element(document.body).removeClass('popover-open');
+        angular.element(document.body).removeClass('modal-open');
+        $scope.TempSewadarData = {};
+      }, 0);
+
     };
+    
     $scope.$on('popover.hidden', function () {
       $scope.popover.remove();
     });
