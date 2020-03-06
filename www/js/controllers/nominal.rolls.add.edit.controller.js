@@ -220,7 +220,7 @@
                         }else {
                               $scope.vehicleId = $scope.vehicleId;                              
                         }
-                        var upadteQuery = "UPDATE nominal_roles SET name = '"+nominalData.name+"', sewa_id = '"+$scope.sewaId+"', vehicle_id = '"+$scope.vehicleId+"', department_id = '"+$scope.jathaId+"', date_from = '"+sDate+"',date_to = '"+eDate+"',driver_name = '"+nominalData.driver_name+"', vehicle_no = '"+nominalData.vehicle_no+"', contact_no = '"+nominalData.contact_no+"', is_scheduled = "+$scope.schedule+", 'new_sewa' = '"+nominalData.new_sewa+"' WHERE id = '"+$scope.nominal_id+"'";           
+                        var upadteQuery = "UPDATE nominal_roles SET name = '"+nominalData.name+"', sewa_id = '"+$scope.sewaId+"', vehicle_id = '"+$scope.vehicleId+"', department_id = '"+$scope.jathaId+"', date_from = '"+sDate+"',date_to = '"+eDate+"',driver_name = '"+nominalData.driver_name+"', vehicle_no = '"+nominalData.vehicle_no+"', contact_no = '"+(nominalData.contact_no ? nominalData.contact_no : '')+"', is_scheduled = "+$scope.schedule+", 'new_sewa' = '"+nominalData.new_sewa+"' WHERE id = '"+$scope.nominal_id+"'";           
                         $cordovaSQLite.execute($rootScope.db, upadteQuery).then(function(res) {
                               $rootScope.$broadcast('refreshPage');
                               if($scope.nominal_user == 'secretary') {
@@ -245,7 +245,7 @@
                         var incharge_type = null;
                         var incharge_female_id = null;
                         var incharge_female_type = null;
-                        var Insertquery = "INSERT INTO nominal_roles('name', 'sewa_id', 'driver_name', 'contact_no', 'department_id', 'vehicle_id', 'vehicle_no', 'date_from', 'date_to', 'status', 'reference_id', 'created_at', 'updated_at', 'approved_by', 'is_scheduled', 'new_sewa', 'incharge_id', 'incharge_type', 'incharge_female_id', 'incharge_female_type') VALUES ('"+nominalData.name+"', '"+$scope.sewaId+"', '"+nominalData.driver_name+"', '"+nominalData.contact_no+"', '"+$scope.jathaId+"' , "+$scope.vehicleId+", '"+nominalData.vehicle_no+"', '"+sDate+"', '"+eDate+"', '"+status+"', NULL, '"+$scope.current+"', '"+$scope.current+"', "+approved_by+", "+$scope.schedule+", '"+nominalData.new_sewa+"', '"+incharge_id+"', '"+incharge_type+"', '"+incharge_female_id+"', '"+incharge_female_type+"')";
+                        var Insertquery = "INSERT INTO nominal_roles('name', 'sewa_id', 'driver_name', 'contact_no', 'department_id', 'vehicle_id', 'vehicle_no', 'date_from', 'date_to', 'status', 'reference_id', 'created_at', 'updated_at', 'approved_by', 'is_scheduled', 'new_sewa', 'incharge_id', 'incharge_type', 'incharge_female_id', 'incharge_female_type') VALUES ('"+nominalData.name+"', '"+$scope.sewaId+"', '"+nominalData.driver_name+"', '"+(nominalData.contact_no ? nominalData.contact_no : '')+"', '"+$scope.jathaId+"' , "+$scope.vehicleId+", '"+nominalData.vehicle_no+"', '"+sDate+"', '"+eDate+"', '"+status+"', NULL, '"+$scope.current+"', '"+$scope.current+"', "+approved_by+", "+$scope.schedule+", '"+nominalData.new_sewa+"', '"+incharge_id+"', '"+incharge_type+"', '"+incharge_female_id+"', '"+incharge_female_type+"')";
                         $cordovaSQLite.execute($rootScope.db, Insertquery).then(function(res) {
                               $rootScope.$broadcast('refreshPage',{vahicleId: $scope.vehicleId});
                               $state.go("nominal_rolls");

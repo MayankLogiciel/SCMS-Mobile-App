@@ -1592,6 +1592,11 @@
     text-align: right;
     padding-top: 6px;
 }
+.add-sewadar {
+	color: #fff;
+    text-align: right;
+	font-size: 2.5rem;
+}
 .list-mark {
 	color: $assertive;
 	&:before {
@@ -3081,3 +3086,77 @@
 		}
 	}
 }
+.camera-button {
+	position: absolute;
+    bottom: 5px;
+	left: calc(50% + 40px);
+	border-radius: 50%;
+    font-size: 2rem !important;
+}
+.new-sewadar-picture-block {
+	position: relative;
+	text-align: center;
+	img{
+		border-radius: 50%;
+	};
+
+}
+.new-sewadar-save-button {
+	width: 40%;
+}
+.new-sewadar-save-block {
+	text-align: center;
+	margin: 10px 0;
+}
+.new-sewadar-list {
+	.row {
+		padding: 0px;
+		.col {
+			margin-bottom: 15px;
+			.item-input{
+				overflow: visible;
+			};
+			.validation-invalid{
+				position: absolute;
+				bottom: -20px;
+				left: 0;
+			}
+		}
+	}
+}
+.new-sewadar-skills {
+	display: flex;
+	flex-wrap: wrap;
+	// .item-checkbox {
+	// 	display: inline-block;
+	// 	float: left;
+	// }
+}
+.required-field {
+    &:after {
+        content: "*";
+        color: #f00;
+    }
+}
+.sewadar-search-block {
+	position: relative;
+	.search-sewadar {
+		position: absolute;
+		top: -15px;
+		background: #fff;
+		width: calc(100% - 10px);
+		z-index: 10;
+		margin: 0 5px;
+		.search-sewadar-items{
+			border: 1px solid #ddd;
+			width: 100%;
+		}
+	}
+}
+// .checkbox-list {
+// 	background: white;
+// 	border: 2px solid #ddd;
+// 	.item-checkbox{
+// 		border: none;
+// 	}
+// }

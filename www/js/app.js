@@ -12,6 +12,8 @@ angular.module('SCMS_ATTENDANCE', ['ionic', 'ngCordova', 'validation', 'validati
             }
             if(window.StatusBar) {
                   StatusBar.styleDefault();
+                  StatusBar.styleLightContent()
+                  StatusBar.backgroundColorByHexString("#000000");
                   if(ionic.Platform.isIOS()){
                         $rootScope.baseAppDir = cordova.file.dataDirectory;
                   }else {
@@ -306,5 +308,15 @@ angular.module('SCMS_ATTENDANCE', ['ionic', 'ngCordova', 'validation', 'validati
             templateUrl: 'templates/sync.db.pics.html',
             controller: 'SyncDBPicsController'
                        
+      })   
+      
+      .state('new-sewadar', {
+            url: "/new-sewadar?action",
+            params: {
+                  sewadar: null
+            },
+            cache: false,
+            templateUrl: 'templates/new.sewadar.html',
+            controller: 'NewSewadarController'    
       })   
 });

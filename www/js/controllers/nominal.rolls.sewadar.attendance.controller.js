@@ -378,16 +378,18 @@
                   TempSewadarData.address = angular.uppercase(TempSewadarData.address);
                   if(TempSewadarData.age < 5) {
                         $scope.showAge = true;
+                        console.log('< 5')
                         return;
                   }else {                        
                         $scope.showAge = false;
                         if (TempSewadarData.id && $scope.ButtonValue == 'Update Sewadar'){
                               var updateQuery = "UPDATE temp_sewadars SET name = '"+TempSewadarData.name+"', guardian = '"+TempSewadarData.guardian+"', gender = '"+TempSewadarData.gender+"', address = '"+TempSewadarData.address+"', age = '"+TempSewadarData.age+"' Where id = "+TempSewadarData.id ;
                               $cordovaSQLite.execute($rootScope.db, updateQuery).then(function(res) {
+                                    console.log(res)
                                     $scope.TempSewadarData = {};
                                     $cordovaToast.show('Updated successfully', 'short', 'center');
                               }, function(err){
-
+                                    console.log(err)
                               });   
                         }else {
                               $scope.current = $filter('date')(new Date(), 'yyyy-MM-dd h:mm:ss');
@@ -395,15 +397,21 @@
                                     $scope.showError = true;
                                     return;
                               }
-                              var CheckQuery = "SELECT * FROM temp_sewadars where name ='"+TempSewadarData.name+"' AND guardian ='"+TempSewadarData.guardian+"' AND gender ='"+TempSewadarData.gender+"' AND address ='"+TempSewadarData.address+"' AND age ='"+TempSewadarData.age+"'";
+
+                              if (TempSewadarData.id) {
+                                    var CheckQuery = "SELECT * FROM temp_sewadars where id =" + TempSewadarData.id;
+                              } else {
+                                    var CheckQuery = "SELECT * FROM temp_sewadars where name ='"+TempSewadarData.name+"' AND guardian ='"+TempSewadarData.guardian+"' AND gender ='"+TempSewadarData.gender+"' AND address ='"+TempSewadarData.address+"' AND age ='"+TempSewadarData.age+"'";
+                              }
                               $cordovaSQLite.execute($rootScope.db, CheckQuery).then(function(res) {
                                     if(res.rows.length == 0) {
                                           var Insertquery = "INSERT INTO temp_sewadars('name', 'guardian', 'gender', 'address', 'age', 'created_at', 'updated_at') VALUES ('"+TempSewadarData.name+"','"+TempSewadarData.guardian+"','"+TempSewadarData.gender+"', '"+TempSewadarData.address+"', '"+TempSewadarData.age+"','"+$scope.current+"','"+$scope.current+"')";
                                           $cordovaSQLite.execute($rootScope.db, Insertquery).then(function(resTemp) {
-                                                      TempSewadarData.id = resTemp.insertId;
-                                                      addTempSewadarNested(TempSewadarData);
+                                                console.log(resTemp)
+                                                TempSewadarData.id = resTemp.insertId;
+                                                addTempSewadarNested(TempSewadarData);
                                           }, function(err){
-
+                                                console.log(err)
                                           });   
                                     }else {
                                           for(var i= 0; i<res.rows.length; i++) {                                    
@@ -440,12 +448,13 @@
                               if(res.rows.length==0) {
                                     insertAttedanceForTempSewadar = "INSERT INTO attendances ('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id') VALUES ('"+nominalAttendanceDate+"','"+TempSewadarData.id+"','"+$scope.nominalRollsData.sewa_id+"', '"+reference_id+"', '"+type+"', '"+batch_type+"','"+$scope.current+"', '"+$scope.current+"', '"+sewadar_type+"','"+$scope.nominal_id+"')";
                                     $cordovaSQLite.execute($rootScope.db, insertAttedanceForTempSewadar).then(function(res) {
+                                          console.log(res)
                                           $scope.sewadarAttendance.unshift(TempSewadarData);
                                           $scope.TempSewadarData = {};
                                           $scope.sewadarsCount();                            
                                           $cordovaToast.show('Sewadar added', 'short', 'center');  
                                     }, function(err) {
-
+                                          console.log(err)
                                     }); 
 
                               }else{
@@ -455,12 +464,13 @@
                   }else{
                         insertAttedanceForTempSewadar = "INSERT INTO attendances ('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id') VALUES ('"+nominalAttendanceDate+"','"+TempSewadarData.id+"','"+$scope.nominalRollsData.sewa_id+"', '"+reference_id+"', '"+type+"', '"+batch_type+"','"+$scope.current+"', '"+$scope.current+"', '"+sewadar_type+"','"+$scope.nominal_id+"')";
                         $cordovaSQLite.execute($rootScope.db, insertAttedanceForTempSewadar).then(function(res) {
+                              console.log(res)
                               $scope.sewadarAttendance.unshift(TempSewadarData);
                               $scope.TempSewadarData = {};
                               $scope.sewadarsCount();
                               $cordovaToast.show('Sewadar added', 'short', 'center');
                         }, function(err) {
-                              
+                              console.log(err)
                         });                         
                   }
                   $scope.TempSewadarData = {};

@@ -1,6 +1,6 @@
 (function(){
       'use strict';
-      var sewadarDetailModalDiretive = function ($cordovaSQLite, $ionicModal, $cordovaFile, $ionicPopup, $cordovaToast, $stateParams, $timeout, $state, $rootScope, profilePicService, $filter) {          
+      var sewadarDetailModalDiretive = function ($cordovaSQLite, $ionicModal, $cordovaFile, $ionicPopup, $cordovaToast, $stateParams, $timeout, $state, $rootScope, profilePicService, printService) {          
             return {
                   restrict: 'A',
                   controller: ['$scope', '$element', '$attrs', function($scope,$element, $attrs){
@@ -10,7 +10,45 @@
                         $scope.isImageNotAvailable = false;
                         $scope.nominal_id = $stateParams.id; 
                         var isModalOpen = false;
-                     
+                        
+                        $scope.printUser = function(sewadar, isImageNotAvailable) {
+                              console.log('print');
+                              var skillList = [];
+                              var vehicleList = [];
+                              
+                              var skillListQuery = "SELECT name, id FROM skills";
+                              var vehicleListQuery = "SELECT name, id FROM vehicles";
+
+                              $cordovaSQLite.execute($rootScope.db, skillListQuery).then(function(skillRes) {
+                                    $cordovaSQLite.execute($rootScope.db, vehicleListQuery).then(function(vehicleRes) {
+                                          if(vehicleRes.rows.length) {
+                                                for(var i= 0; i<vehicleRes.rows.length; i++) { 
+                                                      vehicleList.push(vehicleRes.rows.item(i));                             
+                                                }
+                                          }
+                                          if(skillRes.rows.length) {
+                                                for(var i= 0; i<skillRes.rows.length; i++) { 
+                                                      skillList.push(skillRes.rows.item(i));                                   
+                                                }
+                                          }
+                                          $timeout(function(){
+                                                printService.printUserForm(sewadar, isImageNotAvailable, skillList, vehicleList);
+                                          }, 500);
+                                    }, function(err) {
+                                          console.log(err);
+                                    });
+                              }, function(err) {
+                                    console.log(err);
+                              });
+
+                        };
+
+                        $scope.editUser = function() {
+                              console.log($scope.sewadar);
+                              $scope.modal.hide();
+                              $state.go('new-sewadar', {sewadar: $scope.sewadar, action: 'edit'});
+                        }
+
                         $scope.openModalForSewadarDetail = function() {
                               $ionicModal.fromTemplateUrl('templates/modals/sewadar.info.modal.html', {
                                     scope: $scope,
@@ -188,27 +226,26 @@
                         };  
                        
                         $scope.selectedSewadarDetail = function(sewadar, str, warn) {
-                              var isStateNameSewadars = $state.current.name;
+
                               $scope.mode = str;
-                              if(str==='viewSewadar') {
-                                    $scope.buttonTextForSewadarModel = 'REMOVE ATTENDANCE';                                    
-                              }else {
-                                    $scope.buttonTextForSewadarModel = 'MARK ATTENDANCE';
-                              }
                               $scope.sewadar = sewadar;
+                              $scope.isPrintAndEditEnable = false;
+                              $scope.isImageNotAvailable = true;
+
+                              $scope.buttonTextForSewadarModel = str === 'viewSewadar' ? 'REMOVE ATTENDANCE' : 'MARK ATTENDANCE';
+                              
                               $cordovaFile.checkFile($scope.imagePath, sewadar.photo).then(function (success) { 
                                     $scope.isImageNotAvailable = false;
-                              }, function (error) {
-                                    $scope.isImageNotAvailable = true;                 
                               });
-                              if(warn=='doNotOpen') {
+                              
+                              if(warn == 'doNotOpen') {
                                     return;
                               }else {
-                                    if(isStateNameSewadars == 'sewadars') {
-                                          $scope.showCameraOption = true;
-                                    }else {
-                                          $scope.showCameraOption = false;
+                                    
+                                    if($state.current.name == 'sewadars') {
+                                          $scope.isPrintAndEditEnable = true;
                                     }
+
                                     $scope.openModalForSewadarDetail();                  
                               }
                         }  
@@ -291,7 +328,7 @@
                   }]  
             }
       }
-      sewadarDetailModalDiretive.$inject = ['$cordovaSQLite', '$ionicModal', '$cordovaFile', '$ionicPopup', '$cordovaToast', '$stateParams', '$timeout', '$state', '$rootScope', 'profilePicService', '$filter'];
+      sewadarDetailModalDiretive.$inject = ['$cordovaSQLite', '$ionicModal', '$cordovaFile', '$ionicPopup', '$cordovaToast', '$stateParams', '$timeout', '$state', '$rootScope', 'profilePicService', 'printService'];
 
       angular
       .module('SCMS_ATTENDANCE')

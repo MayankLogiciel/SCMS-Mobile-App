@@ -9,7 +9,7 @@
 				<div class="modal-image">
 					<img ng-if='sewadar.photo && !isImageNotAvailable' ng-src="{{imagePath + sewadar.photo}}?{{timeStampPhoto || ''}}"/>
 					<img ng-if='!sewadar.photo || isImageNotAvailable' ng-src="{{defaultImage}}" height="300" width="300"/>
-					<button class="button button-assertive ion-camera camera-model-button" on-tap="clickPhoto()" ng-if="showCameraOption"></button>
+					<!-- <button class="button button-assertive ion-camera camera-model-button" on-tap="clickPhoto()" ng-if="showCameraOption"></button> -->
 				</div>		
 				<div class="modal-content-left">					
 					<h4>
@@ -64,8 +64,11 @@
 	</div>
 	<div class="bar bar-footer custom-footer" ng-if="stateName!='satsang_day_attendance'">		
 		<div class="button-bar">
+
 			<a class="button button-assertive" ng-click="closeModalForSewadarDetail(); SaveDataToAttandanceTable(sewadar);closePopoverForSewadar();" ng-if="buttonTextForSewadarModel=='MARK ATTENDANCE'">MARK ENTRY</a>
 			<a class="button button-balanced" ng-click="deleteSewadar(sewadar, type);" ng-if="buttonTextForSewadarModel !='MARK ATTENDANCE' && isCurrentDate && !isAttendaceClosed" >REMOVE ENTRY</a>
+			<a class="button button-assertive" ng-if="isPrintAndEditEnable" ng-click="editUser()">EDIT</a>
+			<a class="button button-balanced" ng-if="isPrintAndEditEnable" ng-click="printUser(sewadar, isImageNotAvailable)">PRINT</a>
 			<a class="button button-stable" ng-click="closeModalForSewadarDetail();">CANCEL</a>
 		</div>	
 	</div>
