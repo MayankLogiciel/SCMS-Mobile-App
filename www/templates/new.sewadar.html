@@ -104,15 +104,16 @@
                                 validator="required"/>
                             </label>
                         </div>
-                        <div class="col">
+                        <div class="col" ng-if="areaList.length">
                             <label class="item item-input item-select">
                                 <div class="input-label required-field">
                                     Area
                                 </div>
                                 <select name="area" ng-model="sewadar.area" required-error-message="Area is required"
+                                ng-options="area.area_name for area in areaList"
                                 validator="required">
-                                    <option selected value="">Select</option>
-                                    <option ng-repeat="area in areaList" value="{{area}}">{{area.area_name}}</option>
+                                    <option value="">Select</option>
+                                    <!-- <option ng-repeat="area in areaList" value="{{area.area_id}}">{{area.area_name}}</option> -->
                                 </select>
                             </label>
                         </div>
@@ -149,11 +150,12 @@
                                 <div class="input-label required-field">
                                     Occupation
                                 </div>
-                                <select name="occupation" ng-model="sewadar.occupation_id"
+                                <select name="occupation" ng-model="sewadar.occupation"
                                     required-error-message="Occupation is required"
+                                    ng-options="occupation.occupation_name for occupation in occupationList"
                                     validator="required">
                                     <option selected value="">Select</option>
-                                    <option ng-repeat="occupation in occupationList" value="{{occupation.occupation_id}}">{{occupation.occupation_name}}</option>
+                                    <!-- <option ng-repeat="occupation in occupationList" ng-value="occupation.occupation_id">{{occupation.occupation_name}}</option> -->
                                 </select>
                             </label>
                         </div>
@@ -299,7 +301,7 @@
                 </div>
 
                 <div ng-hide="!referenceDetailBlock">
-                    <div class="row responsive-sm">
+                    <div class="row responsive-sm" style="position: relative;">
                         <div class="col">
                             <label class="item item-input">
                                 <span class="input-label required-field">Badge Number</span>
@@ -310,7 +312,7 @@
                                 required-error-message="Badge Number is required" validator="required"
                                 ng-model-options="{debounce : 500}"
                                 spellcheck = "false"
-                                ng-change = "search(sewadar.ref_badge_number)"/>
+                                ng-change = "search(sewadar.ref_badge_number, 'batch_no')"/>
                             </label>
                         </div>
                         <div class="col">
@@ -323,37 +325,33 @@
                                 required-error-message="Name is required" validator="required"
                                 ng-model-options="{debounce : 500}"
                                 spellcheck="false"
-                                ng-change="search(sewadar.ref_sewadar_name)"/>
+                                ng-change="search(sewadar.ref_sewadar_name, 'name')"/>
                             </label>
                         </div>
-                    </div>
-                    <div class="row sewadar-search-block">
-                        <div class="search-sewadar">
+                        <div class="sewadar-search-block" ng-class="{'sewadar-search-block-right':batch_search_type == 'name'}">
                             <div class="search-sewadar-items common-search-wrapper">
-                                <a class="item item-avatar listing-attend" ng-repeat="sewadar in searchSewadar" on-tap="selectedSewadardetails(sewadar)">
+                                <a class="item item-avatar" ng-repeat="sewadar in searchSewadar" on-tap="selectedSewadardetails(sewadar)">
                                     <img class="list-avtar" ng-if='sewadar.photo && sewadar.isImageFound' ng-src="{{imagePath + sewadar.photo}}"/>
                                     <img class="list-avtar" ng-if='!sewadar.photo || !sewadar.isImageFound' src="{{defaultImage}}"/>
-                                      <h2 class="row list-avtar-wrapper">  
-                                          <div class="col list-sewadar-content-margin">    		
-                                              <h2 class="list-content-avtar">
-                                                  <span ng-bind="sewadar.name" class="text-transform-capital" ></span>
-                                              </h2>
-                                              <h2 class="list-content-avtar-content">
-                                                <span ng-bind="sewadar.guardian" class="text-transform-capital" ></span>
-                                                <span ng-if="sewadar.batch_no"> | </span>
-                                                <span ng-bind="sewadar.batch_no"></span>
-                                                <span ng-if="sewadar.gender" class = "hide-dept-on-mob"> | </span>
-                                                <br class="display-block-dept-on-mob">
-                                                <span ng-bind="(sewadar.gender=='M')?'Male':'Female'"></span>
-                                                <span ng-if="sewadar.department_name"> | </span>
-                                                <span ng-bind="sewadar.department_name" class="text-transform-capital" ></span>			
+                                    <h2 class="row list-avtar-wrapper">  
+                                        <div class="col list-sewadar-content-margin">    		
+                                            <h2 class="list-content-avtar">
+                                                <span ng-bind="sewadar.name" class="text-transform-capital" ></span>
+                                            </h2>
+                                            <h2 class="list-content-avtar-content">
+                                                <p>
+                                                    <span ng-bind="sewadar.guardian" class="text-transform-capital" ></span>
+                                                    <span ng-if="sewadar.batch_no"> | </span><span ng-bind="sewadar.batch_no"></span>
+                                                    <span ng-if="sewadar.gender" class = "hide-dept-on-mob"> | </span><span ng-bind="(sewadar.gender=='M')?'Male':'Female'"></span>
+                                                </p>
                                             </h2>				
-                                          </div>
-                                      </h2>
+                                        </div>
+                                    </h2>
                                 </a>
                             </div>
                         </div>
                     </div>
+                    <!-- batch_search_type == 'name' 'batch_no'  -->
 
                     <div class="row responsive-sm">
                         <div class="col">
@@ -399,7 +397,7 @@
 
                     <div class="row responsive-sm">
                         <div class="col">
-                            <label class="item item-input">
+                            <label class="item item-input" ng-class="{'disabled-input my-disable':action == 'edit'}">
                                 <span class="input-label required-field">Batch No.</span>
                                 <input type="number" autocomplete="off" ng-model="sewadar.batch_no" name="batch_no" required-error-message="Batch No is required" validator="required"/>
                             </label>
@@ -409,9 +407,12 @@
                                 <div class="input-label required-field">
                                     Department
                                 </div>
-                                <select name="department" ng-model="sewadar.department" required-error-message="Department is required" validator="required">
+                                <select name="department" ng-model="sewadar.department"
+                                required-error-message="Department is required" 
+                                ng-options="department.department_name for department in departmentList"
+                                validator="required">
                                     <option selected value="">Select</option>
-                                    <option ng-repeat="department in departmentList" value="{{department}}">{{department.department_name}}</option>
+                                    <!-- <option ng-repeat="department in departmentList" value="{{department}}">{{department.department_name}}</option> -->
                                 </select>
                             </label>
                         </div>
@@ -448,9 +449,12 @@
                                 <div class="input-label required-field">
                                     Designation
                                 </div>
-                                <select name="designation" ng-model="sewadar.designation" required-error-message="Designation is required" validator="required">
+                                <select name="designation" ng-model="sewadar.designation"
+                                    required-error-message="Designation is required" validator="required"
+                                    ng-options="designation.designation_name for designation in designationList"
+                                >
                                     <option selected value="">Select</option>
-                                    <option ng-repeat="designation in designationList" value="{{designation}}">{{designation.designation_name}}</option>
+                                    <!-- <option ng-repeat="designation in designationList" value="{{designation}}">{{designation.designation_name}}</option> -->
                                 </select>
                             </label>
                         </div>
@@ -468,4 +472,5 @@
             </div>
         </form>
     </ion-content>
+
 </ion-view>

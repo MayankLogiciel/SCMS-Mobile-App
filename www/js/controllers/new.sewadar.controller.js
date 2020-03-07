@@ -3,7 +3,7 @@
     /**
     * NewSewadarController
     **/
-    var NewSewadarController = function ($log, $scope, $rootScope, $ionicHistory, $state, $cordovaSQLite, $filter, $timeout, $cordovaFile, $cordovaToast, cfpLoadingBar, $stateParams) {
+    var NewSewadarController = function ($scope, $rootScope, $ionicHistory, $state, $cordovaSQLite, $filter, $timeout, $cordovaFile, $cordovaToast, cfpLoadingBar, $stateParams, $ionicModal) {
 
         $scope.imagePath = $rootScope.baseAppDir + 'import/sewadar_pics/';
         $scope.imageCachePath = cordova.file.externalCacheDirectory;
@@ -11,36 +11,38 @@
         $scope.searchSewadar = [];
         $scope.isImageNotAvailable = false;
         $scope.isImageInCache = false;
+        $scope.action = $stateParams.action;
+        
+        $scope.skillDetailBlock = false;
+        $scope.vehicleDetailBlock = false;
+        $scope.namdaanDetailBlock = false;
+        $scope.otherDetailBlock = false;
+        $scope.referenceDetailBlock = false;
+        $scope.personalDetailBlock = true;
+        
+        $scope.vehicles = [];
+        $scope.areaList = [];
+        $scope.occupationList = [];
+        $scope.skillList = [];
+        $scope.departmentList = [];
+        $scope.designationList = [];
 
+        $scope.sewadar = {
+            gender: 'M',
+            is_namdaan: 'Y',
+            batch_type: 'T',
+            batch_status: 'active',
+            holds_badge_at: 'Y',
+            can_donate: 'Y'
+        }
+
+        var is_image_updated = false;
         var sewadarLimit = 5;
         $scope.goBack = function () {
             $ionicHistory.goBack();
         }
 
         var initCreateSewadar = function() {
-
-            $scope.skillDetailBlock = false;
-            $scope.vehicleDetailBlock = false;
-            $scope.namdaanDetailBlock = false;
-            $scope.otherDetailBlock = false;
-            $scope.referenceDetailBlock = false;
-            $scope.personalDetailBlock = true;
-            
-            $scope.vehicles = [];
-            $scope.areaList = [];
-            $scope.occupationList = [];
-            $scope.skillList = [];
-            $scope.departmentList = [];
-            $scope.designationList = [];
-            
-            $scope.sewadar = {
-                gender: 'M',
-                is_namdaan: 'Y',
-                batch_type: 'T',
-                batch_status: 'active',
-                holds_badge_at: 'Y',
-                can_donate: 'Y'
-            }
 
             getVehicleList();
             getAreaList();
@@ -50,9 +52,10 @@
             getDesignationList();
 
             if ($stateParams.action == 'edit') {
+                cfpLoadingBar.start();
                 $timeout(function(){
                     setUserDataForEdit($stateParams.sewadar);
-                },500)
+                },2000)
             }
             
         }
@@ -68,7 +71,9 @@
         var setUserDataForEdit = function(sewadar) {
             console.log($stateParams);
 
+            $scope.sewadar.id = sewadar.id ? sewadar.id : '';
             $scope.sewadar.photo = sewadar.photo ? sewadar.photo : '';
+
             checkPhotoAvailable($scope.sewadar.photo);
 
             $scope.sewadar.name = sewadar.name ? sewadar.name : '';
@@ -83,52 +88,77 @@
             $scope.sewadar.holds_badge_at = sewadar.holds_badge_at ? sewadar.holds_badge_at : '';
             $scope.sewadar.blood_group = sewadar.blood_group ? sewadar.blood_group : '';
             $scope.sewadar.can_donate = sewadar.can_donate ? sewadar.can_donate : '';
-            $scope.sewadar.occupation_id = sewadar.occupation_id ? sewadar.occupation_id : '';
             $scope.sewadar.occupation_details = sewadar.occupation_details ? sewadar.occupation_details : '';
-            
-            angular.forEach($scope.areaList, function(val) {
-                if (val.id == sewadar.area_id) {
-                    $scope.sewadar.area = val;
-                    break;
-                }
-            })
-            
-            // $scope.sewadar.land_line = sewadar. ? sewadar. : '';
-            // $scope.sewadar.mobile_number = sewadar. ? sewadar. : '';
             
             $scope.sewadar.is_namdaan = sewadar.is_namdaan ? sewadar.is_namdaan : '';
             $scope.sewadar.date_of_namdaan = sewadar.date_of_namdaan ? new Date(sewadar.date_of_namdaan + 'T00:00:00.000Z') : '';
             $scope.sewadar.place_of_namdaan = sewadar.place_of_namdaan ? sewadar.place_of_namdaan : '';
             
-            setReferedBy($scope.sewadar.refered_by);
-            
             $scope.sewadar.batch_no = sewadar.batch_no ? sewadar.batch_no : '';
             $scope.sewadar.batch_status = sewadar.batch_status ? sewadar.batch_status : '';
             $scope.sewadar.batch_type = sewadar.batch_type ? sewadar.batch_type : '';
             
+            if(sewadar.vendor){
+                var vendor = JSON.parse(sewadar.vendor);
+                $scope.sewadar.mobile_number = (vendor.sewadars_mobile_number && vendor.sewadars_mobile_number.length > 0) ? vendor.sewadars_mobile_number[0] : ''
+                $scope.sewadar.land_line = (vendor.sewadars_land_line_number && vendor.sewadars_land_line_number.length > 0) ? vendor.sewadars_land_line_number[0] : ''
+            }
+            
+            setReferedBy(sewadar.refered_by);
+            
+            angular.forEach($scope.occupationList, function(val) {
+                if (val.occupation_id == sewadar.occupation_id) {
+                    $scope.sewadar.occupation = val;
+                }
+            });
+            angular.forEach($scope.areaList, function(val) {
+                if (val.area_id == sewadar.area_id) {
+                    $scope.sewadar.area = val;
+                }
+            });
             angular.forEach($scope.departmentList, function(val) {
-                if (val.id == sewadar.department_id) {
+                if (val.department_id == sewadar.department_id) {
                     $scope.sewadar.department = val;
-                    break;
+                }
+            })
+            angular.forEach($scope.designationList, function(val) {
+                if (val.designation_id == sewadar.designation_id) {
+                    $scope.sewadar.designation = val;
                 }
             })
 
-            angular.forEach($scope.designationList, function(val) {
-                if (val.id == sewadar.designation_id) {
-                    $scope.sewadar.designation = val;
-                    break;
-                }
-            })
+            // set skills
+            getSelectedSkillsAndVehicle(sewadar.vendor)
 
             console.log($scope.occupationList);
             console.log($scope.areaList);
             console.log($scope.departmentList);
             console.log($scope.designationList);
             console.log($scope.sewadar);
+
+            cfpLoadingBar.complete();
+        }
+
+        var getSelectedSkillsAndVehicle = function(selectedData) {
+            var vendor = JSON.parse(selectedData);
+            angular.forEach($scope.skillList, function(listObj) {
+                angular.forEach(vendor.sewadars_skills, function(selected_id) {
+                    if(selected_id == listObj.skill_id) {
+                        listObj.skill_selected = true;
+                    }
+                })
+            })
+            angular.forEach($scope.vehicles, function(listObj) {
+                angular.forEach(vendor.sewadars_vehicle_ids, function(selected_id) {
+                    if(selected_id == listObj.vehicle_id) {
+                        listObj.vehicle_selected = true;
+                    }
+                })
+            })
         }
 
         var setReferedBy = function (referedBy) {
-            // TODO
+
             var query = "select * from sewadars WHERE id='"+referedBy+"' LIMIT 1";
             $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
                 if(res.rows.length) {
@@ -138,6 +168,8 @@
                     $scope.sewadar.ref_department = selectedSewadar.department_name;
                     $scope.sewadar.refered_by = selectedSewadar.id;
                 }
+            }, function(err) {
+                console.log(err);
             });
                 
         }
@@ -209,7 +241,6 @@
         }
 
         $scope.toggleBlock = function(block) {
-            console.log(block)
             $timeout(function(){
                 switch (block) {
                     case 1:
@@ -265,9 +296,55 @@
         
         $scope.saveSewadar = function () {
             console.log($scope.sewadar);
-            console.log($scope.vehicles);
             if ($stateParams.action == 'edit') {
                 console.log($scope.sewadar);
+                var sewadarUpdateQuery = "UPDATE sewadars SET "
+                + "name = '" + ($scope.sewadar.name ? $scope.sewadar.name : '') + "', "
+                + "gender = '" + ($scope.sewadar.gender ? $scope.sewadar.gender : '') + "', "
+                + "age = '" + ($scope.sewadar.age ? $scope.sewadar.age : '') + "', "
+                + "dob = '" + $scope.sewadar.dob.toISOString().split('T')[0] + "', "
+                + "address = '" + ($scope.sewadar.address ? $scope.sewadar.address : '') + "', "
+                + "pin_code = '" + ($scope.sewadar.pin_code ? $scope.sewadar.pin_code : '') + "', "
+                + "area_id = '" + (($scope.sewadar.area && $scope.sewadar.area.area_id) ? $scope.sewadar.area.area_id : '') + "', "
+                + "area_name = '" + (($scope.sewadar.area && $scope.sewadar.area.area_name) ? $scope.sewadar.area.area_name : '') + "', "
+                + "occupation_id = '" + (($scope.sewadar.occupation && $scope.sewadar.occupation.occupation_id) ? $scope.sewadar.occupation.occupation_id : '') + "', "
+                + "occupation_details = '" + ($scope.sewadar.occupation_details ? $scope.sewadar.occupation_details : '') + "', "
+                + "qualification = '" + ($scope.sewadar.qualification ? $scope.sewadar.qualification : '') + "', "
+                + "marital_status = '" + ($scope.sewadar.marital_status ? $scope.sewadar.marital_status : '') + "', "
+                + "guardian = '" + ($scope.sewadar.guardian ? $scope.sewadar.guardian : '') + "', "
+                + "holds_badge_at = '" + ($scope.sewadar.holds_badge_at ? $scope.sewadar.holds_badge_at : '') + "', "
+                + "blood_group = '" + ($scope.sewadar.blood_group ? $scope.sewadar.blood_group : '') + "', "
+                + "can_donate = '" + ($scope.sewadar.can_donate ? $scope.sewadar.can_donate : '') + "', "
+                + "is_namdaan = '" + ($scope.sewadar.is_namdaan ? $scope.sewadar.is_namdaan : '') + "', "
+                + "date_of_namdaan = '" + $scope.sewadar.date_of_namdaan.toISOString().split('T')[0] + "', "
+                + "place_of_namdaan = '" + ($scope.sewadar.place_of_namdaan ? $scope.sewadar.place_of_namdaan : '') + "', "
+                + "refered_by = '" + ($scope.sewadar.refered_by ? $scope.sewadar.refered_by : '') + "', "
+                + "department_id = '" + (($scope.sewadar.department && $scope.sewadar.department.department_id) ? $scope.sewadar.department.department_id : '') + "', "
+                + "department_name = '" + (($scope.sewadar.department && $scope.sewadar.department.department_name) ? $scope.sewadar.department.department_name : '') + "', "
+                + "batch_type = '" + ($scope.sewadar.batch_type ? $scope.sewadar.batch_type : '') + "', "
+                + "batch_status = '" + ($scope.sewadar.batch_status ? $scope.sewadar.batch_status : '') + "', "
+                + "designation_id = '" + (($scope.sewadar.designation && $scope.sewadar.designation.designation_id) ? $scope.sewadar.designation.designation_id : '') + "', "
+                + "designation_name = '" + (($scope.sewadar.designation && $scope.sewadar.designation.designation_name) ? $scope.sewadar.designation.designation_name : '') + "', "
+                // + "batch_no = '" + ($scope.sewadar.batch_no ? $scope.sewadar.batch_no : '') + "', "
+                + "created_at = '" + setDateFormat(new Date().toISOString()) + "', "
+                + "updated_at = '" + setDateFormat(new Date().toISOString()) + "', "
+                + "vendor = '" + setVendor() + "' "
+                // + "is_modify = '" + 1 + "', "
+                + "WHERE id='" + $scope.sewadar.id + "'";
+
+                console.log(sewadarUpdateQuery);
+
+                $cordovaSQLite.execute($rootScope.db, sewadarUpdateQuery).then(function (res) {
+                    console.log(res)
+                    if (is_image_updated) {
+                        copyNewPhoto(cordova.file.externalCacheDirectory, $scope.sewadar.photo, $scope.imagePath, $scope.sewadar.photo, $scope.sewadar.batch_no);
+                    }
+                    $ionicHistory.goBack();
+                    $cordovaToast.show('Sewadar Updated.', 'short', 'center');
+                },function(err) {
+                    $cordovaToast.show(err.message, 'short', 'center');
+                });
+
             } else {
 
                 if ($scope.sewadar.photo && $scope.sewadar.photo != null && $scope.sewadar.photo != '' ) {
@@ -292,17 +369,17 @@
                                 var Insertquery = "INSERT INTO sewadars("
                                 + "'id', 'name', 'gender', 'age', 'dob', 'address', 'pin_code', 'area_id', 'area_name', 'occupation_id', 'occupation_details', 'qualification', 'marital_status', 'guardian',"
                                 + "'holds_badge_at', 'blood_group', 'can_donate', 'is_namdaan', 'date_of_namdaan', 'place_of_namdaan', 'refered_by', 'department_id', 'department_name', 'batch_type', 'batch_status',"
-                                + "'designation_id', 'designation_name', 'batch_no', 'created_at', 'updated_at', 'vendor', 'server_id')"
+                                + "'designation_id', 'designation_name', 'batch_no', 'created_at', 'updated_at', 'vendor', 'server_id')"//, 'is_modify'
                                 + " VALUES ('" + sewadar_id + "','"
                                 + ($scope.sewadar.name ? $scope.sewadar.name : '') + "','"
                                 + ($scope.sewadar.gender ? $scope.sewadar.gender : '') + "','" 
                                 + ($scope.sewadar.age ? $scope.sewadar.age : '') + "', '" 
-                                + $scope.sewadar.dob.split('T')[0] + "', '" 
+                                + ($scope.sewadar.dob ? $scope.sewadar.dob.toISOString().split('T')[0] : '') + "', '" 
                                 + ($scope.sewadar.address ? $scope.sewadar.address : '') + "', '"
                                 + ($scope.sewadar.pin_code ? $scope.sewadar.pin_code : '') + "','" 
-                                + JSON.parse($scope.sewadar.area).area_id + "','" 
-                                + JSON.parse($scope.sewadar.area).area_name + "', '" 
-                                + ($scope.sewadar.occupation_id ? $scope.sewadar.occupation_id : '') + "','"
+                                + (($scope.sewadar.area && $scope.sewadar.area.area_id) ? $scope.sewadar.area.area_id : '') + "','" 
+                                + (($scope.sewadar.area && $scope.sewadar.area.area_name) ? $scope.sewadar.area.area_name : '') + "', '" 
+                                + (($scope.sewadar.occupation && $scope.sewadar.occupation.occupation_id) ? $scope.sewadar.occupation.occupation_id : '') + "','"
                                 + ($scope.sewadar.occupation_details ? $scope.sewadar.occupation_details : '') + "','" 
                                 + ($scope.sewadar.qualification ? $scope.sewadar.qualification : '') + "','" 
                                 + ($scope.sewadar.marital_status ? $scope.sewadar.marital_status : '') + "','" 
@@ -311,24 +388,39 @@
                                 + ($scope.sewadar.blood_group ? $scope.sewadar.blood_group : '') + "','" 
                                 + ($scope.sewadar.can_donate ? $scope.sewadar.can_donate : '') + "','" 
                                 + ($scope.sewadar.is_namdaan ? $scope.sewadar.is_namdaan : '') + "','" 
-                                + $scope.sewadar.date_of_namdaan.split('T')[0] + "','"
+                                + ($scope.sewadar.date_of_namdaan ? $scope.sewadar.date_of_namdaan.toISOString().split('T')[0] : '') + "','"
                                 + ($scope.sewadar.place_of_namdaan ? $scope.sewadar.place_of_namdaan : '') + "','" 
                                 + ($scope.sewadar.refered_by ? $scope.sewadar.refered_by : '') + "','" 
-                                + ($scope.sewadar.department ? JSON.parse($scope.sewadar.department).department_id : '') + "','" 
-                                + ($scope.sewadar.department ? JSON.parse($scope.sewadar.department).department_name : '') + "','"
+                                + (($scope.sewadar.department && $scope.sewadar.department.department_id) ? $scope.sewadar.department.department_id : '') + "','" 
+                                + (($scope.sewadar.department && $scope.sewadar.department.department_name) ? $scope.sewadar.department.department_name : '') + "','"
                                 + ($scope.sewadar.batch_type ? $scope.sewadar.batch_type : '') + "','" 
                                 + ($scope.sewadar.batch_status ? $scope.sewadar.batch_status : '') + "','" 
-                                + ($scope.sewadar.designation ? JSON.parse($scope.sewadar.designation).designation_id : '') + "','"
-                                + ($scope.sewadar.designation ? JSON.parse($scope.sewadar.designation).designation_name : '') + "','"
+                                + (($scope.sewadar.designation && $scope.sewadar.designation.designation_id) ? $scope.sewadar.designation.designation_id : '') + "','" 
+                                + (($scope.sewadar.designation && $scope.sewadar.designation.designation_name) ? $scope.sewadar.designation.designation_name : '') + "','"
                                 + ($scope.sewadar.batch_no ? $scope.sewadar.batch_no : '') + "','"
                                 + setDateFormat(new Date().toISOString()) + "','"
                                 + setDateFormat(new Date().toISOString()) + "','"
-                                + setVendor() + "','" + 0 + "')";
+                                + setVendor() + "','" + 0 + "')";//"','" + 1 +
                                 console.log(Insertquery);
+
                                 $cordovaSQLite.execute($rootScope.db, Insertquery).then(function (res) {
                                     console.log(res)
                                     copyNewPhoto(cordova.file.externalCacheDirectory, $scope.sewadar.photo, $scope.imagePath, $scope.sewadar.photo, $scope.sewadar.batch_no);
+                                    
+                                    
+                                    $ionicHistory.goBack();
                                     $cordovaToast.show('Sewadar created.', 'short', 'center');
+                                    // $ionicModal.fromTemplateUrl('templates/modals/sewadar.info.modal.html', {
+                                    //     scope: $scope,
+                                    //     animation: 'slide-in-up',
+                                    //     backdropClickToClose: false
+                                    // }).then(function(modal) {
+                                    //     $scope.modal = modal;
+                                    //     $scope.modal.show();
+                                    //     isModalOpen = true;
+                                    // },function(err) {
+                                    //     console.log(err)
+                                    // });
                                 },function(err) {
                                     $cordovaToast.show(err.message, 'short', 'center');
                                 });
@@ -398,6 +490,7 @@
                     var photoLink = imageData.split('/');
                     $scope.sewadar.photo = photoLink[photoLink.length-1];
                     $scope.isImageInCache = true;
+                    is_image_updated = true;
                     checkPhotoAvailable($scope.sewadar.photo)
 				});
 			},0)
@@ -419,14 +512,17 @@
             console.log($scope.sewadar);
         }
 
-        $scope.search = function(searchQuery) {
+        $scope.search = function(searchQuery, type) {
             console.log(searchQuery)
+            
+            $scope.batch_search_type = type;
             $scope.str = searchQuery;
             getSewadarList(searchQuery);                                              
         };
 
         var getSewadarList = function (searchQuery) {
             
+            $scope.searchSewadar = [];
             if (searchQuery != '') {
                 cfpLoadingBar.start();
             } else {
@@ -453,7 +549,7 @@
 
             } else {
                 cfpLoadingBar.complete();
-                $cordovaToast.show('Please enter atleast 2 characters', 'short', 'center');
+                $cordovaToast.show('Please enter atleast 1 characters', 'short', 'center');
             }
         }
 
@@ -495,7 +591,7 @@
         initCreateSewadar();
     };
   
-    NewSewadarController.$inject = ['$log', '$scope', '$rootScope', '$ionicHistory', '$state', '$cordovaSQLite', '$filter', '$timeout', '$cordovaFile', '$cordovaToast', 'cfpLoadingBar', '$stateParams'];
+    NewSewadarController.$inject = ['$scope', '$rootScope', '$ionicHistory', '$state', '$cordovaSQLite', '$filter', '$timeout', '$cordovaFile', '$cordovaToast', 'cfpLoadingBar', '$stateParams', '$ionicModal'];
   
     angular
       .module('SCMS_ATTENDANCE')

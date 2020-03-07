@@ -12,34 +12,91 @@
                         var isModalOpen = false;
                         
                         $scope.printUser = function(sewadar, isImageNotAvailable) {
-                              console.log('print');
                               var skillList = [];
                               var vehicleList = [];
+                              var occupationList = [];
+                              var vendor;
                               
+                              if(sewadar.vendor){
+                                    vendor = JSON.parse(sewadar.vendor);
+                              }
+
                               var skillListQuery = "SELECT name, id FROM skills";
                               var vehicleListQuery = "SELECT name, id FROM vehicles";
+                              var occupationListQuery = "SELECT name, id FROM occupations";
+                              var referedByQuery = "select * from sewadars WHERE id='" + sewadar.refered_by + "' LIMIT 1";
 
+                              
                               $cordovaSQLite.execute($rootScope.db, skillListQuery).then(function(skillRes) {
-                                    $cordovaSQLite.execute($rootScope.db, vehicleListQuery).then(function(vehicleRes) {
-                                          if(vehicleRes.rows.length) {
-                                                for(var i= 0; i<vehicleRes.rows.length; i++) { 
-                                                      vehicleList.push(vehicleRes.rows.item(i));                             
+                                    if(skillRes.rows.length) {
+                                          for(var i= 0; i<skillRes.rows.length; i++) { 
+                                                skillList.push(skillRes.rows.item(i)); 
+                                                if(i == skillRes.rows.length-1) {
+                                                      console.log(skillList);
+                                                      angular.forEach(skillList, function(listObj) {
+                                                            angular.forEach(vendor.sewadars_skills, function(selected_id) {
+                                                                  if(selected_id == listObj.id) {
+                                                                        listObj.selected = true;
+                                                                  }
+                                                            })
+                                                      })
                                                 }
                                           }
-                                          if(skillRes.rows.length) {
-                                                for(var i= 0; i<skillRes.rows.length; i++) { 
-                                                      skillList.push(skillRes.rows.item(i));                                   
-                                                }
-                                          }
-                                          $timeout(function(){
-                                                printService.printUserForm(sewadar, isImageNotAvailable, skillList, vehicleList);
-                                          }, 500);
-                                    }, function(err) {
-                                          console.log(err);
-                                    });
+                                    }
                               }, function(err) {
                                     console.log(err);
                               });
+
+                              $cordovaSQLite.execute($rootScope.db, vehicleListQuery).then(function(vehicleRes) {
+                                    if(vehicleRes.rows.length) {
+                                          for(var i= 0; i<vehicleRes.rows.length; i++) { 
+                                                vehicleList.push(vehicleRes.rows.item(i));
+                                                if(i == vehicleRes.rows.length-1) {
+                                                      console.log(vehicleRes);
+                                                      angular.forEach(vehicleList, function(listObj) {
+                                                            angular.forEach(vendor.sewadars_vehicle_ids, function(selected_id) {
+                                                                  if(selected_id == listObj.id) {
+                                                                        listObj.selected = true;
+                                                                  }
+                                                            })
+                                                      })
+                                                }
+                                          }
+                                    }
+                                    
+                              }, function(err) {
+                                    console.log(err);
+                              });
+
+                              $cordovaSQLite.execute($rootScope.db, occupationListQuery).then(function(occupationRes) {
+                                    if(occupationRes.rows.length) {
+                                          for(var i= 0; i<occupationRes.rows.length; i++) {
+                                                if(occupationRes.rows.item(i).id == sewadar.occupation_id){
+                                                      sewadar.occupation_name = occupationRes.rows.item(i).name;
+                                                }
+                                          }
+                                    }
+                              }, function(err) {
+                                    console.log(err);
+                              });
+
+                              $cordovaSQLite.execute($rootScope.db, referedByQuery).then(function(res) {
+                                    if(res.rows.length) {
+                                          var selectedSewadar = res.rows.item(0);
+                                          sewadar.ref_sewadar_name = selectedSewadar.name;
+                                          sewadar.ref_badge_number = selectedSewadar.batch_no;
+                                          sewadar.ref_department = selectedSewadar.department_name;
+                                    }
+                              }, function(err) {
+                                    console.log(err);
+                              });
+
+                              sewadar.mobile_number = (vendor.sewadars_mobile_number && vendor.sewadars_mobile_number.length > 0) ? vendor.sewadars_mobile_number[0] : ''
+                              sewadar.land_line = (vendor.sewadars_land_line_number && vendor.sewadars_land_line_number.length > 0) ? vendor.sewadars_land_line_number[0] : ''
+                              
+                              $timeout(function(){
+                                    printService.printUserForm(sewadar, isImageNotAvailable, skillList, vehicleList);
+                              }, 1500);
 
                         };
 

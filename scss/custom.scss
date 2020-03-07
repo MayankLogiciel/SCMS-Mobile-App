@@ -3138,18 +3138,39 @@
         color: #f00;
     }
 }
+.sewadar-search-block-right {
+	right: 0;
+}
 .sewadar-search-block {
-	position: relative;
-	.search-sewadar {
-		position: absolute;
-		top: -15px;
-		background: #fff;
-		width: calc(100% - 10px);
-		z-index: 10;
-		margin: 0 5px;
-		.search-sewadar-items{
-			border: 1px solid #ddd;
-			width: 100%;
+	position: absolute;
+    top: 50px;
+	z-index: 10;
+    width: 50%;
+	.search-sewadar-items{
+		width: 100%;
+	}
+	.item-avatar {
+		padding-left: 80px;
+		min-height: 90px;
+		img {
+			max-width: 50px !important;
+    		max-height: 50px !important;
+		}
+		.list-sewadar-content-margin {
+			margin-bottom: 0;
+			.list-content-avtar {
+				margin-top: 0 !important;
+				font-size: 12px !important;
+				margin-bottom: 4px !important;
+				span {
+					font-size: 16px;
+				}
+			}
+			.list-content-avtar-content {
+				span {
+					font-size: 14px;;
+				}
+			}
 		}
 	}
 }

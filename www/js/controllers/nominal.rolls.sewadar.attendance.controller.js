@@ -317,19 +317,23 @@
                               if(res.rows.length==0) {
                                     Insertquery = "INSERT INTO attendances('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id') VALUES ('"+date+"','"+sewadar.id+"','"+$scope.nominalRollsData.sewa_id+"', '"+reference_id+"', '"+type+"', '"+batch_type+"','"+$scope.current+"','"+$scope.current+"', '"+sewadar_type+"','"+$scope.nominal_id+"')";
                                     $cordovaSQLite.execute($rootScope.db, Insertquery).then(function(res) {
+                                          console.log(res)
                                           $scope.sewadarAttendance.unshift(sewadar);                              
                                           $scope.sewadarsCount();
                                           $cordovaToast.show('Sewadar addedd', 'short', 'center');
                                     }, function(err) {                  
+                                          console.log(err)
                                     });                           
                               } else {
                                     for(var i= 0; i<res.rows.length; i++) { 
                                           if(res.rows.item(i).status == 'deleted') {
                                                 var UpdateQuery = "Update attendances set status = 'active' where sewadar_id ='"+res.rows.item(i).sewadar_id+"'";
                                                 $cordovaSQLite.execute($rootScope.db, UpdateQuery).then(function(res) {
+                                                      console.log(res)
                                                       $scope.sewadarAttendance.unshift(sewadar);                              
                                                       $cordovaToast.show('Sewadar added', 'short', 'center');
-                                                }, function(err) {                  
+                                                }, function(err) {
+                                                      console.log(err)
                                                 });   
                                           } else {
                                                 $cordovaToast.show('Sewadar already exist', 'short', 'center');                                                
