@@ -67,6 +67,25 @@
                 $scope.isImageNotAvailable = true;
             });
         }
+
+        var decodeVandor = function(data) {
+            if(data){
+                var vendor = JSON.parse(data);
+
+                $scope.sewadar.mobile_number = (
+                    vendor.sewadars_mobile_number
+                    && vendor.sewadars_mobile_number.length > 0
+                    && !isNaN(vendor.sewadars_mobile_number[0])) 
+                    ? parseInt(vendor.sewadars_mobile_number[0]) : null;
+
+                $scope.sewadar.land_line = (
+                    vendor.sewadars_land_line_number
+                    && vendor.sewadars_land_line_number.length > 0
+                    && !isNaN(vendor.sewadars_land_line_number[0])) 
+                    ? parseInt(vendor.sewadars_land_line_number[0]) : null;
+
+            }
+        }
         
         var setUserDataForEdit = function(sewadar) {
             console.log($stateParams);
@@ -98,11 +117,7 @@
             $scope.sewadar.batch_status = sewadar.batch_status ? sewadar.batch_status : '';
             $scope.sewadar.batch_type = sewadar.batch_type ? sewadar.batch_type : '';
             
-            if(sewadar.vendor){
-                var vendor = JSON.parse(sewadar.vendor);
-                $scope.sewadar.mobile_number = (vendor.sewadars_mobile_number && vendor.sewadars_mobile_number.length > 0) ? vendor.sewadars_mobile_number[0] : ''
-                $scope.sewadar.land_line = (vendor.sewadars_land_line_number && vendor.sewadars_land_line_number.length > 0) ? vendor.sewadars_land_line_number[0] : ''
-            }
+            decodeVandor(sewadar.vendor);
             
             setReferedBy(sewadar.refered_by);
             
@@ -287,8 +302,8 @@
         
         var setVendor = function() {
             return JSON.stringify({
-                sewadars_mobile_number: [($scope.sewadar.mobile_number ? $scope.sewadar.mobile_number : '')],
-                sewadars_land_line_number: [($scope.sewadar.land_line ? $scope.sewadar.land_line : '')],
+                sewadars_mobile_number: [($scope.sewadar.mobile_number ? $scope.sewadar.mobile_number : null)],
+                sewadars_land_line_number: [($scope.sewadar.land_line ? $scope.sewadar.land_line : null)],
                 sewadars_skills: getSelectedSkills(),
                 sewadars_vehicle_ids: getSelectedVehicles()
             })
@@ -328,8 +343,8 @@
                 // + "batch_no = '" + ($scope.sewadar.batch_no ? $scope.sewadar.batch_no : '') + "', "
                 + "created_at = '" + setDateFormat(new Date().toISOString()) + "', "
                 + "updated_at = '" + setDateFormat(new Date().toISOString()) + "', "
-                + "vendor = '" + setVendor() + "' "
-                // + "is_modify = '" + 1 + "', "
+                // + "vendor = '" + setVendor() + "' "
+                + "is_modify = '" + 1 + "' "
                 + "WHERE id='" + $scope.sewadar.id + "'";
 
                 console.log(sewadarUpdateQuery);
@@ -369,7 +384,7 @@
                                 var Insertquery = "INSERT INTO sewadars("
                                 + "'id', 'name', 'gender', 'age', 'dob', 'address', 'pin_code', 'area_id', 'area_name', 'occupation_id', 'occupation_details', 'qualification', 'marital_status', 'guardian',"
                                 + "'holds_badge_at', 'blood_group', 'can_donate', 'is_namdaan', 'date_of_namdaan', 'place_of_namdaan', 'refered_by', 'department_id', 'department_name', 'batch_type', 'batch_status',"
-                                + "'designation_id', 'designation_name', 'batch_no', 'created_at', 'updated_at', 'vendor', 'server_id')"//, 'is_modify'
+                                + "'designation_id', 'designation_name', 'batch_no', 'created_at', 'updated_at', 'vendor', 'server_id', 'is_modify')"//
                                 + " VALUES ('" + sewadar_id + "','"
                                 + ($scope.sewadar.name ? $scope.sewadar.name : '') + "','"
                                 + ($scope.sewadar.gender ? $scope.sewadar.gender : '') + "','" 
@@ -400,7 +415,7 @@
                                 + ($scope.sewadar.batch_no ? $scope.sewadar.batch_no : '') + "','"
                                 + setDateFormat(new Date().toISOString()) + "','"
                                 + setDateFormat(new Date().toISOString()) + "','"
-                                + setVendor() + "','" + 0 + "')";//"','" + 1 +
+                                + setVendor() + "','" + 0 + "','" + 1 + "')";
                                 console.log(Insertquery);
 
                                 $cordovaSQLite.execute($rootScope.db, Insertquery).then(function (res) {

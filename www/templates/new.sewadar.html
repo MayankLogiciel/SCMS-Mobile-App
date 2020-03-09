@@ -121,19 +121,19 @@
 
                     <div class="row responsive-sm">
                         <div class="col">
-                            <label class="item item-input">
+                            <label class="item item-input" ng-class="{'disabled-input my-disable':action == 'edit'}">
                                 <span class="input-label required-field">Mobile No</span>
                                 <input
                                     type="number"
                                     autocomplete="off"
                                     ng-model="sewadar.mobile_number"
                                     name="mobile_number"
-                                    required-error-message="Mobile No is required"
+                                    required-error-message="Atleast 10 digit required"
                                     validator="required"/>
                             </label>
                         </div>
                         <div class="col">
-                            <label class="item item-input">
+                            <label class="item item-input" ng-class="{'disabled-input my-disable':action == 'edit'}">
                                 <span class="input-label">Landline No</span>
                                 <input
                                     type="number"
@@ -370,7 +370,7 @@
                 </div>
 
                 <div ng-hide="!skillDetailBlock">
-                    <div class="new-sewadar-skills checkbox-list">
+                    <div class="new-sewadar-skills checkbox-list" ng-class="{'disabled-input my-disable':action == 'edit'}">
                         <ion-checkbox ng-repeat="skill in skillList" ng-model="skill.skill_selected">{{skill.skill_name}}</ion-checkbox>
                     </div>
                 </div>
@@ -382,7 +382,7 @@
                 </div>
 
                 <div ng-hide="!vehicleDetailBlock">
-                    <div class="new-sewadar-skills checkbox-list">
+                    <div class="new-sewadar-skills checkbox-list" ng-class="{'disabled-input my-disable':action == 'edit'}">
                         <ion-checkbox ng-repeat="vahicle in vehicles" ng-model="vahicle.vehicle_selected">{{vahicle.vehicle_name}}</ion-checkbox>
                     </div>
                 </div>
