@@ -21,8 +21,15 @@ angular.module('SCMS_ATTENDANCE')
             }; 
 
             $scope.closeModalForNominalDetail = function() {
-                $scope.modal.hide();
+                $timeout(function () {
+                    $scope.modal.hide();
+                    angular.element(document.body).removeClass('modal-open');
+                }, 0);
             };   
+
+            $scope.$on('$destroy', function () {
+                $scope.modal.remove();
+            });
 
 
             var getFemaleIncharge = function() {

@@ -9888,6 +9888,12 @@ a.button {
     .satsang-day-view-btn {
       margin-top: -213px !important; } }
 
+.home-day-view-btn {
+  margin-top: -178px !important; }
+  @media (max-width: 480px) {
+    .home-day-view-btn {
+      margin-top: -178px !important; } }
+
 .satsang-date-today {
   font-size: 25px !important; }
   @media (max-width: 480px) {
@@ -9949,7 +9955,9 @@ a.button {
   right: 0;
   top: 0;
   padding-top: 6px;
-  padding-bottom: 5px; }
+  padding-bottom: 5px;
+  z-index: 9999;
+  margin-top: 9px; }
   @media (max-width: 480px) {
     .swap-btn {
       right: 0 !important;
@@ -10034,7 +10042,7 @@ a.button {
         width: 70%;
         margin: auto; } }
   .scms-home .button.btn-padding.col {
-    height: 180px;
+    height: 220px;
     margin: 15px;
     font-size: 25px;
     font-weight: normal; }
@@ -11832,6 +11840,8 @@ a.button {
 @media (min-width: 480px) {
   .floating-btn-for-list {
     display: none; }
+  .floating-btn-for-list-nominal {
+    display: block; }
   .nominal-list-on-tab {
     padding: 0 5px !important; }
   .nominal-list-on-mob {
@@ -12172,6 +12182,55 @@ a.button {
 @media (max-width: 480px) {
   .import-db-btn-line {
     line-height: 19px !important; } }
+
+.search-wrapper-home {
+  top: 62px; }
+  .search-wrapper-home .row {
+    padding: 0; }
+  .search-wrapper-home .col {
+    padding: 0; }
+
+.checkbox-dimension-time {
+  padding: 20px !important;
+  font-size: 25px; }
+
+.search-wrapper-home-center {
+  top: 120px; }
+  .search-wrapper-home-center .col {
+    padding: 0;
+    padding-right: 5px; }
+  .search-wrapper-home-center .swap-btn {
+    position: relative; }
+
+.male-female-count {
+  margin-top: 17px; }
+  .male-female-count span {
+    margin-right: 10px;
+    font-size: 19px;
+    font-weight: 500; }
+
+.home-center-btn-wrap {
+  height: 250px !important; }
+
+.common-search-wrapper-home {
+  top: 195px; }
+
+.content-with-footer {
+  bottom: 65px; }
+
+.align-self-center {
+  align-self: center; }
+  .align-self-center .list-trash:before {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: 35px; }
+
+.floating-btn-for-home-center #floating-menu {
+  bottom: 75px !important; }
+
+@media (max-width: 767px) {
+  .floating-btn-for-home-center #floating-menu {
+    bottom: 95px !important; } }
 
 #loading-bar, #loading-bar-spinner {
   pointer-events: none;

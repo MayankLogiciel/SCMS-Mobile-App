@@ -79,14 +79,16 @@
                         $scope.closeModalForSewadarDetail = function() {
                               setFocus();
                               if(isModalOpen) {
-                                    $scope.modal.hide();
+                                    $timeout(function () {
+                                          $scope.modal.hide();
+                                          angular.element(document.body).removeClass('modal-open');
+                                    }, 0);
                               }
                               if($scope.popover_open === 'popover-open') {
                                     $scope.closePopoverForSewadar();
                               }
                               isModalOpen = false;
                         };
-
                         $scope.$on('modal.hidden', function() {
                               $scope.modal.remove();
                         });

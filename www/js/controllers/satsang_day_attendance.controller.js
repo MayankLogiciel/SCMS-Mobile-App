@@ -58,6 +58,10 @@
                   $scope.popover.hide();
             }
 
+            $scope.$on('$destroy', function () {
+                  $scope.popover.remove();
+            });
+
             $scope.byNameOrBatch = function(str) {
                   switch (str){
                         case 'name':

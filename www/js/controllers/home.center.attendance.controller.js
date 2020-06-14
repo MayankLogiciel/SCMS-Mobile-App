@@ -16,8 +16,7 @@
       $scope.totalAttendees();
       $scope.currentAttendees();
       $scope.in = true;
-      $scope.out = false;
-      
+      $scope.out = false;      
     };
         
     $scope.goBack = function () {
@@ -135,6 +134,10 @@
     $scope.closeNameBadgePopover = function () {
       $scope.popover.hide();
     }
+    $scope.$on('$destroy', function () {
+      $scope.popover.remove();
+    });
+
 
     $scope.byNameOrBatch = function (str) {
       switch (str) {

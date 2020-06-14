@@ -218,6 +218,10 @@
                   $scope.popover.remove();
             });
 
+            $scope.$on('$destroy', function () {
+                  $scope.popover.remove();
+            });
+
             $scope.quickActions = function(nominal) {
                   var txt = '';
                   var user_type = 'Admin' || 'Users'; 

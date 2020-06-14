@@ -53,6 +53,10 @@
             var closeSyncDeletePopOver = function(){
                   $scope.popover.hide();                  
             }
+
+            $scope.$on('$destroy', function () {
+                  $scope.popover.remove();
+            });
            
             var getNominalRollsData = function(query) {
                   $cordovaSQLite.execute($rootScope.db, query).then(function(res) {

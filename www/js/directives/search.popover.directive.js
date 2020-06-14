@@ -15,6 +15,7 @@
                              $scope.timeStampPhoto =  profilePicService.getTimeOfPic();
                         }
                         $scope.search = function(searchQuery, type) {
+                              console.log(searchQuery, type);
                               if(temp == searchQuery && isPopoverOpen) {
                                     return;
                               }
@@ -133,6 +134,10 @@
                               }
                               isPopoverOpen = false;
                         };
+
+                        $scope.$on('$destroy', function () {
+                              $scope.popover.remove();
+                        });
                   }]  
             }
       }

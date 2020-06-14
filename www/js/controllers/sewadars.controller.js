@@ -32,6 +32,10 @@
                   $scope.popover.hide();
             }
 
+            $scope.$on('$destroy', function () {
+                  $scope.popover.remove();
+            });
+
             $scope.search = function(searchQuery) {
                   $scope.str = searchQuery;
                   getSewadarList(searchQuery);                                              

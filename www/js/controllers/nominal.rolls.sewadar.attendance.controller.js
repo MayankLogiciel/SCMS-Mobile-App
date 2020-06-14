@@ -406,9 +406,7 @@
 
                                           });   
                                     }else {
-                                          for(var i= 0; i<res.rows.length; i++) {                                    
-                                                addTempSewadarNested(res.rows.item(i));
-                                          }
+                                          addTempSewadarNested(res.rows.item(0));
                                     }
                               })
                               
@@ -502,9 +500,9 @@
                   $scope.TempSewadarData = {};                 
             };
 
-            // $scope.$on('popover.hidden', function() {
-            //       $scope.popover.remove();
-            // });
+            $scope.$on('popover.hidden', function() {
+                  $scope.popover.remove();
+            });
 
             var setBlankRows = function(callback, incharge, femaleIncharge, maleIncharge) {
                   if( !angular.isDefined($scope.sewadarPrintList) 
@@ -596,6 +594,10 @@
                         $scope.LetterNumber = {};  
                   },0);                
             };
+
+            $scope.$on('$destroy', function () {
+                  $scope.popover.remove();
+            });
 
             $scope.print = function() {
                   $scope.sewadarPrintList = [];                       
