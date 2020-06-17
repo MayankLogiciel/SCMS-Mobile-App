@@ -46,7 +46,7 @@
       $scope.totalAttendees();
       $scope.currentAttendees();
       $scope.in = true;
-      $scope.day_type = $stateParams.type == 'day' ? 'Home Center Day' + ' ' + '(' + $scope.today + ')' : 'Home Center Night' + ' ' + '(' + $scope.today + ')';
+      $scope.day_type = $stateParams.type == 'day' ? 'Day' + ' ' + '(' + $scope.today + ')' : 'Night' + ' ' + '(' + $scope.today + ')';
     };
 
     $scope.openNameOrBadgePopover = function ($event) {
@@ -376,6 +376,10 @@
     }
 
     $scope.SaveDataToAttandanceTable = function (sewadar, fromQR) {
+      if (sewadar.batch_status == 'hold') {
+        $cordovaToast.show('Not allowed due to hold status. Please contact to your respective incharge.', 'long', 'center');
+        return;
+      }
       $scope.sewadarAttendance = [];
       var sewa_id = $stateParams.type == 'day' ? 24 : 5;
       $scope.current = $filter('date')(new Date(), 'yyyy-MM-dd h:mm:ss');

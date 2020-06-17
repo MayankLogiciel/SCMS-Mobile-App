@@ -294,6 +294,10 @@
             }
             
             $scope.SaveDataToAttandanceTable = function(sewadar) {
+                  if (sewadar.batch_status == 'hold') {
+                        $cordovaToast.show('Not allowed due to hold status. Please contact to your respective incharge.', 'long', 'center');
+                        return;
+                  }
                   if ($scope.nominalRollsData.status == 'dispatched') {
                         $cordovaToast.show('You cannot add or update sewadar.', 'short', 'center');
                         return;
@@ -594,10 +598,6 @@
                         $scope.LetterNumber = {};  
                   },0);                
             };
-
-            $scope.$on('$destroy', function () {
-                  $scope.popover.remove();
-            });
 
             $scope.print = function() {
                   $scope.sewadarPrintList = [];                       

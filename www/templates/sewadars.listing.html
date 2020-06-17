@@ -69,7 +69,9 @@
 					</h2>
 					<h2 ng-if="sewadar.batch_no" class="list-content-avtar-content">
 						<span ng-bind="sewadar.guardian" class="text-transform-capital"></span>
-						<span ng-if="sewadar.batch_no"> | </span>
+						<br />
+						<!-- <span ng-bind="sewadar.guardian" class="text-transform-capital"></span> -->
+						<!-- <span ng-if="sewadar.batch_no"> | </span> -->
 						<span ng-bind="sewadar.batch_no"></span>
 						<span ng-if="sewadar.gender" class="hide-dept-on-mob"> | </span>
 						<br class="display-block-dept-on-mob">
@@ -78,11 +80,13 @@
 						<span ng-bind="sewadar.dname" class="text-transform-capital"></span>
 					</h2>
 					<h2 ng-if="!sewadar.batch_no" class="list-content-avtar">
-						<span ng-bind="sewadar.name" class="text-transform-capital"></span>
-					</h2>
-					<h2 ng-if="!sewadar.batch_no" class="list-content-avtar-content">
+							<span ng-bind="sewadar.name" class="text-transform-capital"></span>
+						</h2>
+						<h2 ng-if="!sewadar.batch_no" class="list-content-avtar-content">
+							<!-- <span ng-bind="sewadar.guardian" class="text-transform-capital"></span>
+								<span> | </span> -->
 						<span ng-bind="sewadar.guardian" class="text-transform-capital"></span>
-						<span> | </span>
+						<br />
 						<span ng-bind="(sewadar.gender=='M')?'Male':'Female'"></span>
 						<span> | </span>
 						<span ng-bind="sewadar.address"></span>
@@ -96,7 +100,7 @@
 					<h2 ng-if="sewadar.time_out != 'null' && sewadar.time_in != 'null'"
 						class="list-content-avtar-content">
 						<span class="text-transform-capital" ng-if="sewadar.th != 0">
-							Total hours: {{sewadar.th}}
+							TOTAL HOURS: {{sewadar.th}}
 						</span>
 					</h2>
 				</div>

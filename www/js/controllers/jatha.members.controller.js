@@ -112,10 +112,12 @@
             $scope.checkedMale = function() {
                   angular.forEach($scope.alreadyPresentSewadars, function(item) {
                         angular.forEach($scope.maleMembers, function(val, i) {
-                              if(val.id == item.sewadar_id ) {
+                              if (val.batch_status == 'hold') {
+                                    $scope.maleMembers[i].isDisabled = true;
+                              }
+                              if (val.id == item.sewadar_id) {
                                     $scope.maleMembers[i].isDisabled = true;
                                     $scope.maleMembers[i].isSelected = true; 
-                              }else {
                               }
                         });
                   });
@@ -125,7 +127,10 @@
             $scope.checkedFemale = function() {
                   angular.forEach($scope.alreadyPresentSewadars, function(item) {
                         angular.forEach($scope.femaleMembers, function(val, i) {
-                              if(val.id == item.sewadar_id ) {   
+                              if (val.batch_status == 'hold') {   
+                                    $scope.femaleMembers[i].isDisabled = true;                                                                     
+                              }
+                              if (val.id == item.sewadar_id) {   
                                     $scope.femaleMembers[i].isDisabled = true;                                                                     
                                     $scope.femaleMembers[i].isSelected = true;  
                               }

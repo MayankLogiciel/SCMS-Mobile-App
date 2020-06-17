@@ -102,6 +102,10 @@
     };
 
     $scope.SaveDataToAttandanceTable = function (sewadar, fromQR) {
+      if (sewadar.batch_status == 'hold') {
+        $cordovaToast.show('Not allowed due to hold status. Please contact to your respective incharge.', 'long', 'center');
+        return;
+      }
       var sewa_id = $stateParams.type == 'day' ? 24 : 5;
       $scope.current = $filter('date')(new Date(), 'yyyy-MM-dd h:mm:ss');
       var nominal_roll_id = null;

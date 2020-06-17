@@ -70,6 +70,10 @@
             };
 
             $scope.SaveDataToAttandanceTable = function(sewadar, fromQR) {
+                  if (sewadar.batch_status == 'hold') {
+                        $cordovaToast.show('Not allowed to mark attendance', 'short', 'center');
+                        return;
+                  }
                   var CheckQuery = "SELECT sewadar_id FROM attendances where sewadar_id ='" + sewadar.id + "' AND date(date) = '" + $scope.currentDate + "' AND nominal_roll_id = '" + null + "' AND type = 'satsang_day'";
                   $cordovaSQLite.execute($rootScope.db, CheckQuery).then(function(res) {
                         if(res.rows.length == 0) {

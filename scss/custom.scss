@@ -1653,8 +1653,8 @@
 	}
 }
 .list-content-avtar {
-	margin-bottom: 15px !important;
-	margin-top: 10px !important;
+	margin-bottom: 0 !important;
+	margin-top: 0 !important;
 	span {
 		font-size: 20px;
 		font-weight: bold;
@@ -1662,7 +1662,7 @@
 }
 .list-content-avtar-content {
 	span {
-		font-size: 20px;
+		font-size: 18px;
 	}
 }
 .list-avtar-wrapper {
@@ -2093,9 +2093,9 @@
 		top: 20px;
 	}
 	.list-content-avtar span {
-	    font-size: 16px;
-	    font-weight: bold;
-	    margin-left: 0;
+		font-size: 16px;
+		font-weight: bold;
+		margin-left: 0;
 	}
 	.list-content-avtar-content span {
  	   font-size: 15px;
