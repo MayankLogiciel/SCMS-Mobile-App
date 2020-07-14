@@ -9,6 +9,7 @@ angular
         }
         return{
             responseError: function(rejection) {
+                console.log(rejection)
                 rejection.status = (angular.isDefined(rejection.status))? rejection.status: rejection.http_status;
                 var $state = $injector.get('$state');
                 switch(rejection.status){
@@ -20,6 +21,9 @@ angular
                         break;
                     case 422: 
                          $cordovaToast.show(message.underProcessMessage, 'short', 'center');                           
+                        break;
+                    case 429: 
+                         $cordovaToast.show('Sync after sometime', 'short', 'center');                           
                         break;
                     case 404: 
                         if(rejection.statusText == 'Not Found') {
@@ -47,6 +51,8 @@ angular
                     case -1: 
                         $cordovaToast.show(message.wrongUrl, 'short', 'center'); 
                         break;
+                    default:
+                        $cordovaToast.show(rejection.body || message.serverErrorMessage, 'short', 'center');
                 }//end of switch
                 return $q.reject(rejection);
             } 

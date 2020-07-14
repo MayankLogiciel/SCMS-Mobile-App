@@ -16,7 +16,12 @@
                         $scope.timeStampPhoto =  profilePicService.getTimeOfPic();
                   }
                   alterPhotoUpdateStatus();
-            }; 
+            };
+
+            $scope.createSewadar = function() {
+                  console.log('create');
+                  $state.go('new-sewadar', {action: 'add'})
+            }
 
             $scope.openNameOrBadgePopover = function($event) {
                   $ionicPopover.fromTemplateUrl('templates/popovers/nameorbadgebutton.popover.html', {

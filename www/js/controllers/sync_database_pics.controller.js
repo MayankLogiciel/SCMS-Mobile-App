@@ -204,10 +204,12 @@
                    
 
             $scope.uploadDatabase = function(type) {
+
                   if($cordovaNetwork.isOffline()){
                         $cordovaToast.show('Please Check your network connection', 'short', 'center');
                         return;
-                  }                  
+                  }
+
                   if(!angular.isDefined($scope.serverURlPrefix) || 
                         $scope.serverURlPrefix == null || 
                         $scope.serverURlPrefix.serverURL =='' ||
@@ -215,8 +217,10 @@
                         $cordovaToast.show('Please enter valid server url', 'short', 'center');
                         return;
                   }
+
                   $scope.sync_type = type;
-                  if(type == 'sda') {                         
+
+                  if (type == 'sda') {                         
                         if($scope.attendanceCount <=0) {
                               $cordovaToast.show('No data available to sync', 'short', 'center');
                               return;
@@ -225,17 +229,16 @@
                               $scope.syncingDatabase('Uploading database (0%)');
                               // $scope.createExportFolder();                       
                         }
-                  }else {
+                  } else {
                         if($scope.getToken == null || $scope.getToken == '') {
                               $scope.syncingDatabase('Uploading database (0%)');
                               getToken('database');
-                        }else
-                        if($scope.nominalCount <= 0) {
-                              $cordovaToast.show('No data available to sync', 'short', 'center');
-                              return;
+                        // }else if($scope.nominalCount <= 0) {
+                        //       $cordovaToast.show('No data available to sync', 'short', 'center');
+                        //       return;
                         }else {
                               $scope.syncingDatabase('Uploading database (0%)');
-                              $scope.createExportFolder();                       
+                              $scope.createExportFolder();                 
                         }
                   }
             };
@@ -278,8 +281,6 @@
                   })
 
             }
-
-
 
             var copiedDataInExport = function(path,dbName) {
 

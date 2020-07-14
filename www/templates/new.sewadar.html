@@ -1,0 +1,476 @@
+<ion-view class="login-home-body"> 
+    <ion-header-bar class="bar-balanced custom-header-bar">
+        <div class="buttons left-button row ios-header-css">
+            <button class="button button-icon button-stable ion-chevron-left col-10" ng-click="goBack()"></button>
+            <span class=' col col-80 header-title'>Add New Sewadar</span>
+        </div>
+    </ion-header-bar>
+    <ion-content>
+        <form name='sewadarAddEdit' class="scms-common-margin-for-login-and-home nominal-add-edit-form nominal-add-edit-form-width" novalidate>
+            <div class="list new-sewadar-list">
+
+                <div class="new-sewadar-picture-block">
+                    <img ng-if="sewadar.photo && !isImageNotAvailable" ng-src="{{(isImageInCache ? imageCachePath : imagePath) + sewadar.photo}}" width="200" height="200"/>
+                    <img ng-if="!sewadar.photo || ( sewadar.photo && isImageNotAvailable )" src="img/imgUnavailable.png" width="200" height="200"/>
+                    <button class="button button-assertive ion-camera camera-button" ng-click="clickPhoto()"></button>
+                </div>
+
+                <div class="item item-divider item-icon-right" ng-click="toggleBlock(1)">
+                    Personal Details
+                    <i ng-if="!personalDetailBlock" class="icon ion-plus"></i>
+                    <i ng-if="personalDetailBlock" class="icon ion-minus"></i>
+                </div>
+
+                <div ng-hide="!personalDetailBlock">
+
+                    <div class="row responsive-sm">
+                        <div class="col">
+                            <label class="item item-input">
+                              <span class="input-label required-field">Name</span>
+                              <input validator="required"
+                                type="text"
+                                autocomplete="off"
+                                ng-model="sewadar.name"
+                                name="name"
+                                required-error-message="Name is required"/>
+                            </label>
+                        </div>
+                        <div class="col">
+                            <label class="item item-input item-select">
+                                <div class="input-label required-field">
+                                  Gender
+                                </div>
+                                <select name="gender" ng-model="sewadar.gender">
+                                    <option selected value="M">Male</option>
+                                    <option value="F">Female</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="row responsive-sm">
+                        <div class="col">
+                            <label class="item item-input">
+                                <span class="input-label required-field">Date of Birth</span>
+                                <input
+                                    type="date"
+                                    autocomplete="off"
+                                    ng-model="sewadar.dob"
+                                    name="dob" 
+                                    required-error-message="Date of Birth is required"
+                                    validator="required"
+                                    ng-change="calculateAge()"/>
+                            </label>
+                        </div>
+                        <div class="col">
+                            <label class="item item-input disabled-input my-disable">
+                                <span class="input-label required-field">Age</span>
+                                <input
+                                    type="number"
+                                    autocomplete="off"
+                                    ng-model="sewadar.age"
+                                    name="age"
+                                    required-error-message="Age is required"
+                                    validator="required"/>
+                            </label>
+                        </div>
+                    </div>
+    
+                    <div class="row">
+                        <div class="col">
+                            <label class="item item-input">
+                                <span class="input-label required-field">Residential address</span>
+                                <input
+                                    type="text"
+                                    autocomplete="off"
+                                    ng-model="sewadar.address"
+                                    name="address"
+                                    required-error-message="Address is required"
+                                    validator="required"/>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="row responsive-sm">
+                        <div class="col">
+                            <label class="item item-input">
+                                <span class="input-label required-field">Pin code</span>
+                                <input
+                                type="number"
+                                autocomplete="off"
+                                ng-model="sewadar.pin_code"
+                                name="pin_code"
+                                required-error-message="Pin code is required"
+                                validator="required"/>
+                            </label>
+                        </div>
+                        <div class="col" ng-if="areaList.length">
+                            <label class="item item-input item-select">
+                                <div class="input-label required-field">
+                                    Area
+                                </div>
+                                <select name="area" ng-model="sewadar.area" required-error-message="Area is required"
+                                ng-options="area.area_name for area in areaList"
+                                validator="required">
+                                    <option value="">Select</option>
+                                    <!-- <option ng-repeat="area in areaList" value="{{area.area_id}}">{{area.area_name}}</option> -->
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="row responsive-sm">
+                        <div class="col">
+                            <label class="item item-input" ng-class="{'disabled-input my-disable':action == 'edit'}">
+                                <span class="input-label required-field">Mobile No</span>
+                                <input
+                                    type="number"
+                                    autocomplete="off"
+                                    ng-model="sewadar.mobile_number"
+                                    name="mobile_number"
+                                    required-error-message="Atleast 10 digit required"
+                                    validator="required"/>
+                            </label>
+                        </div>
+                        <div class="col">
+                            <label class="item item-input" ng-class="{'disabled-input my-disable':action == 'edit'}">
+                                <span class="input-label">Landline No</span>
+                                <input
+                                    type="number"
+                                    autocomplete="off"
+                                    ng-model="sewadar.land_line"
+                                    name="land_line"/>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="row responsive-sm">
+                        <div class="col">
+                            <label class="item item-input item-select">
+                                <div class="input-label required-field">
+                                    Occupation
+                                </div>
+                                <select name="occupation" ng-model="sewadar.occupation"
+                                    required-error-message="Occupation is required"
+                                    ng-options="occupation.occupation_name for occupation in occupationList"
+                                    validator="required">
+                                    <option selected value="">Select</option>
+                                    <!-- <option ng-repeat="occupation in occupationList" ng-value="occupation.occupation_id">{{occupation.occupation_name}}</option> -->
+                                </select>
+                            </label>
+                        </div>
+                        <div class="col">
+                            <label class="item item-input">
+                                <span class="input-label">Occupation Detail</span>
+                                <input type="text" autocomplete="off" ng-model="sewadar.occupation_details" name="occupation_details" />
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="row responsive-sm">
+                        <div class="col">
+                            <label class="item item-input">
+                                <span class="input-label required-field">Qualification</span>
+                                <input
+                                type="text"
+                                autocomplete="off"
+                                ng-model="sewadar.qualification"
+                                name="qualification"
+                                required-error-message="Qualification is required"
+                                validator="required"/>
+                            </label>
+                        </div>
+                        <div class="col">
+                            <label class="item item-input item-select">
+                                <div class="input-label">
+                                    Marital Status
+                                </div>
+                                <select name="marital_status" ng-model="sewadar.marital_status">
+                                    <option selected value="">Select</option>
+                                    <option value="married">Married</option>
+                                    <option value="unmarried">Unmarried</option>
+                                    <option value="divorced">Divorced</option>
+                                    <option value="widower">Widower</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="row responsive-sm">
+                        <div class="col">
+                            <label class="item item-input">
+                                <span class="input-label required-field">Father's/Husband's name</span>
+                                <input
+                                    type="text"
+                                    autocomplete="off"
+                                    ng-model="sewadar.guardian"
+                                    name="guardian"
+                                    required-error-message="Name is required"
+                                    validator="required"/>
+                            </label>
+                        </div>
+                        <div class="col">
+                            <label class="item item-input item-select">
+                                <div class="input-label">
+                                    Holds Badge At Beas
+                                </div>
+                                <select name="holds_badge_at" ng-model="sewadar.holds_badge_at">
+                                    <option selected value="Y">Yes</option>
+                                    <option value="N">No</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="row responsive-sm">
+                        <div class="col">
+                            <label class="item item-input item-select">
+                                <div class="input-label">
+                                    Blood Group
+                                </div>
+                                <select name="blood_group" ng-model="sewadar.blood_group">
+                                    <option selected value="">Select</option>
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="col">
+                            <label class="item item-input item-select">
+                                <div class="input-label">
+                                    Willing to donate blood
+                                </div>
+                                <select name="can_donate" ng-model="sewadar.can_donate">
+                                    <option selected value="Y">Yes</option>
+                                    <option value="N">No</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="item item-divider item-icon-right" ng-click="toggleBlock(2)">
+                    Namdaan Detail
+                    <i ng-if="!namdaanDetailBlock" class="icon ion-plus"></i>
+                    <i ng-if="namdaanDetailBlock" class="icon ion-minus"></i>
+                </div>
+
+                <div ng-hide="!namdaanDetailBlock">
+
+                    <div class="row responsive-sm">
+                        <div class="col">
+                            <label class="item item-input item-select">
+                                <div class="input-label">
+                                    Are you initiated
+                                </div>
+                                <select name="is_namdaan" ng-model="sewadar.is_namdaan">
+                                    <option selected value="Y">Yes</option>
+                                    <option value="N">No</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="col">
+                            <label class="item item-input">
+                                <span class="input-label">Date of Initiated</span>
+                                <input type="date" autocomplete="off" ng-model="sewadar.date_of_namdaan" name="date_of_namdaan">
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="row responsive-sm">
+                        <div class="col">
+                            <label class="item item-input">
+                                <span class="input-label">Place of Initiated</span>
+                                <input type="text" autocomplete="off" ng-model="sewadar.place_of_namdaan" name="place_of_namdaan" />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="item item-divider item-icon-right" ng-click="toggleBlock(3)">
+                    Reference Detail
+                    <i ng-if="!referenceDetailBlock" class="icon ion-plus"></i>
+                    <i ng-if="referenceDetailBlock" class="icon ion-minus"></i>
+                </div>
+
+                <div ng-hide="!referenceDetailBlock">
+                    <div class="row responsive-sm" style="position: relative;">
+                        <div class="col">
+                            <label class="item item-input">
+                                <span class="input-label required-field">Badge Number</span>
+                                <input
+                                type="number"
+                                ng-model="sewadar.ref_badge_number"
+                                name="ref_badge_number"
+                                required-error-message="Badge Number is required" validator="required"
+                                ng-model-options="{debounce : 500}"
+                                spellcheck = "false"
+                                ng-change = "search(sewadar.ref_badge_number, 'batch_no')"/>
+                            </label>
+                        </div>
+                        <div class="col">
+                            <label class="item item-input">
+                                <span class="input-label required-field">Name of Sewadar</span>
+                                <input
+                                type="text"
+                                ng-model="sewadar.ref_sewadar_name"
+                                name="ref_sewadar_name"
+                                required-error-message="Name is required" validator="required"
+                                ng-model-options="{debounce : 500}"
+                                spellcheck="false"
+                                ng-change="search(sewadar.ref_sewadar_name, 'name')"/>
+                            </label>
+                        </div>
+                        <div class="sewadar-search-block" ng-class="{'sewadar-search-block-right':batch_search_type == 'name'}">
+                            <div class="search-sewadar-items common-search-wrapper">
+                                <a class="item item-avatar" ng-repeat="sewadar in searchSewadar" on-tap="selectedSewadardetails(sewadar)">
+                                    <img class="list-avtar" ng-if='sewadar.photo && sewadar.isImageFound' ng-src="{{imagePath + sewadar.photo}}"/>
+                                    <img class="list-avtar" ng-if='!sewadar.photo || !sewadar.isImageFound' src="{{defaultImage}}"/>
+                                    <h2 class="row list-avtar-wrapper">  
+                                        <div class="col list-sewadar-content-margin">    		
+                                            <h2 class="list-content-avtar">
+                                                <span ng-bind="sewadar.name" class="text-transform-capital" ></span>
+                                            </h2>
+                                            <h2 class="list-content-avtar-content">
+                                                <p>
+                                                    <span ng-bind="sewadar.guardian" class="text-transform-capital" ></span>
+                                                    <span ng-if="sewadar.batch_no"> | </span><span ng-bind="sewadar.batch_no"></span>
+                                                    <span ng-if="sewadar.gender" class = "hide-dept-on-mob"> | </span><span ng-bind="(sewadar.gender=='M')?'Male':'Female'"></span>
+                                                </p>
+                                            </h2>				
+                                        </div>
+                                    </h2>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- batch_search_type == 'name' 'batch_no'  -->
+
+                    <div class="row responsive-sm">
+                        <div class="col">
+                            <label class="item item-input disabled-input my-disable">
+                                <span class="input-label">Department</span>
+                                <input type="text" ng-model="sewadar.ref_department" name="ref_department" />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="item item-divider item-icon-right" ng-click="toggleBlock(4)">
+                    Skills Detail
+                    <i ng-if="!skillDetailBlock" class="icon ion-plus"></i>
+                    <i ng-if="skillDetailBlock" class="icon ion-minus"></i>
+                </div>
+
+                <div ng-hide="!skillDetailBlock">
+                    <div class="new-sewadar-skills checkbox-list" ng-class="{'disabled-input my-disable':action == 'edit'}">
+                        <ion-checkbox ng-repeat="skill in skillList" ng-model="skill.skill_selected">{{skill.skill_name}}</ion-checkbox>
+                    </div>
+                </div>
+                
+                <div class="item item-divider item-icon-right" ng-click="toggleBlock(5)">
+                    Vehicles Detail
+                    <i ng-if="!vehicleDetailBlock" class="icon ion-plus"></i>
+                    <i ng-if="vehicleDetailBlock" class="icon ion-minus"></i>
+                </div>
+
+                <div ng-hide="!vehicleDetailBlock">
+                    <div class="new-sewadar-skills checkbox-list" ng-class="{'disabled-input my-disable':action == 'edit'}">
+                        <ion-checkbox ng-repeat="vahicle in vehicles" ng-model="vahicle.vehicle_selected">{{vahicle.vehicle_name}}</ion-checkbox>
+                    </div>
+                </div>
+
+                <div class="item item-divider item-icon-right" ng-click="toggleBlock(6)">
+                    Other Detail
+                    <i ng-if="!otherDetailBlock" class="icon ion-plus"></i>
+                    <i ng-if="otherDetailBlock" class="icon ion-minus"></i>
+                </div>
+
+                <div ng-hide="!otherDetailBlock">
+
+                    <div class="row responsive-sm">
+                        <div class="col">
+                            <label class="item item-input" ng-class="{'disabled-input my-disable':action == 'edit'}">
+                                <span class="input-label required-field">Batch No.</span>
+                                <input type="number" autocomplete="off" ng-model="sewadar.batch_no" name="batch_no" required-error-message="Batch No is required" validator="required"/>
+                            </label>
+                        </div>
+                        <div class="col">
+                            <label class="item item-input item-select">
+                                <div class="input-label required-field">
+                                    Department
+                                </div>
+                                <select name="department" ng-model="sewadar.department"
+                                required-error-message="Department is required" 
+                                ng-options="department.department_name for department in departmentList"
+                                validator="required">
+                                    <option selected value="">Select</option>
+                                    <!-- <option ng-repeat="department in departmentList" value="{{department}}">{{department.department_name}}</option> -->
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="row responsive-sm">
+                        <div class="col">
+                            <label class="item item-input item-select">
+                                <div class="input-label required-field">
+                                    Badge Type
+                                </div>
+                                <select name="batch_type" ng-model="sewadar.batch_type" required-error-message="Badge Type is required" validator="required">
+                                    <option value="T">Temporary</option>
+                                    <option value="P">Permanent</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="col">
+                            <label class="item item-input item-select">
+                                <div class="input-label required-field">
+                                    Badge Status
+                                </div>
+                                <select name="batch_status" ng-model="sewadar.batch_status" required-error-message="Badge Status is required" validator="required">
+                                    <option value="active">Active</option>
+                                    <option value="hold">Hold</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="row responsive-sm">
+                        <div class="col">
+                            <label class="item item-input item-select">
+                                <div class="input-label required-field">
+                                    Designation
+                                </div>
+                                <select name="designation" ng-model="sewadar.designation"
+                                    required-error-message="Designation is required" validator="required"
+                                    ng-options="designation.designation_name for designation in designationList"
+                                >
+                                    <option selected value="">Select</option>
+                                    <!-- <option ng-repeat="designation in designationList" value="{{designation}}">{{designation.designation_name}}</option> -->
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="new-sewadar-save-block">
+                    <button class="button button-positive new-sewadar-save-button"
+                        validation-submit="sewadarAddEdit"
+                        type="submit"
+                        ng-click="saveSewadar()">
+                        Save
+                    </button>
+                </div>
+            </div>
+        </form>
+    </ion-content>
+
+</ion-view>
