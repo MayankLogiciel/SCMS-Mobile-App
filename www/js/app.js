@@ -262,6 +262,12 @@ angular.module('SCMS_ATTENDANCE', ['ionic', 'ngCordova', 'validation', 'validati
             templateUrl: 'templates/home.certer.attendance.html',
             controller: 'HomeCenterController'
       })
+      .state('home_center_report', {
+            cache: false,
+            url: '/home_center_report',
+            templateUrl: 'templates/home.center.report.html',
+            controller: 'HomeCenterReportController'
+      })
       .state('home-center-date-list', {
             cache: false,
             url: '/home-center-date-list/:type',

@@ -1,0 +1,32 @@
+<ion-modal-view class="custom-model">
+  <div class="bar bar-header bar-balanced">
+    <h1 class="title">Daily Attendance Report Filters</h1>
+  </div>
+  <ion-content class="has-header">
+    <form name='FormTemp' class="temp-form" novalidate>
+      <div class="list">
+        <div class="list list-inset login-wraper temp-name">
+          <label class="item item-input custom-text height-on-mob">
+            <i class="icon ion-person placeholder-icon"></i>
+            <input 
+              class="text-transform-capital"
+              type="text"
+              name="name"
+              autocomplete="off"
+              ng-model="TempSewadarData.name"
+              ng-change="search(TempSewadarData.name, 'open-sewadar')"
+              placeholder="Name" />
+          </label>
+        </div>
+      </div>
+      <div class="bar bar-footer custom-footer open-sewadar-footer">
+        <div class="button-bar">
+          <a class="button button-assertive temp-sewa-btn" ng-click="addTempSewadar(TempSewadarData);"
+            validation-submit="FormTemp">{{ButtonValue}}</a>
+          <a class="button button-stable temp-sewa-btn" ng-click="closePopoverForTempSewadar()"
+            validation-reset="FormTemp">CANCEL</a>
+        </div>
+      </div>
+    </form>
+  </ion-content>
+</ion-modal-view>
