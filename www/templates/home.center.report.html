@@ -1,11 +1,4 @@
 <ion-view class="login-home-body home-popup">
-  <!-- <ion-header-bar class="bar-balanced custom-header-bar">
-    <div class="buttons left-button row home-Header ios-header-css">
-      <button class="button button-icon button-stable ion-chevron-left col-10" on-tap="goBack()">
-      </button>
-      <span class='col col-90 satsang-date-today'>Daily Attendance Report</span>
-    </div>
-  </ion-header-bar> -->
   <ion-header-bar class="bar-balanced custom-header-bar">
     <div class="buttons left-button row ios-header-css">
       <div on-tap="goBack()" class="col-80 row">
@@ -13,7 +6,7 @@
         </button>
         <span class='col col-90 sat-att-list-title'>Daily Attendance Report</span>
       </div>
-      <button class="button button-icon button-add col-20 edit-btn-att" on-tap="setFilters()">
+      <button class="button button-icon button-add col-20 edit-btn-att" on-tap="showFilterModal()">
         <i class="icon ion-funnel"></i>
         <span class="sat-att-list-edit">Filters</span>
       </button>
