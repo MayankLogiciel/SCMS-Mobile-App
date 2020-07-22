@@ -33,6 +33,9 @@
                   satsangDayAttendanceListService.setSatsangAttendanceDate($scope.currentDate);
                   $state.go('home_center_attendance_list', { type: t, action: 'mark' });
             }
+            $scope.goToReportPage = function(t) {
+                  $state.go('home_center_report');
+            }
 
             /**
             * syncDataPopup function used to open sync database popup

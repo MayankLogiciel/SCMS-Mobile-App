@@ -1,0 +1,101 @@
+<ion-modal-view class="custom-model">
+  <div class="bar bar-header bar-balanced">
+    <h1 class="title">Daily Attendance Filter</h1>
+  </div>
+  <ion-content has-bouncing="false" scroll="true">
+    <form name='nominalForm'
+      class="scms-common-margin-for-login-and-home nominal-add-edit-form nominal-add-edit-form-width" novalidate>
+      <div class="list">
+        <div class="row">
+          <div class="col col-50">
+            <div class="list list-inset login-wraper">
+              <label class="item item-input custom-text nominal-roll-add-edit-input">
+                <i class="icon ion-calendar placeholder-icon"></i>
+                <input 
+                  type="text"
+                  autocomplete="off"
+                  ng-model="date_from"
+                  name="Date From"
+                  message-id="from-date-id" 
+                  required-error-message="* Enter start date"
+                  placeholder="Date From"
+                  ng-click="openDatePicker('from')" 
+                  readonly
+                >
+              </label>
+            </div>
+            <p id='from-date-id'></p>
+            <div class="list list-inset login-wraper">
+              <label class="item item-input custom-text nominal-roll-add-edit-input">
+                <i class="icon ion-person placeholder-icon"></i>
+                <input 
+                  class="text-transform-capital"
+                  type="text" autocomplete="off"
+                  ng-model="sewadar_name"
+                  name="sewadar_name"
+                  message-id="sewadar-id"
+                  required-error-message="* Enter Sewadar name"
+                  placeholder="sewardar Name" 
+                />
+              </label>
+            </div>
+            <p id='sewadar-id'></p>
+
+          </div>
+          <div class="col col-50">
+            <div class="list list-inset login-wraper">
+              <label class="item item-input custom-text nominal-roll-add-edit-input">
+                <i class="icon ion-calendar placeholder-icon"></i>
+                <input 
+                  type="text" 
+                  autocomplete="off" 
+                  ng-model="date_to" 
+                  name="Date To" 
+                  message-id="to-date-id"
+                  required-error-message="* Enter End date" 
+                  placeholder="Date To" 
+                  ng-click="openDatePicker('to')" 
+                  readonly
+                >
+              </label>
+            </div>
+            <p id='to-date-id'></p>
+
+            <label class="item item-input item-select option-sewa" 
+              ng-init="getListForJatha()"
+            >
+              <i class="icon ion-ios-people placeholder-icon"></i>
+              <select 
+                name="jatha" 
+                ng-model="deptData.dept"
+                ng-options="jatha.jatha_name for jatha in jathas track by jatha.department_id" 
+                message-id="jatha-id"
+                required-error-message="* Please select jatha" 
+                ng-change="selectedJatha(deptData.dept)"
+              >
+                <option selected value="">Select Department</option>
+              </select>
+            </label>
+            <p id='jatha-id'></p>
+
+            <!-- <div class="list list-inset login-wraper" ng-class="{'final-diable':isVehicaltypeSected}">
+              <label class="item item-input custom-text nominal-roll-add-edit-input">
+                <i class="icon ion-card placeholder-icon"></i>
+                <input type="text" class="text-transform-uppercase placehoder-text-change" autocomplete="off"
+                  ng-model="nominal.vehicle_no" name="vehicle_number" placeholder="Vehicle Number"
+                  ng-disabled='isVehicaltypeSected' />
+              </label>
+            </div>
+            <p></p> -->
+          </div>
+        </div>
+      </div>
+    </form>
+  </ion-content>
+    <div class="bar bar-footer custom-footer">
+      <div class="button-bar">
+        <a class="button button-assertive">APPLY</a>
+        <a class="button button-stable">CANCEL</a>
+      </div>
+    </div>
+</ion-modal-view>

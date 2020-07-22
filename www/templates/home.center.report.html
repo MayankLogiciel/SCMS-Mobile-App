@@ -1,0 +1,42 @@
+<ion-view class="login-home-body home-popup">
+  <ion-header-bar class="bar-balanced custom-header-bar">
+    <div class="buttons left-button row ios-header-css">
+      <div on-tap="goBack()" class="col-80 row">
+        <button class="button button-icon button-stable ion-chevron-left col-10 sat-att-list-back-width">
+        </button>
+        <span class='col col-90 sat-att-list-title'>Daily Attendance Report</span>
+      </div>
+      <button class="button button-icon button-add col-20 edit-btn-att" on-tap="showFilterModal()">
+        <i class="icon ion-funnel"></i>
+        <span class="sat-att-list-edit">Filters</span>
+      </button>
+    </div>
+  </ion-header-bar>
+  <ion-content has-bouncing="false">
+    <div class="home-center-report">
+      <table>
+        <tr>
+          <th>S.No</th>
+          <th>Date</th>
+          <th>Sewadar Name</th>
+          <th>Badge No.</th>
+          <th>Deptt</th>
+          <th>Time In</th>
+          <th>Time Out</th>
+          <th>Total Time</th>
+        </tr>
+        <tr ng-repeat="report in reportData">
+          <td>{{report.s_no}}</td>
+          <td>{{report.d}}</td>
+          <td>{{report.name}}</td>
+          <td>{{report.batch_no ? report.batch_no : '--'}}</td>
+          <td>{{report.dname ? report.dname : '--'}}</td>
+          <td>{{report.time_in ? report.time_in : '--'}}</td>
+          <td>{{report.time_out ? report.time_out : '--'}}</td>
+          <td>{{report.th}} hrs</td>
+        </tr>
+        
+      </table>
+    </div>
+  </ion-content>
+</ion-view>
