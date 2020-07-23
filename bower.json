@@ -8,6 +8,7 @@
     "ionic-datepicker": "^1.2.1",
     "ionic-toast": "^0.4.1",
     "angular-loading-bar": "^0.9.0",
-    "ion-floating-menu": "^1.0.5"
+    "ion-floating-menu": "^1.0.5",
+    "ionic-timepicker": "^0.6.0"
   }
 }

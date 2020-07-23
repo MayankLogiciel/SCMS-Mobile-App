@@ -34,7 +34,6 @@
     "commit": "ad2c48dbf2d06b68bec31515c28c3046ac5363da"
   },
   "_source": "https://github.com/rajeshwarpatlolla/ionic-datepicker.git",
-  "_target": "1.2.1",
-  "_originalSource": "ionic-datepicker",
-  "_direct": true
+  "_target": "^1.2.1",
+  "_originalSource": "ionic-datepicker"
 }

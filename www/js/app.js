@@ -1,4 +1,4 @@
-angular.module('SCMS_ATTENDANCE', ['ionic', 'ngCordova', 'validation', 'validation.rule', 'ionic-datepicker', 'angular-loading-bar', 'ngAnimate', 'dtrw.bcrypt', 'ion-floating-menu'])     
+angular.module('SCMS_ATTENDANCE', ['ionic', 'ngCordova', 'validation', 'validation.rule', 'ionic-datepicker', 'ionic-timepicker' , 'angular-loading-bar', 'ngAnimate', 'dtrw.bcrypt', 'ion-floating-menu'])     
 .run(function($ionicPlatform, $cordovaSQLite, $rootScope, $state, $ionicPopup, authService, $cordovaFile,  $timeout, $cordovaSplashscreen, cfpLoadingBar) {
       
 
@@ -191,6 +191,17 @@ angular.module('SCMS_ATTENDANCE', ['ionic', 'ngCordova', 'validation', 'validati
             //disableWeekdays: []
       };
       ionicDatePickerProvider.configDatePicker(datePickerObj);
+})
+
+.config(function (ionicTimePickerProvider) {
+      var timePickerObj = {
+            inputTime: (((new Date()).getHours() * 60 * 60) + ((new Date()).getMinutes() * 60)),
+            format: 12,
+            step: 15,
+            setLabel: 'Set',
+            closeLabel: 'Close'
+      };
+      ionicTimePickerProvider.configTimePicker(timePickerObj);
 })
 
 .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {

@@ -1037,6 +1037,10 @@
 	text-align: center;
 }
 
+.t-center {
+	text-align: center !important;
+}
+
 #loading-bar-spinner {
 	top: 50% !important;
     left: 42% !important; 
@@ -3142,6 +3146,11 @@
 }
 .sewadar-search-block-right {
 	right: 0;
+}
+.ionic_timepicker_popup {
+	.popup {
+		max-width: 60% !important;
+	}
 }
 .sewadar-search-block {
 	position: absolute;

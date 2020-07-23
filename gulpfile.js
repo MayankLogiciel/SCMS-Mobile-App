@@ -36,6 +36,8 @@ gulp.task('copyplugins', function() {
   .pipe(gulp.dest('./www/lib'))
   gulp.src('./bower_components/ionic-datepicker/dist/ionic-datepicker.bundle.min.js')
   .pipe(gulp.dest('./www/lib'))
+  gulp.src('./bower_components/ionic-timepicker/dist/ionic-timepicker.bundle.min.js')
+  .pipe(gulp.dest('./www/lib'))
   gulp.src('./bower_components/angular-validation/dist/angular-validation.js')
   .pipe(gulp.dest('./www/lib'))
   gulp.src('./bower_components/angular-validation/dist/angular-validation-rule.js')

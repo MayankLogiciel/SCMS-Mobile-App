@@ -2,9 +2,9 @@
   <div class="bar bar-header bar-balanced">
     <h1 class="title">Daily Attendance Filter</h1>
   </div>
-  <ion-content has-bouncing="false" scroll="true">
+  <ion-content class="has-header" has-bouncing="false" scroll="true">
     <form name='nominalForm'
-      class="scms-common-margin-for-login-and-home nominal-add-edit-form nominal-add-edit-form-width" novalidate>
+      class=" modal-padding nominal-list-on-tab n-modal-padding scms-common-margin-for-login-and-home nominal-add-edit-form nominal-add-edit-form-width" novalidate>
       <div class="list">
         <div class="row">
           <div class="col col-50">
@@ -30,16 +30,42 @@
                 <i class="icon ion-person placeholder-icon"></i>
                 <input 
                   class="text-transform-capital"
-                  type="text" autocomplete="off"
+                  type="text" 
+                  autocomplete="off"
                   ng-model="sewadar_name"
                   name="sewadar_name"
                   message-id="sewadar-id"
+                  ng-change="handleInputChange(sewadar_name, 'name')"
                   required-error-message="* Enter Sewadar name"
                   placeholder="sewardar Name" 
                 />
               </label>
             </div>
             <p id='sewadar-id'></p>
+            <div class="list list-inset login-wraper">
+              <label class="item item-input custom-text nominal-roll-add-edit-input">
+                <i class="icon ion-android-time placeholder-icon"></i>
+                <input type="text" autocomplete="off" ng-model="time_in" name="Time_in" message-id="in-id"
+                  required-error-message="* Enter In Time" placeholder="Time In" ng-click="openTimePicker('in')" readonly>
+              </label>
+            </div>
+            <p id='in-id'></p>
+            <label class="item item-input item-select option-sewa" 
+              ng-init="getListForJatha()"
+            >
+              <i class="icon ion-ios-people placeholder-icon"></i>
+              <select 
+                name="jatha" 
+                ng-model="jatha_name"
+                ng-options="jatha.jatha_name for jatha in jathas track by jatha.department_id" 
+                message-id="jatha-id"
+                required-error-message="* Please select jatha" 
+                ng-change="handleInputChange(jatha_name, 'dept')"
+              >
+                <option selected value="">Select Department</option>
+              </select>
+            </label>
+            <p id='jatha-id'></p>
 
           </div>
           <div class="col col-50">
@@ -60,42 +86,61 @@
               </label>
             </div>
             <p id='to-date-id'></p>
-
-            <label class="item item-input item-select option-sewa" 
-              ng-init="getListForJatha()"
-            >
-              <i class="icon ion-ios-people placeholder-icon"></i>
-              <select 
-                name="jatha" 
-                ng-model="deptData.dept"
-                ng-options="jatha.jatha_name for jatha in jathas track by jatha.department_id" 
-                message-id="jatha-id"
-                required-error-message="* Please select jatha" 
-                ng-change="selectedJatha(deptData.dept)"
-              >
-                <option selected value="">Select Department</option>
-              </select>
-            </label>
-            <p id='jatha-id'></p>
-
-            <!-- <div class="list list-inset login-wraper" ng-class="{'final-diable':isVehicaltypeSected}">
+            
+            <div class="list list-inset login-wraper">
               <label class="item item-input custom-text nominal-roll-add-edit-input">
                 <i class="icon ion-card placeholder-icon"></i>
-                <input type="text" class="text-transform-uppercase placehoder-text-change" autocomplete="off"
-                  ng-model="nominal.vehicle_no" name="vehicle_number" placeholder="Vehicle Number"
-                  ng-disabled='isVehicaltypeSected' />
+                <input 
+                  type="tel" 
+                  class="text-transform-uppercase placehoder-text-change" 
+                  autocomplete="off"
+                  ng-model="badge_no"
+                  ng-change="handleInputChange(badge_no, 'badge')"
+                  name="badge_no" 
+                  placeholder="Badge No"
+                />
               </label>
             </div>
-            <p></p> -->
+            <p></p>
+            <!-- <div class="list list-inset login-wraper">
+              <label class="item item-input custom-text nominal-roll-add-edit-input">
+                <i class="icon ion-android-time placeholder-icon"></i>
+                <input 
+                  ng-model="time_out" 
+                  ng-change="handleInputChange(time_out, 'time_out')" 
+                  type="time" 
+                  name="time_out"
+                  placeholder="Time Out"
+                >
+              </label>
+            </div>
+            <p id='in-time'></p> -->
+            <div class="list list-inset login-wraper">
+              <label class="item item-input custom-text nominal-roll-add-edit-input">
+                <i class="icon ion-android-time placeholder-icon"></i>
+                <input 
+                  type="text" 
+                  autocomplete="off" 
+                  ng-model="time_out" 
+                  name="Time_out" 
+                  message-id="out-id"
+                  required-error-message="* Enter Out Time" 
+                  placeholder="Time Out" 
+                  ng-click="openTimePicker('out')" 
+                  readonly
+                >
+              </label>
+            </div>
+            <p id='out-id'></p>
           </div>
         </div>
       </div>
     </form>
   </ion-content>
-    <div class="bar bar-footer custom-footer">
-      <div class="button-bar">
-        <a class="button button-assertive">APPLY</a>
-        <a class="button button-stable">CANCEL</a>
-      </div>
+  <div class="bar bar-footer custom-footer">
+    <div class="button-bar">
+      <a class="button button-assertive" on-tap="applyFilter()">APPLY</a>
+      <a class="button button-stable" on-tap="resetFilter()">RESET</a>
     </div>
+  </div>
 </ion-modal-view>

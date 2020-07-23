@@ -25,7 +25,10 @@
           <th>Time Out</th>
           <th>Total Time</th>
         </tr>
-        <tr ng-repeat="report in reportData">
+        <tr ng-if="reportData.length <= 0">
+          <td colspan="8" class="t-center">No Record Found.</td>
+        </tr>
+        <tr ng-repeat="report in reportData" ng-if="reportData.length > 0">
           <td>{{report.s_no}}</td>
           <td>{{report.d}}</td>
           <td>{{report.name}}</td>
@@ -33,7 +36,7 @@
           <td>{{report.dname ? report.dname : '--'}}</td>
           <td>{{report.time_in ? report.time_in : '--'}}</td>
           <td>{{report.time_out ? report.time_out : '--'}}</td>
-          <td>{{report.th}} hrs</td>
+          <td>{{report.hours}} hrs</td>
         </tr>
         
       </table>
