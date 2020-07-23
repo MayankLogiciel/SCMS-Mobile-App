@@ -12,7 +12,7 @@
       $scope.reportData = [];
       $scope.sewadar_name = '';
       $scope.jathas = [];     
-      $scope.jatha_name = ''; 
+      $scope.dept = {}; 
       $scope.badge_no = ''; 
       $scope.time_in = '';
       $scope.time_out = '';
@@ -45,35 +45,6 @@
       });
     };    
 
-    var startTime =  function (d) {
-      var format = new Date(d);
-        var h = format.getHours();
-        var m = format.getMinutes();
-        var s = format.getSeconds();
-
-        if (!h && !m  && !s) return '--';
-     
-        return h + ":" + m + ":" + s;
-    }
-
-    // function diff_hours(d, date1, date2) {
-    //   if (!date2  || date2 == '--') return 1;
-
-    //   var dt1 = new Date(d + ' ' +date1);
-    //   var dt2 = new Date(d + ' ' + date2);
-
-    //   var diff = Math.abs(dt1 - dt2) / 36e5;
-
-    //   var hour = 0;
-    //   if (diff < 1.5) return 1;
-
-    //   if (diff >= 1.5) hour = 2;
-    //   if (diff > 2) hour = 4;
-    //   if (diff > 4) hour = 8;
-
-    //   return hour;
-    // }
-
     var getReportData = function (query) {
       $scope.reportData = [];
       $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
@@ -85,7 +56,14 @@
             }
 
             if (res.rows.item(i).time_in == null) res.rows.item(i).time_in = '--';
-            if (res.rows.item(i).time_out == null) res.rows.item(i).time_in = '--';
+            if (
+              res.rows.item(i).time_out == null ||
+              res.rows.item(i).time_out == 'null' ||
+              res.rows.item(i).time_out == '--'
+            ) {
+              res.rows.item(i).time_out = '--';
+              res.rows.item(i).hours = '1';
+            }
 
             if (res.rows.item(i).time_out != null && res.rows.item(i).time_out.length > 8) {
               res.rows.item(i).time_out = $filter('date')(new Date(res.rows.item(i).time_out), 'HH:mm:ss');
@@ -103,14 +81,13 @@
 
 
     $scope.handleInputChange = function (q, key) {
-      console.log(q, key)
       switch (key) {
         case 'name':
           $scope.sewadar_name = q;
           break;
 
         case 'dept':
-          $scope.jatha_name = q.jatha_name;
+          $scope.dept = q;
           break;
 
         case 'badge':
@@ -138,17 +115,14 @@
 
       var handleQuery = function(t, key) {
         if (!t) return '';
-        if (key == 'dname') return "AND dname = '" + $scope.jatha_name + "'";
+        if (key == 'dname') return "AND dname = '" + $scope.dept.jatha_name + "'";
         if (key == 'name') return "AND name LIKE '" + $scope.sewadar_name + '%' + "'";
         if (key == 'badge_no') return "AND batch_no LIKE '" + $scope.badge_no + '%' + "'";
         if (key == 'time_in') return "AND time_in>='" + $scope.time_in + "'";
         if (key == 'time_out') return "AND time_out<= '" + $scope.time_out + "'";
       } 
 
-      var query = "Select *  from (SELECT sewadars.id, sewadars.name as name, sewadars.batch_no as batch_no, sewadars.photo, sewadars.department_name as dname, attendances.date as d, attendances.created_at as att_created_at,  attendances.sewadar_id as att_id, attendances.time_in as time_in, attendances.time_out as time_out, attendances.hours, attendances.id as s_id FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where date (attendances.date) >= '" + prevdate + "' AND date(attendances.date) <= '" + currentDate + "' " + handleQuery($scope.jatha_name, 'dname') + " " + handleQuery($scope.sewadar_name, 'name') + " " + handleQuery($scope.badge_no, 'badge_no') + " " + handleQuery($scope.time_in, 'time_in') + " " + handleQuery($scope.time_out, 'time_out') + " AND attendances.type='home_center' UNION SELECT temp_sewadars.id, temp_sewadars.name, NULL as batch_no, NULL as photo, NULL as department_name, attendances.date as d, attendances.created_at as att_created_at, attendances.sewadar_id as att_id, attendances.time_in as time_in, attendances.time_out as time_ouy, attendances.hours, attendances.id as s_id FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where date (attendances.date) >= '" + prevdate + "' AND date(attendances.date) <= '" + currentDate + "' "+ handleQuery($scope.sewadar_name, 'name') + " " + handleQuery($scope.time_in, 'time_in') + " " + handleQuery($scope.time_out, 'time_out') +" AND attendances.type='home_center') order by d Desc, dname Desc, name Asc";
-
-      console.log(query);
-
+      var query = "Select *  from (SELECT sewadars.id, sewadars.name as name, sewadars.batch_no as batch_no, sewadars.photo, sewadars.department_name as dname, attendances.date as d, attendances.created_at as att_created_at,  attendances.sewadar_id as att_id, attendances.time_in as time_in, attendances.time_out as time_out, attendances.hours, attendances.id as s_id FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where date (attendances.date) >= '" + prevdate + "' AND date(attendances.date) <= '" + currentDate + "' " + handleQuery($scope.dept, 'dname') + " " + handleQuery($scope.sewadar_name, 'name') + " " + handleQuery($scope.badge_no, 'badge_no') + " " + handleQuery($scope.time_in, 'time_in') + " " + handleQuery($scope.time_out, 'time_out') + " AND attendances.type='home_center' UNION SELECT temp_sewadars.id, temp_sewadars.name, NULL as batch_no, NULL as photo, NULL as department_name, attendances.date as d, attendances.created_at as att_created_at, attendances.sewadar_id as att_id, attendances.time_in as time_in, attendances.time_out as time_ouy, attendances.hours, attendances.id as s_id FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where date (attendances.date) >= '" + prevdate + "' AND date(attendances.date) <= '" + currentDate + "' "+ handleQuery($scope.sewadar_name, 'name') + " " + handleQuery($scope.time_in, 'time_in') + " " + handleQuery($scope.time_out, 'time_out') +" AND attendances.type='home_center') order by d Desc, dname Desc, name Asc";
       getReportData(query);
       $scope.modal.hide();
     }
@@ -160,7 +134,7 @@
         $scope.sewadar_name= '';
         $scope.time_in = '';
         $scope.time_out = '';
-        $scope.jatha_name = '';
+        $scope.dept = {};
         $scope.badge_no = '';
         $scope.modal.hide();
         $scope.getReport();

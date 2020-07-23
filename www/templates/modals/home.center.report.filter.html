@@ -56,11 +56,11 @@
               <i class="icon ion-ios-people placeholder-icon"></i>
               <select 
                 name="jatha" 
-                ng-model="jatha_name"
+                ng-model="dept"
                 ng-options="jatha.jatha_name for jatha in jathas track by jatha.department_id" 
                 message-id="jatha-id"
                 required-error-message="* Please select jatha" 
-                ng-change="handleInputChange(jatha_name, 'dept')"
+                ng-change="handleInputChange(dept, 'dept')"
               >
                 <option selected value="">Select Department</option>
               </select>
@@ -102,19 +102,6 @@
               </label>
             </div>
             <p></p>
-            <!-- <div class="list list-inset login-wraper">
-              <label class="item item-input custom-text nominal-roll-add-edit-input">
-                <i class="icon ion-android-time placeholder-icon"></i>
-                <input 
-                  ng-model="time_out" 
-                  ng-change="handleInputChange(time_out, 'time_out')" 
-                  type="time" 
-                  name="time_out"
-                  placeholder="Time Out"
-                >
-              </label>
-            </div>
-            <p id='in-time'></p> -->
             <div class="list list-inset login-wraper">
               <label class="item item-input custom-text nominal-roll-add-edit-input">
                 <i class="icon ion-android-time placeholder-icon"></i>
