@@ -43,7 +43,25 @@
         }
       }, function (err) {
       });
-    };    
+    };   
+    
+    function diff_hours(d, date1, date2) {
+      if (!date2  || date2 == '--') return 1;
+
+      var dt1 = new Date(d + ' ' +date1);
+      var dt2 = new Date(d + ' ' + date2);
+
+      var diff = Math.abs(dt1 - dt2) / 36e5;
+
+      var hour = 0;
+      if (diff < 1.5) return 1;
+
+      if (diff >= 1.5) hour = 2;
+      if (diff > 2) hour = 4;
+      if (diff > 4) hour = 8;
+
+      return hour;
+    }
 
     var getReportData = function (query) {
       $scope.reportData = [];
@@ -65,8 +83,18 @@
               res.rows.item(i).hours = '1';
             }
 
+            
+            
             if (res.rows.item(i).time_out != null && res.rows.item(i).time_out.length > 8) {
               res.rows.item(i).time_out = $filter('date')(new Date(res.rows.item(i).time_out), 'HH:mm:ss');
+            }
+            
+            if (res.rows.item(i).time_out != null && res.rows.item(i).hours == null) {
+              res.rows.item(i).hours = diff_hours(
+                res.rows.item(i).d,
+                res.rows.item(i).time_in,
+                res.rows.item(i).time_out
+              );
             }
 
             res.rows.item(i).s_no = i+1;
