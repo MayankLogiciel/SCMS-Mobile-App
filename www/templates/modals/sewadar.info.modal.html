@@ -67,7 +67,7 @@
 
 			<a class="button button-assertive" ng-click="closeModalForSewadarDetail(); SaveDataToAttandanceTable(sewadar);closePopoverForSewadar();" ng-if="buttonTextForSewadarModel=='MARK ATTENDANCE'">MARK ENTRY</a>
 			<a class="button button-balanced" ng-click="deleteSewadar(sewadar, type);" ng-if="buttonTextForSewadarModel !='MARK ATTENDANCE' && isCurrentDate && !isAttendaceClosed" >REMOVE ENTRY</a>
-			<a class="button button-assertive" ng-if="isPrintAndEditEnable" ng-click="editUser()">EDIT</a>
+			<!-- <a class="button button-assertive" ng-if="isPrintAndEditEnable" ng-click="editUser()">EDIT</a> -->
 			<a class="button button-balanced" ng-if="isPrintAndEditEnable" ng-click="printUser(sewadar, isImageNotAvailable)">PRINT</a>
 			<a class="button button-stable" ng-click="closeModalForSewadarDetail();">CANCEL</a>
 		</div>	

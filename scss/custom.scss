@@ -3185,29 +3185,44 @@
 		}
 	}
 }
-// .checkbox-list {
-// 	background: white;
-// 	border: 2px solid #ddd;
-// 	.item-checkbox{
-// 		border: none;
-// 	}
-// }
-.home-center-report {
-	table {
-		font-family: arial, sans-serif;
-		border-collapse: collapse;
-		width: 100%;
-	}
-	th {
-		font-weight: bold;
-	}
-	td, th {
-		border: 1px solid #dddddd;
-		text-align: left;
-		padding: 8px;
-	}
 
-	tr:nth-child(even) {
-		background-color: #dddddd;
+.home-center-report-wrap {
+	overflow: scroll;
+	.home-center-report {
+		table {
+			font-family: arial, sans-serif;
+			border-collapse: collapse;
+			width: 100%;
+			table-layout: fixed;
+		}
+		th {
+			font-weight: bold;
+			line-height: 38px;
+		}
+		td, th {
+			border: 1px solid #DDDDDD;
+			text-align: left;
+			padding: 8px;
+			white-space: break-spaces;
+		}
+		tr:nth-child(even) {
+			background-color: #DDDDDD;
+		}
+	}
+	.list .item.item-accordion {
+		padding: 0px;
+		transition: 0.09s all linear;
+		width: 950px !important;
+	}
+	.list .item.item-accordion.ng-hide {
+		line-height: 0px;
+	}
+	.list .item.item-accordion.ng-hide-add,
+	.list .item.item-accordion.ng-hide-remove {
+		display: block !important;
+	}
+	.item.item-stable {
+		padding: 0px;
+		width: 950px !important;
 	}
 }

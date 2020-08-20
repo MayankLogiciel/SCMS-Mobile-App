@@ -1,45 +1,79 @@
 <ion-view class="login-home-body home-popup">
-  <ion-header-bar class="bar-balanced custom-header-bar">
-    <div class="buttons left-button row ios-header-css">
-      <div on-tap="goBack()" class="col-80 row">
-        <button class="button button-icon button-stable ion-chevron-left col-10 sat-att-list-back-width">
+ 
+    <ion-header-bar class="bar-balanced custom-header-bar">
+      <div class="buttons left-button row ios-header-css">
+        <div on-tap="goBack()" class="col-80 row">
+          <button class="button button-icon button-stable ion-chevron-left col-10 sat-att-list-back-width">
+          </button>
+          <span class='col col-90 sat-att-list-title'>Daily Attendance Report</span>
+        </div>
+        <button class="button button-icon button-add col-20 edit-btn-att" on-tap="showFilterModal()">
+          <i class="icon ion-funnel"></i>
+          <span class="sat-att-list-edit">Filters</span>
         </button>
-        <span class='col col-90 sat-att-list-title'>Daily Attendance Report</span>
       </div>
-      <button class="button button-icon button-add col-20 edit-btn-att" on-tap="showFilterModal()">
-        <i class="icon ion-funnel"></i>
-        <span class="sat-att-list-edit">Filters</span>
-      </button>
-    </div>
-  </ion-header-bar>
-  <ion-content has-bouncing="false">
-    <div class="home-center-report">
-      <table>
-        <tr>
-          <th>S.No</th>
-          <th>Date</th>
-          <th>Sewadar Name</th>
-          <th>Badge No.</th>
-          <th>Deptt</th>
-          <th>Time In</th>
-          <th>Time Out</th>
-          <th>Total Time</th>
-        </tr>
-        <tr ng-if="reportData.length <= 0">
-          <td colspan="8" class="t-center">No Record Found.</td>
-        </tr>
-        <tr ng-repeat="report in reportData" ng-if="reportData.length > 0">
-          <td>{{report.s_no}}</td>
-          <td>{{report.d}}</td>
-          <td>{{report.name}}</td>
-          <td>{{report.batch_no ? report.batch_no : '--'}}</td>
-          <td>{{report.dname ? report.dname : '--'}}</td>
-          <td>{{report.time_in ? report.time_in : '--'}}</td>
-          <td>{{report.time_out ? report.time_out : '--'}}</td>
-          <td>{{report.hours}} hrs</td>
-        </tr>
-        
-      </table>
-    </div>
-  </ion-content>
+    </ion-header-bar>
+    
+    <ion-content>  
+      <div class="home-center-report-wrap">
+        <div class="home-center-report">
+          <table id="theader">
+            <tr>
+              <th width="50">S.No</th>
+              <th width="100">Date</th>
+              <th width="200">Sewadar Name</th>
+              <th width="90">Badge No.</th>
+              <th width="150">Deptt</th>
+              <th width="80">Time In</th>
+              <th width="80">Time Out</th>
+              <th width="100">Total Time</th>
+              <th width="100">No of Entries</th>
+            </tr>
+          </table>
+        </div>
+        <ion-list>
+          <div class="home-center-report" ng-if="reportData.length <= 0">
+            <table>
+              <tr>
+                <td colspan="9" class="t-center">No Record Found.</td>
+              </tr>
+            </table>
+          </div>
+          <div ng-repeat="report in reportData" ng-if="reportData.length > 0">
+            <ion-item class="item-stable" ng-click="toggleGroup(report)" ng-class="{active: isGroupShown(report)}">
+              <div class="home-center-report">
+                <table>
+                  <tr>
+                    <td width="50">{{report.s_no}}</td>
+                    <td width="100">{{report.d}}</td>
+                    <td width="200">{{report.name}}</td>
+                    <td width="90">{{report.batch_no ? report.batch_no : '--'}}</td>
+                    <td width="150">{{report.dname ? report.dname : '--'}}</td>
+                    <td width="80">{{report.time_in ? report.time_in : '--'}}</td>
+                    <td width="80">{{report.time_out ? report.time_out : '--'}}</td>
+                    <td width="100">{{report.th}} hrs</td>
+                    <td width="100">{{report.entry}}</td>
+                  </tr>
+                </table>
+              </div>
+            </ion-item>
+            <ion-item class="item-accordion" ng-repeat="item in multipleRecords" ng-if="isGroupShown(report) && multipleRecords.length > 0 && shownGroup != null">
+              <div class="home-center-report">
+                <table>
+                  <tr>
+                    <td colspan="2" width="150">{{item.d}}</td>
+                    <td width="200">{{item.name}}</td>
+                    <td width="90">{{item.batch_no ? item.batch_no : '--'}}</td>
+                    <td width="150">{{item.dname ? item.dname : '--'}}</td>
+                    <td width="80">{{item.time_in ? item.time_in : '--'}}</td>
+                    <td width="80">{{item.time_out ? item.time_out : '--'}}</td>
+                    <td width="200" colspan="2">{{item.hours}} hrs</td>
+                  </tr>
+                </table>
+              </div>
+            </ion-item>
+          </div>
+        </ion-list>
+      </div>
+      </ion-content>
 </ion-view>

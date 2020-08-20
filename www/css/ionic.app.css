@@ -12309,21 +12309,35 @@ a.button {
       .sewadar-search-block .item-avatar .list-sewadar-content-margin .list-content-avtar-content span {
         font-size: 14px; }
 
-.home-center-report table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 100%; }
-
-.home-center-report th {
-  font-weight: bold; }
-
-.home-center-report td, .home-center-report th {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px; }
-
-.home-center-report tr:nth-child(even) {
-  background-color: #dddddd; }
+.home-center-report-wrap {
+  overflow: scroll; }
+  .home-center-report-wrap .home-center-report table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed; }
+  .home-center-report-wrap .home-center-report th {
+    font-weight: bold;
+    line-height: 38px; }
+  .home-center-report-wrap .home-center-report td, .home-center-report-wrap .home-center-report th {
+    border: 1px solid #DDDDDD;
+    text-align: left;
+    padding: 8px;
+    white-space: break-spaces; }
+  .home-center-report-wrap .home-center-report tr:nth-child(even) {
+    background-color: #DDDDDD; }
+  .home-center-report-wrap .list .item.item-accordion {
+    padding: 0px;
+    transition: 0.09s all linear;
+    width: 950px !important; }
+  .home-center-report-wrap .list .item.item-accordion.ng-hide {
+    line-height: 0px; }
+  .home-center-report-wrap .list .item.item-accordion.ng-hide-add,
+  .home-center-report-wrap .list .item.item-accordion.ng-hide-remove {
+    display: block !important; }
+  .home-center-report-wrap .item.item-stable {
+    padding: 0px;
+    width: 950px !important; }
 
 #loading-bar, #loading-bar-spinner {
   pointer-events: none;
