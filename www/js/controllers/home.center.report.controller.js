@@ -161,7 +161,7 @@
     $scope.applyFilter = function() {
       cfpLoadingBar.start();
       var date = new Date();
-      var pdate = new Date(date.setDate(date.getDate() - 30));
+      var pdate = new Date(date.setDate(date.getDate() - 6));
       var currentDate = $scope.date_to ? $filter('date')(new Date($scope.date_to), 'yyyy-MM-dd') : $filter('date')(new Date(), 'yyyy-MM-dd');
       var prevdate = $scope.date_from ? $filter('date')(new Date($scope.date_from), 'yyyy-MM-dd')  : $filter('date')(new Date(pdate), 'yyyy-MM-dd');
 
@@ -206,7 +206,7 @@
     $scope.getReport = function () {
       
       var date = new Date();
-      var pdate = new Date(date.setDate(date.getDate() - 30));
+      var pdate = new Date(date.setDate(date.getDate() - 6));
       var currentDate = $filter('date')(new Date(), 'yyyy-MM-dd');
       var prevdate = $filter('date')(new Date(pdate), 'yyyy-MM-dd');
      
@@ -217,35 +217,30 @@
     $scope.getTotalHrs = function () {
       cfpLoadingBar.start()
       var date = new Date();
-      var pdate = new Date(date.setDate(date.getDate() - 30));
+      var pdate = new Date(date.setDate(date.getDate() - 6));
       var currentDate = $filter('date')(new Date(), 'yyyy-MM-dd');
       var prevdate = $filter('date')(new Date(pdate), 'yyyy-MM-dd');
-     
       var query = "SELECT sewadars.id, attendances.date as d, attendances.hours FROM sewadars INNER JOIN attendances ON sewadars.id =  attendances.sewadar_id where date(attendances.date) >= '" + prevdate + "' AND date(attendances.date) <= '" + currentDate + "' AND attendances.type = 'home_center'";
-
       $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
-        if (res.rows.length > 0) {
-          for (var i = 0; i < res.rows.length; i++) {
-            $scope.totalHours.push(res.rows.item(i));
-            if(res.rows.length - 1 == i) {
-              var que = "SELECT temp_sewadars.id, attendances.date as d, attendances.hours FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id =  attendances.sewadar_id where date(attendances.date) >= '" + prevdate + "' AND date(attendances.date) <= '" + currentDate + "' AND attendances.type = 'home_center'";
-              $cordovaSQLite.execute($rootScope.db, que).then(function (res) {
-                if (res.rows.length > 0) {
-                  for (var i = 0; i < res.rows.length; i++) {
-                    $scope.totalHours.push(res.rows.item(i));
-                    if(res.rows.length - 1 == i) {
-                      $scope.getReport();
-                    }
+        for (var i = 0; i < res.rows.length; i++) {
+          $scope.totalHours.push(res.rows.item(i));
+          if(res.rows.length - 1 == i) {
+            var que = "SELECT temp_sewadars.id, attendances.date as d, attendances.hours FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id =  attendances.sewadar_id where date(attendances.date) >= '" + prevdate + "' AND date(attendances.date) <= '" + currentDate + "' AND attendances.type = 'home_center'";
+            $cordovaSQLite.execute($rootScope.db, que).then(function (res1) {
+              if (res1.rows.length > 0) {
+                for (var j = 0; j < res1.rows.length; j++) {
+                  $scope.totalHours.push(res1.rows.item(j));
+                  if(res1.rows.length - 1 == j) {
+                    $scope.getReport();
                   }
-                }else {
-                  $scope.getReport();
                 }
-              });
-            }
+              }else {
+                $scope.getReport();
+              }
+            });
           }
         }
       });
-
     };
 
     $scope.getMultipleRecords = function (group) {
