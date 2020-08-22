@@ -133,8 +133,6 @@
     $scope.search = function (searchQuery) {
       $scope.searchQuery1 = searchQuery;
 
-      console.log(searchQuery);
-
       if (!searchQuery || !searchQuery.batch_no ||searchQuery.batch_no == ""){
         $scope.searchQuery1.batch_no = undefined
       } 
@@ -142,36 +140,12 @@
     
     $scope.updateOutTime = function (sewadar, type) {
       var time = $filter('date')(new Date(), 'yyyy-MM-dd H:mm:ss');
-      var ids = [];
-
-      var CheckQuery = "SELECT id, sewa_id, sewadar_id FROM attendances where sewadar_id ='" + sewadar.id + "' AND nominal_roll_id = '" + null + "' AND type = 'home_center' AND sewa_id = '" + sewadar.sewa_id + "'";
-
-      $cordovaSQLite.execute($rootScope.db, CheckQuery).then(function (res) {
-
-        for (var i = 0; i < res.rows.length; i++) {
-          ids.push(res.rows.item(i).id);
-        }
-      });
-
-      $timeout(function () {
-        if (ids.length <= 0) {
-          $cordovaToast.show('Please enter in time first.', 'short', 'center');
-          return;
-        }
-        var Checktime = "SELECT time_out FROM attendances where sewadar_id ='" + sewadar.id + "' AND nominal_roll_id = '" + null + "' AND type = 'home_center' AND sewa_id = '" + sewadar.sewa_id + "' AND id = '" + ids[ids.length - 1] + "'";
-
-        $cordovaSQLite.execute($rootScope.db, Checktime).then(function (res) {
-          if (res.rows.item(0).time_out == 'null') {
-            var query = "UPDATE attendances SET time_out = '" + time + "' WHERE sewadar_id = '" + sewadar.id + "' AND id = '" + ids[ids.length - 1] + "'";
-            $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
-              $cordovaToast.show('Out time entry saved', 'short', 'center');
-              setup();
-            }, function (err) { })
-            return;
-          }
-          $cordovaToast.show('Please enter in time first.', 'short', 'center');
-        })
-      }, 500);
+      var query = "UPDATE attendances SET time_out = '" + time + "' WHERE attendances.sewadar_id = '" + sewadar.att_id + "' AND attendances.created_at = '" + sewadar.att_created_at + "'";
+      
+      $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
+        $cordovaToast.show('Out time entry saved', 'short', 'center');
+        setup();
+      }, function (err) { })
     };   
 
     $scope.goToDateList = function () {
@@ -321,7 +295,7 @@
       var insertAttedanceForTempSewadar;
 
       if (angular.isDefined(TempSewadarData.id) && $scope.in) {
-        var CheckQuery = "SELECT attendances.id as s_id, sewa_id, sewadar_id FROM attendances where sewadar_id ='" + TempSewadarData.id + "' AND nominal_roll_id = '" + null + "' AND type = 'home_center' AND status <> 'done' AND sewa_id = '" + sewa_id + "'";
+        var CheckQuery = "SELECT sewa_id, sewadar_id, created_at FROM attendances where sewadar_id ='" + TempSewadarData.id + "' AND nominal_roll_id = '" + null + "' AND type = 'home_center' AND status <> 'done' AND sewa_id = '" + sewa_id + "'";
         $cordovaSQLite.execute($rootScope.db, CheckQuery).then(function (res) {
           if (res.rows.length == 0) {
              insertAttedanceForTempSewadar = "INSERT INTO attendances ('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id', 'time_in', 'time_out') VALUES ('" + $scope.currentDate + "','" + TempSewadarData.id + "','" + sewa_id + "', '" + reference_id + "', '" + type + "', '" + batch_type + "','" + $scope.current + "', '" + $scope.current + "', '" + sewadar_type + "','" + nominal_roll_id + "', '" + time + "', '" + null + "')";
@@ -337,7 +311,7 @@
               });   
 
           } else {
-            var query = "UPDATE attendances SET status = 'done' WHERE attendances.id = " + res.rows.item(0).s_id;
+            var query = "UPDATE attendances SET status = 'done' WHERE attendances.created_at <> '" + $scope.current + "' AND attendances.sewadar_id = '" + TempSewadarData.id + "'";
             $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
               insertAttedanceForTempSewadar = "INSERT INTO attendances ('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id', 'time_in', 'time_out') VALUES ('" + $scope.currentDate + "','" + TempSewadarData.id + "','" + sewa_id + "', '" + reference_id + "', '" + type + "', '" + batch_type + "','" + $scope.current + "', '" + $scope.current + "', '" + sewadar_type + "','" + nominal_roll_id + "', '" + time + "', '" + null + "')";
               $cordovaSQLite.execute($rootScope.db, insertAttedanceForTempSewadar).then(function (res) {
@@ -399,10 +373,11 @@
         var time = $filter('date')(new Date(), 'yyyy-MM-dd H:mm:ss');
   
         if ($scope.in) {
-          var CheckQuery = "SELECT attendances.id as s_id, sewa_id, sewadar_id FROM attendances where sewadar_id ='" + sewadar.id + "' AND nominal_roll_id = '" + null + "' AND type = 'home_center' AND status <> 'done' AND sewa_id = '" + sewa_id + "'";
+          var CheckQuery = "SELECT sewa_id, sewadar_id, created_at FROM attendances where sewadar_id ='" + sewadar.id + "' AND nominal_roll_id = '" + null + "' AND type = 'home_center' AND status <> 'done' AND sewa_id = '" + sewa_id + "'";
           $cordovaSQLite.execute($rootScope.db, CheckQuery).then(function (res) {
             if (res.rows.length > 0) {
-              var query = "UPDATE attendances SET status = 'done' WHERE attendances.id = " + res.rows.item(0).s_id;
+              var query = "UPDATE attendances SET status = 'done' WHERE attendances.created_at <> '" + $scope.current +"' AND attendances.sewadar_id = '" + res.rows.item(0).sewadar_id + "'";
+
               $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
                 var Insertquery = "INSERT INTO attendances('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id', 'time_in', 'time_out') VALUES ('" + $scope.currentDate + "','" + sewadar.id + "','" + sewa_id + "', '" + reference_id + "', '" + type + "', '" + batch_type + "','" + $scope.current + "','" + $scope.current + "', '" + sewadar_type + "','" + nominal_roll_id + "', '" + time + "', '" + null + "')";
         

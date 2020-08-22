@@ -207,6 +207,7 @@
 
 
                         var showDeleteConfirm = function(sewadar, type) { 
+                              console.log(sewadar, type);
                               $ionicPopup.confirm({
                                     title: 'Please Confirm',
                                     template: 'Are you sure you want to detete '+sewadar.name+' from attendees list? ',
@@ -248,7 +249,8 @@
                                           } 
                                           else {
                                                 if (type == "home_center") {
-                                                      var query = "DELETE FROM attendances WHERE attendances.id = '" + sewadar.s_id +"'";
+                                                      var query = "DELETE FROM attendances WHERE attendances.sewadar_id = '" + sewadar.att_id + "' AND attendances.created_at = '" + sewadar.att_created_at +"'";
+
                                                       $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
                                                             for (var i = 0; i < $scope.sewadarAttendance.length; i++) {
                                                                   if ($scope.sewadarAttendance[i].s_id == sewadar.s_id) {
