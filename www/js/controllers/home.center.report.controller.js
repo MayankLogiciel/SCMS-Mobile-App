@@ -28,9 +28,9 @@
         e = 0;
         angular.forEach($scope.totalHours, function(val) {
           if (val.id == v.id && val.d == v.d) {
-            h += Number(val.hours) 
+            h += Number(val.hours) <= 0 ? 1 : Number(val.hours);
             e += 1;
-            $scope.reportData[i].th = h <= 0 ? 1 : h;
+            $scope.reportData[i].th = h;
             $scope.reportData[i].entry = e;
           }
         })
