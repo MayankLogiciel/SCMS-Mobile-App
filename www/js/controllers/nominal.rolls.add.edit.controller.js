@@ -261,7 +261,7 @@
                   },
                   disabledDates: [],
                   from: new Date(2016, 1, 1), //Optional
-                  to: new Date(2020, 10, 30), //Optional
+                  // to: new Date(2020, 10, 30), //Optional
                   inputDate: new Date(),      //Optional
                   mondayFirst: true,          //Optional
                   disableWeekdays: [],       //Optional
@@ -275,7 +275,7 @@
                   },
                   disabledDates: [],
                   from: new Date(2016, 1, 1), //Optional
-                  to: new Date(2020, 10, 30), //Optional
+                  // to: new Date(2020, 10, 30), //Optional
                   inputDate: new Date(),      //Optional
                   mondayFirst: true,          //Optional
                   disableWeekdays: [],       //Optional
