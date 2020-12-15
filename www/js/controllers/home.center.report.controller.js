@@ -83,6 +83,7 @@
     }
 
     var getReportData = function (query) {
+      cfpLoadingBar.start();
       $scope.reportData = [];
       $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
         cfpLoadingBar.complete()
@@ -215,7 +216,7 @@
     };
 
     $scope.getTotalHrs = function () {
-      cfpLoadingBar.start()
+      // cfpLoadingBar.start();
       var date = new Date();
       var pdate = new Date(date.setDate(date.getDate() - 6));
       var currentDate = $filter('date')(new Date(), 'yyyy-MM-dd');

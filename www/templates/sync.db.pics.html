@@ -18,30 +18,30 @@
                 <i class="icon ion-android-upload upload-icon-sync"></i> Sync Now
             </button>
         </div>
-        <div class="sync-pic" >
+        <div class="sync-pic" ng-if="userData.group_id==4">
             <!-- <h4 class="profile-pic">Satsang Day attendance to sync: {{attendanceCount}}</h4> -->
             <h4 class="profile-pic">
-                <span ng-if="userData.group_id==5">Sync New Sewadars</span>
-                <span ng-if="userData.group_id==4">Nominal Rolls to sync: {{nominalCount}}</span>
+                <span>Nominal Rolls to sync: {{nominalCount}}</span>
             </h4>
             <button class="button button-assertive profile-pic-sync-btn" on-tap="uploadDatabase('nominal')">
                 <i class="icon ion-android-upload upload-icon-sync"></i> Sync Now
             </button>
         </div>       
-        <div class="sync-pic">
+        <div class="sync-pic" ng-if="userData.group_id==4">
             <h4 class="profile-pic">Profile pictures to sync: {{picturesCount}}</h4>
             <button class="button button-assertive profile-pic-sync-btn" on-tap="uploadImageOneByOne('only-pics')">
                 <i class="icon ion-android-upload upload-icon-sync"></i> Sync Now
             </button>
         </div>
-        <h3 class="download-img">DOWNLOAD IMAGES</h3>
-        <span class="sync-date" ng-if = "syncDateAndTime != null">Last Sync On: {{syncDateAndTime.date +"-"+ syncDateAndTime.time}}</span>
-        <div class="download-images-from-db all-img">
+        <h3 class="download-img" ng-if="userData.group_id==4">DOWNLOAD IMAGES</h3>
+        <span class="sync-date" ng-if="syncDateAndTime != null && userData.group_id==4">Last Sync On:
+            {{syncDateAndTime.date +"-"+ syncDateAndTime.time}}</span>
+        <div class="download-images-from-db all-img" ng-if="userData.group_id==4">
             <button class="button button-assertive profile-pic-sync-btn1 " on-tap="importImagesFromServer('all')">
                 <i class="icon ion-android-download upload-icon-sync"></i> All Images
             </button>
         </div>
-        <div class="download-images-from-db">
+        <div class="download-images-from-db" ng-if="userData.group_id==4">
             <button class="button button-assertive profile-pic-sync-btn1" on-tap ="importImagesFromServer()">
                 <i class="icon ion-android-download upload-icon-sync"></i>Updated Images
             </button>
