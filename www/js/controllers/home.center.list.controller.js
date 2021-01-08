@@ -65,7 +65,7 @@
     }
 
     $scope.closeNameBadgePopover = function () {
-      $scope.popover.hide();
+      $scope.popover.remove();
       $scope.$on('$destroy', function () {
         $scope.popover.remove();
       });
@@ -113,7 +113,7 @@
             res.rows.item(i).time_out = res.rows.item(i).time_out;
             if (res.rows.item(i).time_out != 'null') {
               res.rows.item(i).th = diff_hours(
-                $filter('date')(new Date(res.rows.item(i).time_in), 'yyyy-MM-dd H:mm:ss'), 
+                $filter('date')(new Date(res.rows.item(i).time_in), 'yyyy-MM-dd H:mm:ss'),
                 $filter('date')(new Date(res.rows.item(i).time_out), 'yyyy-MM-dd H:mm:ss')
               );
               res.rows.item(i).time_out = $filter('date')(new Date(res.rows.item(i).time_out), 'H:mm:ss');
@@ -133,26 +133,26 @@
     $scope.search = function (searchQuery) {
       $scope.searchQuery1 = searchQuery;
 
-      if (!searchQuery || !searchQuery.batch_no ||searchQuery.batch_no == ""){
+      if (!searchQuery || !searchQuery.batch_no || searchQuery.batch_no == "") {
         $scope.searchQuery1.batch_no = undefined
-      } 
-    }  
-    
+      }
+    }
+
     $scope.updateOutTime = function (sewadar, type) {
       var time = $filter('date')(new Date(), 'yyyy-MM-dd H:mm:ss');
       var query = "UPDATE attendances SET time_out = '" + time + "' WHERE attendances.sewadar_id = '" + sewadar.att_id + "' AND attendances.created_at = '" + sewadar.att_created_at + "'";
-      
+
       $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
         $cordovaToast.show('Out time entry saved', 'short', 'center');
         setup();
       }, function (err) { })
-    };   
+    };
 
     $scope.goToDateList = function () {
       $state.go('home-center-date-list', { type: $stateParams.type });
     }
 
-    $scope.timeFilter = function(type) {
+    $scope.timeFilter = function (type) {
       $scope.sewadarAttendance = [];
       var query = '';
       var sewa_id = $stateParams.type == 'day' ? 24 : 5;
@@ -161,17 +161,17 @@
         case 'in':
           var query = "Select *  from (SELECT DISTINCT sewadars.id, sewadars.name, sewadars.gender,sewadars.address, sewadars.batch_no, sewadars.guardian, sewadars.age, sewadars.photo, sewadars.designation_name, sewadars.department_name as dname, sewadars.dob, sewadars.sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, attendances.nominal_roll_id, attendances.sewadar_type, attendances.time_in, attendances.time_out, attendances.sewa_id, attendances.id as s_id FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "'  AND attendances.nominal_roll_id = '" + null + "' AND attendances.sewadar_type = 'permanent' AND attendances.type='home_center' AND attendances.status <> 'done' AND attendances.time_in<>'" + null + "'  AND attendances.sewa_id = '" + sewa_id + "' UNION SELECT DISTINCT temp_sewadars.id, temp_sewadars.name, temp_sewadars.gender,temp_sewadars.address, NULL as batch_no, temp_sewadars.guardian, temp_sewadars.age, NULL as photo, NULL as designation_name, NULL as department_name, NULL as dob, NULL as sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, NULL as nominal_roll_id, attendances.sewadar_type, attendances.time_in, attendances.time_out, attendances.sewa_id, attendances.id as s_id FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id = '" + null + "' AND attendances.sewadar_type = 'temporary' AND attendances.type='home_center' AND attendances.status <> 'done' AND attendances.time_in<>'" + null + "'  AND attendances.sewa_id = '" + sewa_id + "') att GROUP BY  att_id order by dname Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
 
-            getSewadarData(query);
-            break;
-          case 'out':
+          getSewadarData(query);
+          break;
+        case 'out':
           var query = "Select *  from (SELECT DISTINCT sewadars.id, sewadars.name, sewadars.gender,sewadars.address, sewadars.batch_no, sewadars.guardian, sewadars.age, sewadars.photo, sewadars.designation_name, sewadars.department_name as dname, sewadars.dob, sewadars.sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, attendances.nominal_roll_id, attendances.sewadar_type, attendances.time_in, attendances.time_out, attendances.sewa_id, attendances.id as s_id FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "'  AND attendances.nominal_roll_id = '" + null + "' AND attendances.sewadar_type = 'permanent' AND attendances.type='home_center' AND attendances.status <> 'done' AND attendances.time_out<>'" + null + "'  AND attendances.sewa_id = '" + sewa_id + "' UNION SELECT DISTINCT temp_sewadars.id, temp_sewadars.name, temp_sewadars.gender,temp_sewadars.address, NULL as batch_no, temp_sewadars.guardian, temp_sewadars.age, NULL as photo, NULL as designation_name, NULL as department_name, NULL as dob, NULL as sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, NULL as nominal_roll_id, attendances.sewadar_type, attendances.time_in, attendances.time_out, attendances.sewa_id, attendances.id as s_id FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id = '" + null + "' AND attendances.sewadar_type = 'temporary' AND attendances.type='home_center' AND attendances.status <> 'done' AND attendances.time_out<>'" + null + "'  AND attendances.sewa_id = '" + sewa_id + "') att GROUP BY  att_id order by dname Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
-            getSewadarData(query);
-            break;
+          getSewadarData(query);
+          break;
         case 'current':
           var query = "Select *  from (SELECT DISTINCT sewadars.id, sewadars.name, sewadars.gender,sewadars.address, sewadars.batch_no, sewadars.guardian, sewadars.age, sewadars.photo, sewadars.designation_name, sewadars.department_name as dname, sewadars.dob, sewadars.sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, attendances.nominal_roll_id, attendances.sewadar_type, attendances.time_in, attendances.time_out, attendances.sewa_id, attendances.id as s_id FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "'  AND attendances.nominal_roll_id = '" + null + "' AND attendances.sewadar_type = 'permanent' AND attendances.type='home_center' AND attendances.status <> 'done' AND attendances.time_out='" + null + "'  AND attendances.sewa_id = '" + sewa_id + "' UNION SELECT DISTINCT temp_sewadars.id, temp_sewadars.name, temp_sewadars.gender,temp_sewadars.address, NULL as batch_no, temp_sewadars.guardian, temp_sewadars.age, NULL as photo, NULL as designation_name, NULL as department_name, NULL as dob, NULL as sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, NULL as nominal_roll_id, attendances.sewadar_type, attendances.time_in, attendances.time_out, attendances.sewa_id, attendances.id as s_id FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id = '" + null + "' AND attendances.sewadar_type = 'temporary' AND attendances.type='home_center' AND attendances.status <> 'done' AND attendances.time_out='" + null + "'  AND attendances.sewa_id = '" + sewa_id + "') att GROUP BY  att_id order by dname Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
           getSewadarData(query);
-            
-            break;
+
+          break;
       }
     }
 
@@ -220,7 +220,7 @@
 
     $scope.closePopoverForTempSewadar = function () {
       $timeout(function () {
-        $scope.popover.hide();
+        $scope.popover.remove();
         angular.element(document.body).removeClass('popover-open');
         angular.element(document.body).removeClass('modal-open');
         $scope.TempSewadarData = {};
@@ -250,14 +250,14 @@
       TempSewadarData.guardian = angular.uppercase(TempSewadarData.guardian);
       TempSewadarData.address = angular.uppercase(TempSewadarData.address);
 
-      
+
       $scope.current = $filter('date')(new Date(), 'yyyy-MM-dd h:mm:ss');
-      
+
       if (TempSewadarData.age < 5) {
         $scope.showAge = true;
         return;
       }
-      
+
       $scope.showAge = false;
       if (!TempSewadarData.gender && !angular.isDefined(TempSewadarData.Male) && !angular.isDefined(TempSewadarData.Female)) {
         $scope.showError = true;
@@ -273,7 +273,7 @@
           $cordovaSQLite.execute($rootScope.db, Insertquery).then(function (resTemp) {
             TempSewadarData.id = resTemp.insertId;
             addTempSewadarNested(TempSewadarData);
-          }, function (err) {});
+          }, function (err) { });
           return;
         }
         addTempSewadarNested(res.rows.item(0));
@@ -291,24 +291,24 @@
       var batch_type = 'temporary';
       var sewadar_type = 'temporary';
       var time = $filter('date')(new Date(), 'yyyy-MM-dd H:mm:ss');
-     
+
       var insertAttedanceForTempSewadar;
 
       if (angular.isDefined(TempSewadarData.id) && $scope.in) {
         var CheckQuery = "SELECT sewa_id, sewadar_id, created_at FROM attendances where sewadar_id ='" + TempSewadarData.id + "' AND nominal_roll_id = '" + null + "' AND type = 'home_center' AND status <> 'done' AND sewa_id = '" + sewa_id + "'";
         $cordovaSQLite.execute($rootScope.db, CheckQuery).then(function (res) {
           if (res.rows.length == 0) {
-             insertAttedanceForTempSewadar = "INSERT INTO attendances ('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id', 'time_in', 'time_out') VALUES ('" + $scope.currentDate + "','" + TempSewadarData.id + "','" + sewa_id + "', '" + reference_id + "', '" + type + "', '" + batch_type + "','" + $scope.current + "', '" + $scope.current + "', '" + sewadar_type + "','" + nominal_roll_id + "', '" + time + "', '" + null + "')";
-              $cordovaSQLite.execute($rootScope.db, insertAttedanceForTempSewadar).then(function (res) {
-                $scope.sewadarAttendance.unshift(TempSewadarData);
-                $scope.TempSewadarData = {};
-                $scope.currentAttendees();
-                $scope.totalAttendees();
-                $cordovaToast.show('Entry marked successfully', 'short', 'center');
-                setup();
-              }, function (err) {
+            insertAttedanceForTempSewadar = "INSERT INTO attendances ('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id', 'time_in', 'time_out') VALUES ('" + $scope.currentDate + "','" + TempSewadarData.id + "','" + sewa_id + "', '" + reference_id + "', '" + type + "', '" + batch_type + "','" + $scope.current + "', '" + $scope.current + "', '" + sewadar_type + "','" + nominal_roll_id + "', '" + time + "', '" + null + "')";
+            $cordovaSQLite.execute($rootScope.db, insertAttedanceForTempSewadar).then(function (res) {
+              $scope.sewadarAttendance.unshift(TempSewadarData);
+              $scope.TempSewadarData = {};
+              $scope.currentAttendees();
+              $scope.totalAttendees();
+              $cordovaToast.show('Entry marked successfully', 'short', 'center');
+              setup();
+            }, function (err) {
 
-              });   
+            });
 
           } else {
             var query = "UPDATE attendances SET status = 'done' WHERE attendances.created_at <> '" + $scope.current + "' AND attendances.sewadar_id = '" + TempSewadarData.id + "'";
@@ -323,7 +323,7 @@
                 setup();
               }, function (err) {
 
-              });   
+              });
             })
           }
         });
@@ -351,13 +351,13 @@
     }
 
     $scope.SaveDataToAttandanceTable = function (sewadar, fromQR) {
-      if(!sewadar.batch_no) {
-        if(sewadar.id) {
+      if (!sewadar.batch_no) {
+        if (sewadar.id) {
           addTempSewadarNested(sewadar);
-        }                       
+        }
         $scope.closePopoverForTempSewadar();
-        setFocus();  
-      }else {
+        setFocus();
+      } else {
         if (sewadar.batch_status == 'hold') {
           $cordovaToast.show('Not allowed due to hold status. Please contact to your respective incharge.', 'long', 'center');
           return;
@@ -371,26 +371,26 @@
         var batch_type = 'permanent';
         var sewadar_type = 'permanent';
         var time = $filter('date')(new Date(), 'yyyy-MM-dd H:mm:ss');
-  
+
         if ($scope.in) {
           var CheckQuery = "SELECT sewa_id, sewadar_id, created_at FROM attendances where sewadar_id ='" + sewadar.id + "' AND nominal_roll_id = '" + null + "' AND type = 'home_center' AND status <> 'done' AND sewa_id = '" + sewa_id + "'";
           $cordovaSQLite.execute($rootScope.db, CheckQuery).then(function (res) {
             if (res.rows.length > 0) {
-              var query = "UPDATE attendances SET status = 'done' WHERE attendances.created_at <> '" + $scope.current +"' AND attendances.sewadar_id = '" + res.rows.item(0).sewadar_id + "'";
+              var query = "UPDATE attendances SET status = 'done' WHERE attendances.created_at <> '" + $scope.current + "' AND attendances.sewadar_id = '" + res.rows.item(0).sewadar_id + "'";
 
               $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
                 var Insertquery = "INSERT INTO attendances('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id', 'time_in', 'time_out') VALUES ('" + $scope.currentDate + "','" + sewadar.id + "','" + sewa_id + "', '" + reference_id + "', '" + type + "', '" + batch_type + "','" + $scope.current + "','" + $scope.current + "', '" + sewadar_type + "','" + nominal_roll_id + "', '" + time + "', '" + null + "')";
-        
+
                 $cordovaSQLite.execute($rootScope.db, Insertquery).then(function (res) {
                   $cordovaToast.show('Entry marked successfully', 'short', 'center');
                   $scope.currentAttendees();
                   $scope.totalAttendees();
                   $scope.getListFromSewadarsForAttendance();
-                }, function (err) {});
+                }, function (err) { });
               })
-            }else {
+            } else {
               var Insertquery = "INSERT INTO attendances('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id', 'time_in', 'time_out') VALUES ('" + $scope.currentDate + "','" + sewadar.id + "','" + sewa_id + "', '" + reference_id + "', '" + type + "', '" + batch_type + "','" + $scope.current + "','" + $scope.current + "', '" + sewadar_type + "','" + nominal_roll_id + "', '" + time + "', '" + null + "')";
-  
+
               $cordovaSQLite.execute($rootScope.db, Insertquery).then(function (res) {
                 $cordovaToast.show('Entry marked successfully', 'short', 'center');
                 $scope.currentAttendees();
@@ -399,7 +399,7 @@
               }, function (err) { });
             }
           });
-  
+
         }
 
       }

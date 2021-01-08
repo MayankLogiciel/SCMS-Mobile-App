@@ -16,17 +16,17 @@
       $scope.totalAttendees();
       $scope.currentAttendees();
       $scope.in = true;
-      $scope.out = false;      
+      $scope.out = false;
     };
-        
+
     $scope.goBack = function () {
       $ionicHistory.goBack();
     };
 
-    $scope.timeTypeSelection = function(type) {
+    $scope.timeTypeSelection = function (type) {
       if (type == 'in') {
         $scope.in = true;
-        $scope.out = false ;
+        $scope.out = false;
       }
 
       if (type == 'out') {
@@ -37,7 +37,7 @@
 
     $scope.totalAttendees = function () {
       var sewa_id = $stateParams.type == 'day' ? 24 : 5;
-      var query = "SELECT COUNT(DISTINCT sewadar_id) as count FROM attendances WHERE date(attendances.date) = '" + $scope.currentDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type= 'home_center' AND attendances.sewa_id = '" + sewa_id +"'";
+      var query = "SELECT COUNT(DISTINCT sewadar_id) as count FROM attendances WHERE date(attendances.date) = '" + $scope.currentDate + "' AND attendances.nominal_roll_id= '" + null + "' AND attendances.type= 'home_center' AND attendances.sewa_id = '" + sewa_id + "'";
       $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
         for (var i = 0; i < res.rows.length; i++) {
           $scope.count = res.rows.item(i).count;
@@ -72,7 +72,7 @@
       }
     }
 
-    $scope.goToDateList = function() {
+    $scope.goToDateList = function () {
       $state.go('home-center-date-list', { type: $stateParams.type });
     }
 
@@ -114,7 +114,7 @@
       var batch_type = 'permanent';
       var sewadar_type = 'permanent';
       var time = $filter('date')(new Date(), 'yyyy-MM-dd H:mm:ss');
-      
+
       if ($scope.in) {
         var Insertquery = "INSERT INTO attendances('date', 'sewadar_id', 'sewa_id','reference_id', 'type', 'batch_type', 'created_at', 'updated_at', 'sewadar_type', 'nominal_roll_id', 'time_in', 'time_out') VALUES ('" + $scope.currentDate + "','" + sewadar.id + "','" + sewa_id + "', '" + reference_id + "', '" + type + "', '" + batch_type + "','" + $scope.current + "','" + $scope.current + "', '" + sewadar_type + "','" + nominal_roll_id + "', '" + time + "', '" + null + "')";
         $cordovaSQLite.execute($rootScope.db, Insertquery).then(function (res) {
@@ -136,7 +136,7 @@
     };
 
     $scope.closeNameBadgePopover = function () {
-      $scope.popover.hide();
+      $scope.popover.remove();
     }
     $scope.$on('$destroy', function () {
       $scope.popover.remove();

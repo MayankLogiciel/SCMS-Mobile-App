@@ -13,20 +13,20 @@
       $scope.multipleRecords = [];
       $scope.totalHours = [];
       $scope.sewadar_name = '';
-      $scope.jathas = [];     
-      $scope.dept = {}; 
-      $scope.badge_no = ''; 
+      $scope.jathas = [];
+      $scope.dept = {};
+      $scope.badge_no = '';
       $scope.time_in = '';
       $scope.time_out = '';
     };
 
-    $scope.calculateHours = function() {
+    $scope.calculateHours = function () {
       var h = 0;
       var e = 0;
-      angular.forEach($scope.reportData, function(v, i) {
+      angular.forEach($scope.reportData, function (v, i) {
         h = 0;
         e = 0;
-        angular.forEach($scope.totalHours, function(val) {
+        angular.forEach($scope.totalHours, function (val) {
           if (val.id == v.id && val.d == v.d) {
             h += Number(val.hours) <= 0 ? 1 : Number(val.hours);
             e += 1;
@@ -50,7 +50,7 @@
         $scope.modal = modal;
         $scope.modal.show();
       });
-    }; 
+    };
 
     $scope.getListForJatha = function () {
       var query = "SELECT name as jatha_name, id as department_id FROM departments ORDER BY jatha_name ASC";
@@ -62,12 +62,12 @@
         }
       }, function (err) {
       });
-    };   
-    
-    function diff_hours(d, date1, date2) {
-      if (!date2  || date2 == '--') return 1;
+    };
 
-      var dt1 = new Date(d + ' ' +date1);
+    function diff_hours(d, date1, date2) {
+      if (!date2 || date2 == '--') return 1;
+
+      var dt1 = new Date(d + ' ' + date1);
       var dt2 = new Date(d + ' ' + date2);
 
       var diff = Math.abs(dt1 - dt2) / 36e5;
@@ -104,31 +104,31 @@
               res.rows.item(i).hours = '1';
             }
 
-            
+
             if (res.rows.item(i).time_out != null && res.rows.item(i).time_out.length > 8) {
               res.rows.item(i).time_out = $filter('date')(new Date(res.rows.item(i).time_out), 'HH:mm:ss');
             }
-            
+
             if (res.rows.item(i).time_out != null && res.rows.item(i).hours == null) {
               res.rows.item(i).hours = diff_hours(
                 res.rows.item(i).d,
                 res.rows.item(i).time_in,
                 res.rows.item(i).time_out
-                );
+              );
             }
-            
-            res.rows.item(i).s_no = i+1;
+
+            res.rows.item(i).s_no = i + 1;
             $scope.reportData.push(res.rows.item(i));
-            if(res.rows.length - 1 == i) {
+            if (res.rows.length - 1 == i) {
               $scope.calculateHours();
             }
           }
         }
       },
-      function (err) {}).finally(function () {
-        cfpLoadingBar.complete()
-        $scope.$broadcast('scroll.infiniteScrollComplete');
-      });
+        function (err) { }).finally(function () {
+          cfpLoadingBar.complete()
+          $scope.$broadcast('scroll.infiniteScrollComplete');
+        });
     };
 
 
@@ -149,24 +149,24 @@
         case 'time_in':
           $scope.time_in = $filter('date')(new Date(q), 'HH:mm:ss');
           break;
-          
+
         case 'time_out':
           $scope.time_out = $filter('date')(new Date(q), 'HH:mm:ss');
           break;
-      
+
         default:
           break;
       }
-    }  
+    }
 
-    $scope.applyFilter = function() {
+    $scope.applyFilter = function () {
       cfpLoadingBar.start();
       var date = new Date();
       var pdate = new Date(date.setDate(date.getDate() - 6));
       var currentDate = $scope.date_to ? $filter('date')(new Date($scope.date_to), 'yyyy-MM-dd') : $filter('date')(new Date(), 'yyyy-MM-dd');
-      var prevdate = $scope.date_from ? $filter('date')(new Date($scope.date_from), 'yyyy-MM-dd')  : $filter('date')(new Date(pdate), 'yyyy-MM-dd');
+      var prevdate = $scope.date_from ? $filter('date')(new Date($scope.date_from), 'yyyy-MM-dd') : $filter('date')(new Date(pdate), 'yyyy-MM-dd');
 
-      var handleQuery = function(t, key) {
+      var handleQuery = function (t, key) {
         if (!t) return '';
         if (key == 'dname' && $scope.dept.jatha_name) return "AND dname = '" + $scope.dept.jatha_name + "'";
         if (key == 'name' && $scope.sewadar_name) return "AND name LIKE '" + $scope.sewadar_name + '%' + "'";
@@ -175,25 +175,25 @@
         if (key == 'time_out' && $scope.time_out) return "AND time_out<= '" + $scope.time_out + "'";
 
         return '';
-      } 
+      }
 
       var query = '';
 
       if ($scope.badge_no || $scope.dept.jatha_name) {
-        query = "Select *  from (SELECT sewadars.id, sewadars.name as name, sewadars.batch_no as batch_no, sewadars.photo, sewadars.department_name as dname, attendances.date as d, attendances.created_at as att_created_at,  attendances.sewadar_id as att_id, attendances.time_in as time_in, attendances.time_out as time_out, attendances.hours, attendances.id as s_id FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where date (attendances.date) >= '" + prevdate + "' AND date(attendances.date) <= '" + currentDate + "' " + handleQuery($scope.dept, 'dname') + " " + handleQuery($scope.sewadar_name, 'name') + " " + handleQuery($scope.badge_no, 'badge_no') + " " + handleQuery($scope.time_in, 'time_in') + " " + handleQuery($scope.time_out, 'time_out') + " AND attendances.type='home_center') Group By d, name order by d Desc, dname Desc, name Asc";
+        query = "Select *  from (SELECT sewadars.id, sewadars.name as name, sewadars.batch_no as batch_no, sewadars.photo, sewadars.department_name as dname, attendances.date as d, attendances.created_at as att_created_at,  attendances.sewadar_id as att_id, attendances.time_in as time_in, attendances.time_out as time_out, attendances.hours, attendances.id as s_id FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where date (attendances.date) >= '" + prevdate + "' AND date(attendances.date) <= '" + currentDate + "' " + handleQuery($scope.dept, 'dname') + " " + handleQuery($scope.sewadar_name, 'name') + " " + handleQuery($scope.badge_no, 'badge_no') + " " + handleQuery($scope.time_in, 'time_in') + " " + handleQuery($scope.time_out, 'time_out') + " AND attendances.type='home_center' AND attendances.sewadar_type='permanent') Group By d, name order by d Desc, dname Desc, name Asc";
       } else {
-        query = "Select *  from (SELECT sewadars.id, sewadars.name as name, sewadars.batch_no as batch_no, sewadars.photo, sewadars.department_name as dname, attendances.date as d, attendances.created_at as att_created_at,  attendances.sewadar_id as att_id, attendances.time_in as time_in, attendances.time_out as time_out, attendances.hours, attendances.id as s_id FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where date (attendances.date) >= '" + prevdate + "' AND date(attendances.date) <= '" + currentDate + "' " + handleQuery($scope.dept, 'dname') + " " + handleQuery($scope.sewadar_name, 'name') + " " + handleQuery($scope.badge_no, 'badge_no') + " " + handleQuery($scope.time_in, 'time_in') + " " + handleQuery($scope.time_out, 'time_out') + " AND attendances.type='home_center' UNION SELECT temp_sewadars.id, temp_sewadars.name, NULL as batch_no, NULL as photo, NULL as department_name, attendances.date as d, attendances.created_at as att_created_at, attendances.sewadar_id as att_id, attendances.time_in as time_in, attendances.time_out as time_ouy, attendances.hours, attendances.id as s_id FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where date (attendances.date) >= '" + prevdate + "' AND date(attendances.date) <= '" + currentDate + "' " + handleQuery($scope.sewadar_name, 'name') + " " + handleQuery($scope.time_in, 'time_in') + " " + handleQuery($scope.time_out, 'time_out') +" AND attendances.type='home_center') Group By d, name order by d Desc, dname Desc, name Asc";
+        query = "Select *  from (SELECT sewadars.id, sewadars.name as name, sewadars.batch_no as batch_no, sewadars.photo, sewadars.department_name as dname, attendances.date as d, attendances.created_at as att_created_at,  attendances.sewadar_id as att_id, attendances.time_in as time_in, attendances.time_out as time_out, attendances.hours, attendances.id as s_id FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where date (attendances.date) >= '" + prevdate + "' AND date(attendances.date) <= '" + currentDate + "' " + handleQuery($scope.dept, 'dname') + " " + handleQuery($scope.sewadar_name, 'name') + " " + handleQuery($scope.badge_no, 'badge_no') + " " + handleQuery($scope.time_in, 'time_in') + " " + handleQuery($scope.time_out, 'time_out') + " AND attendances.type='home_center' AND attendances.sewadar_type='permanent' UNION SELECT temp_sewadars.id, temp_sewadars.name, NULL as batch_no, NULL as photo, NULL as department_name, attendances.date as d, attendances.created_at as att_created_at, attendances.sewadar_id as att_id, attendances.time_in as time_in, attendances.time_out as time_ouy, attendances.hours, attendances.id as s_id FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where date (attendances.date) >= '" + prevdate + "' AND date(attendances.date) <= '" + currentDate + "' " + handleQuery($scope.sewadar_name, 'name') + " " + handleQuery($scope.time_in, 'time_in') + " " + handleQuery($scope.time_out, 'time_out') + " AND attendances.type='home_center' AND attendances.sewadar_type='temporary') Group By d, name order by d Desc, dname Desc, name Asc";
       }
 
       getReportData(query);
       $scope.modal.hide();
     }
 
-    $scope.resetFilter = function() {
+    $scope.resetFilter = function () {
       $timeout(function () {
         $scope.date_from = '';
         $scope.date_to = '';
-        $scope.sewadar_name= '';
+        $scope.sewadar_name = '';
         $scope.time_in = '';
         $scope.time_out = '';
         $scope.dept = {};
@@ -205,13 +205,16 @@
     }
 
     $scope.getReport = function () {
-      
+
       var date = new Date();
       var pdate = new Date(date.setDate(date.getDate() - 6));
       var currentDate = $filter('date')(new Date(), 'yyyy-MM-dd');
       var prevdate = $filter('date')(new Date(pdate), 'yyyy-MM-dd');
-     
-      var query = "Select *  from (SELECT sewadars.id, sewadars.name as name, sewadars.batch_no, sewadars.photo, sewadars.department_name as dname, attendances.date as d, attendances.created_at as att_created_at,  attendances.sewadar_id as att_id, attendances.time_in, attendances.time_out, attendances.hours, attendances.id as s_id FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where date (attendances.date) >= '" + prevdate + "' AND date(attendances.date) <= '" + currentDate + "' AND attendances.type='home_center' UNION SELECT temp_sewadars.id, temp_sewadars.name, NULL as batch_no, NULL as photo, NULL as department_name, attendances.date as d, attendances.created_at as att_created_at, attendances.sewadar_id as att_id, attendances.time_in, attendances.time_out, attendances.hours, attendances.id as s_id FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where date (attendances.date) >= '" + prevdate + "' AND date(attendances.date) <= '" + currentDate + "' AND attendances.type='home_center') Group By d, name order by d Desc, dname Desc, name Asc";
+
+      var query = "Select *  from (SELECT sewadars.id, sewadars.name as name, sewadars.batch_no, sewadars.photo, sewadars.department_name as dname, attendances.date as d, attendances.created_at as att_created_at,  attendances.sewadar_id as att_id, attendances.time_in, attendances.time_out, attendances.hours, attendances.id as s_id FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where date (attendances.date) >= '" + prevdate + "' AND date(attendances.date) <= '" + currentDate + "' AND attendances.type='home_center' AND attendances.sewadar_type='permanent' UNION SELECT temp_sewadars.id, temp_sewadars.name, NULL as batch_no, NULL as photo, NULL as department_name, attendances.date as d, attendances.created_at as att_created_at, attendances.sewadar_id as att_id, attendances.time_in, attendances.time_out, attendances.hours, attendances.id as s_id FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where date (attendances.date) >= '" + prevdate + "' AND date(attendances.date) <= '" + currentDate + "' AND attendances.type='home_center' AND attendances.sewadar_type='temporary') Group By d, name order by d Desc, dname Desc, name Asc";
+
+      console.log(query);
+
       getReportData(query);
     };
 
@@ -225,17 +228,17 @@
       $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
         for (var i = 0; i < res.rows.length; i++) {
           $scope.totalHours.push(res.rows.item(i));
-          if(res.rows.length - 1 == i) {
+          if (res.rows.length - 1 == i) {
             var que = "SELECT temp_sewadars.id, attendances.date as d, attendances.hours FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id =  attendances.sewadar_id where date(attendances.date) >= '" + prevdate + "' AND date(attendances.date) <= '" + currentDate + "' AND attendances.type = 'home_center'";
             $cordovaSQLite.execute($rootScope.db, que).then(function (res1) {
               if (res1.rows.length > 0) {
                 for (var j = 0; j < res1.rows.length; j++) {
                   $scope.totalHours.push(res1.rows.item(j));
-                  if(res1.rows.length - 1 == j) {
+                  if (res1.rows.length - 1 == j) {
                     $scope.getReport();
                   }
                 }
-              }else {
+              } else {
                 $scope.getReport();
               }
             });
@@ -249,9 +252,9 @@
       $scope.multipleRecords = [];
       var query = '';
       if (group.batch_no) {
-        query = "SELECT sewadars.id, sewadars.name as name, sewadars.batch_no, sewadars.photo, sewadars.department_name as dname, attendances.date as d, attendances.created_at as att_created_at,  attendances.sewadar_id as att_id, attendances.time_in, attendances.time_out, attendances.hours, attendances.id as s_id FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where date (attendances.date) == '" + group.d + "' AND att_id == '" + group.att_id + "' AND attendances.type='home_center' order by d Desc";
+        query = "SELECT sewadars.id, sewadars.name as name, sewadars.batch_no, sewadars.photo, sewadars.department_name as dname, attendances.date as d, attendances.created_at as att_created_at,  attendances.sewadar_id as att_id, attendances.time_in, attendances.time_out, attendances.hours, attendances.id as s_id FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where date (attendances.date) == '" + group.d + "' AND att_id == '" + group.att_id + "' AND attendances.type='home_center' AND attendances.sewadar_type='parmanent' order by d Desc";
       } else {
-        query = "SELECT temp_sewadars.id, temp_sewadars.name, NULL as batch_no, NULL as photo, NULL as department_name, attendances.date as d, attendances.created_at as att_created_at, attendances.sewadar_id as att_id, attendances.time_in, attendances.time_out, attendances.hours, attendances.id as s_id FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where date (attendances.date) == '" + group.d + "' AND att_id == '" + group.att_id + "' order by d Desc";
+        query = "SELECT temp_sewadars.id, temp_sewadars.name, NULL as batch_no, NULL as photo, NULL as department_name, attendances.date as d, attendances.created_at as att_created_at, attendances.sewadar_id as att_id, attendances.time_in, attendances.time_out, attendances.hours, attendances.id as s_id FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where date (attendances.date) == '" + group.d + "' AND att_id == '" + group.att_id + "' AND attendances.type='home_center' AND attendances.sewadar_type='temporary' order by d Desc";
       }
       $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
         cfpLoadingBar.complete();
@@ -333,8 +336,8 @@
       }
     };
 
-    var handleTimeFormat = function(t) {
-      if (t.toLocaleString().length == 1) return '0'+t;
+    var handleTimeFormat = function (t) {
+      if (t.toLocaleString().length == 1) return '0' + t;
 
       return t;
     }
@@ -346,7 +349,7 @@
         } else {
           $scope.selectedValue = val;
           var selectedTime = new Date(Number(val) * 1000);
-          
+
           $scope.time_in = handleTimeFormat(selectedTime.getUTCHours()) + ':' + handleTimeFormat(selectedTime.getUTCMinutes()) + ':' + '00';
         }
       },
@@ -392,7 +395,7 @@
         $scope.shownGroup = null;
       } else {
         $scope.shownGroup = null;
-        if(group.entry == 1) return;
+        if (group.entry == 1) return;
         $scope.getMultipleRecords(group);
       }
     };
