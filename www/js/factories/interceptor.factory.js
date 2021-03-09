@@ -14,30 +14,30 @@ angular
                 var $state = $injector.get('$state');
                 switch(rejection.status){
                     case 500:
-                        $cordovaToast.show(message.serverErrorMessage, 'short', 'center'); 
+                        $cordovaToast.show(message.serverErrorMessage, 'short', 'center');
                         break;
-                    case 400: 
-                        localStorage.removeItem("SCMS_token");                            
+                    case 400:
+                        localStorage.removeItem("SCMS_token");
                         break;
-                    case 422: 
-                         $cordovaToast.show(message.underProcessMessage, 'short', 'center');                           
+                    case 422:
+                         $cordovaToast.show(message.underProcessMessage, 'short', 'center');
                         break;
-                    case 429: 
-                         $cordovaToast.show('Sync after sometime', 'short', 'center');                           
+                    case 429:
+                         $cordovaToast.show('Sync after sometime', 'short', 'center');
                         break;
-                    case 404: 
+                    case 404:
                         if(rejection.statusText == 'Not Found') {
-                            $cordovaToast.show(message.wrongRoute, 'short', 'center'); 
+                            $cordovaToast.show(message.wrongRoute, 'short', 'center');
                         }
                         if(rejection.data.message) {
-                            $cordovaToast.show(rejection.data.message, 'short', 'center'); 
+                            $cordovaToast.show(rejection.data.message, 'short', 'center');
                         }
-                        break; 
-                    case 401:  
+                        break;
+                    case 401:
                         if($state.current.name == "import-database") {
-                            $cordovaToast.show(rejection.data.message, 'short', 'center'); 
+                            $cordovaToast.show(rejection.data && rejection.data.message, 'short', 'center');
                         }
-                        localStorage.removeItem("SCMS_token"); 
+                        localStorage.removeItem("SCMS_token");
                         break;
                     case 412:
                         if(angular.isDefined(rejection.data)) {
@@ -48,14 +48,14 @@ angular
                             }
                         }
                         break;
-                    case -1: 
-                        $cordovaToast.show(message.wrongUrl, 'short', 'center'); 
+                    case -1:
+                        $cordovaToast.show(message.wrongUrl, 'short', 'center');
                         break;
                     default:
                         $cordovaToast.show(rejection.body || message.serverErrorMessage, 'short', 'center');
                 }//end of switch
                 return $q.reject(rejection);
-            } 
+            }
         };
 	})
     .config(function($httpProvider) {

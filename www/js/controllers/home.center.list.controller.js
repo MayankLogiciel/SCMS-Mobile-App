@@ -52,7 +52,7 @@
     $scope.openNameOrBadgePopover = function ($event) {
       $ionicPopover.fromTemplateUrl('templates/popovers/nameorbadgebutton.popover.html', {
         scope: $scope,
-        //backdropClickToClose: false                  
+        //backdropClickToClose: false
       }).then(function (popover) {
         $scope.popover = popover;
         $scope.popover.show($event);
@@ -110,16 +110,27 @@
         $scope.totalRows = res.rows.length;
         if (res.rows.length > 0) {
           for (var i = 0; i < res.rows.length; i++) {
-            res.rows.item(i).time_out = res.rows.item(i).time_out;
-            if (res.rows.item(i).time_out != 'null') {
-              res.rows.item(i).th = diff_hours(
-                $filter('date')(new Date(res.rows.item(i).time_in), 'yyyy-MM-dd H:mm:ss'),
-                $filter('date')(new Date(res.rows.item(i).time_out), 'yyyy-MM-dd H:mm:ss')
-              );
-              res.rows.item(i).time_out = $filter('date')(new Date(res.rows.item(i).time_out), 'H:mm:ss');
+            var sewadar = res.rows.item(i);
+
+
+            if (sewadar.time_out != 'null' && sewadar.time_in != 'null') {
+
+              var currentDate = $filter('date')(new Date(), 'yyyy-MM-dd');
+              var time_in = currentDate + ' ' + sewadar.time_in;
+              var time_out = currentDate + ' ' + sewadar.time_out;
+              var diffInMs = Date.parse(time_out) - Date.parse(time_in);
+              var diffInHours = diffInMs / 1000 / 60 / 60;
+              var hour = 1;
+
+              if (diffInHours < 1.5) hour = 1;
+              if (diffInHours >= 1.5) hour = 2;
+              if (diffInHours > 2) hour = 4;
+              if (diffInHours > 4) hour = 8;
+
+              sewadar.th = hour;
             }
-            res.rows.item(i).time_in = $filter('date')(new Date(res.rows.item(i).time_in), 'H:mm:ss');
-            $scope.sewadarAttendance = $scope.sewadarAttendance.concat(res.rows.item(i));
+
+            $scope.sewadarAttendance.push(sewadar);
           }
         }
         findImage();
@@ -410,7 +421,10 @@
       if (angular.isDefined(action) || action == 'load') {
         cfpLoadingBar.start();
       }
-      var query = "Select *  from (SELECT DISTINCT sewadars.id, sewadars.name, sewadars.gender,sewadars.address, sewadars.batch_no, sewadars.guardian, sewadars.age, sewadars.photo, sewadars.designation_name, sewadars.department_name as dname, sewadars.dob, sewadars.sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, attendances.nominal_roll_id, attendances.sewadar_type, attendances.time_in, attendances.time_out, attendances.sewa_id, attendances.id as s_id FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "'  AND attendances.nominal_roll_id = '" + null + "' AND attendances.sewadar_type = 'permanent' AND attendances.type='home_center' AND attendances.status <> 'done'  AND attendances.sewa_id = '" + sewa_id + "' UNION SELECT DISTINCT temp_sewadars.id, temp_sewadars.name, temp_sewadars.gender,temp_sewadars.address, NULL as batch_no, temp_sewadars.guardian, temp_sewadars.age, NULL as photo, NULL as designation_name, NULL as department_name, NULL as dob, NULL as sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, NULL as nominal_roll_id, attendances.sewadar_type, attendances.time_in, attendances.time_out, attendances.sewa_id, attendances.id as s_id FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + $scope.getDate + "' AND attendances.nominal_roll_id = '" + null + "' AND attendances.sewadar_type = 'temporary' AND attendances.type='home_center' AND attendances.status <> 'done'  AND attendances.sewa_id = '" + sewa_id + "') att GROUP BY  att_id order by dname Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
+
+      var currentDate = $filter('date')(new Date(), 'yyyy-MM-dd');
+
+      var query = "Select *  from (SELECT DISTINCT sewadars.id, sewadars.name, sewadars.gender,sewadars.address, sewadars.batch_no, sewadars.guardian, sewadars.age, sewadars.photo, sewadars.designation_name, sewadars.department_name as dname, sewadars.dob, sewadars.sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, attendances.nominal_roll_id, attendances.sewadar_type, attendances.time_in, attendances.time_out, attendances.sewa_id, attendances.id as s_id FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + currentDate + "'  AND (attendances.sewadar_type = 'permanent' OR attendances.sewadar_type = 'temporary') AND attendances.type='home_center' AND attendances.status <> 'done'  AND attendances.sewa_id = '" + sewa_id + "' UNION SELECT DISTINCT temp_sewadars.id, temp_sewadars.name, temp_sewadars.gender,temp_sewadars.address, NULL as batch_no, temp_sewadars.guardian, temp_sewadars.age, NULL as photo, NULL as designation_name, NULL as department_name, NULL as dob, NULL as sewadar_contact, attendances.sewadar_id as att_id, attendances.created_at as att_created_at, NULL as nominal_roll_id, attendances.sewadar_type, attendances.time_in, attendances.time_out, attendances.sewa_id, attendances.id as s_id FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where date(attendances.date)= '" + currentDate + "' AND attendances.nominal_roll_id = '" + null + "' AND attendances.sewadar_type = 'temporary' AND attendances.type='home_center' AND attendances.status <> 'done'  AND attendances.sewa_id = '" + sewa_id + "') att GROUP BY  att_id order by dname Desc LIMIT " + $scope.limit + " offset " + $scope.offset;
 
       getSewadarData(query);
     };
