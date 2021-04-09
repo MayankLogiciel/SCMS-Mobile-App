@@ -22,11 +22,15 @@
 
     $scope.calculateHours = function () {
       var e = 0;
+      var h = 0;
       angular.forEach($scope.reportData, function (v, i) {
         e = 0;
+        h = 0;
         angular.forEach($scope.totalHours, function (val) {
           if (val.id == v.id && val.d == v.d) {
             e += 1;
+            h += Number(val.hours) <= 0 ? 1 : Number(val.hours);
+            $scope.reportData[i].th = h;
             $scope.reportData[i].entry = e;
           }
         })
@@ -94,8 +98,9 @@
             if (sewadar.hours > 2) hour = 4;
             if (sewadar.hours > 4) hour = 8;
 
-            sewadar.th = hour;
-             if (
+            sewadar.hours = hour;
+
+            if (
               sewadar.time_out == null ||
               sewadar.time_out == 'null' ||
               sewadar.time_out == '--'
@@ -254,9 +259,9 @@
       $scope.multipleRecords = [];
       var query = '';
       if (group.batch_no) {
-        query = "SELECT sewadars.id, sewadars.name as name, sewadars.batch_no, sewadars.photo, sewadars.department_name as dname, attendances.date as d, attendances.created_at as att_created_at,  attendances.sewadar_id as att_id, attendances.time_in, attendances.time_out, attendances.hours, attendances.id as s_id FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where date (attendances.date) == '" + group.d + "' AND att_id == '" + group.att_id + "' AND attendances.type='home_center' AND attendances.sewadar_type='parmanent' order by d Desc";
+        query = "SELECT sewadars.id, sewadars.name as name, sewadars.batch_no, sewadars.photo, sewadars.department_name as dname, attendances.date as d, attendances.created_at as att_created_at,  attendances.sewadar_id as att_id, attendances.time_in, attendances.time_out, attendances.hours, attendances.id as s_id FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where date (attendances.date) == '" + group.d + "' AND att_id == '" + group.att_id + "' AND attendances.type='home_center' order by d Desc";
       } else {
-        query = "SELECT temp_sewadars.id, temp_sewadars.name, NULL as batch_no, NULL as photo, NULL as department_name, attendances.date as d, attendances.created_at as att_created_at, attendances.sewadar_id as att_id, attendances.time_in, attendances.time_out, attendances.hours, attendances.id as s_id FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where date (attendances.date) == '" + group.d + "' AND att_id == '" + group.att_id + "' AND attendances.type='home_center' AND attendances.sewadar_type='temporary' order by d Desc";
+        query = "SELECT temp_sewadars.id, temp_sewadars.name, NULL as batch_no, NULL as photo, NULL as department_name, attendances.date as d, attendances.created_at as att_created_at, attendances.sewadar_id as att_id, attendances.time_in, attendances.time_out, attendances.hours, attendances.id as s_id FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where date (attendances.date) == '" + group.d + "' AND att_id == '" + group.att_id + "' AND attendances.type='home_center' order by d Desc";
 
       }
       $cordovaSQLite.execute($rootScope.db, query).then(function (res) {

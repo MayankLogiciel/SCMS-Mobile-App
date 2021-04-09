@@ -264,29 +264,49 @@
 
       $scope.current = $filter('date')(new Date(), 'yyyy-MM-dd h:mm:ss');
 
-      if (TempSewadarData.age < 5) {
-        $scope.showAge = true;
-        return;
-      }
-
+      $scope.inValidAadhaar = false;
+      $scope.inValidMobile = false;
       $scope.showAge = false;
+
+      if (String(TempSewadarData.mobile_number).length !=10 ) {
+        $scope.inValidMobile = true;
+        return;
+     }
+
+     if (String(TempSewadarData.icard_id).length != 12 ) {
+        $scope.inValidAadhaar = true;
+        return;
+     }
+
+     if (TempSewadarData.age < 5) {
+           $scope.showAge = true;
+           return;
+     }
+
       if (!TempSewadarData.gender && !angular.isDefined(TempSewadarData.Male) && !angular.isDefined(TempSewadarData.Female)) {
         $scope.showError = true;
         return;
       }
 
       TempSewadarData.gender = TempSewadarData.gender ? TempSewadarData.gender : (TempSewadarData.Female ? 'F' : 'M');
-      var CheckQuery = "SELECT * FROM temp_sewadars where name ='" + TempSewadarData.name + "' AND guardian ='" + TempSewadarData.guardian + "' AND gender ='" + TempSewadarData.gender + "' AND address ='" + TempSewadarData.address + "' AND age ='" + TempSewadarData.age + "'";
+      var CheckQuery = "SELECT * FROM temp_sewadars where name ='" + TempSewadarData.name + "' AND guardian ='" + TempSewadarData.guardian + "' AND gender ='" + TempSewadarData.gender + "' AND address ='" + TempSewadarData.address + "' AND age ='" + TempSewadarData.age + "' AND icard_id ='" + TempSewadarData.icard_id + "' AND mobile_number ='" + TempSewadarData.mobile_number + "'";
 
       $cordovaSQLite.execute($rootScope.db, CheckQuery).then(function (res) {
         if (res.rows.length == 0) {
-          var Insertquery = "INSERT INTO temp_sewadars('name', 'guardian', 'gender', 'address', 'age', 'created_at', 'updated_at') VALUES ('" + TempSewadarData.name + "','" + TempSewadarData.guardian + "','" + TempSewadarData.gender + "', '" + TempSewadarData.address + "', '" + TempSewadarData.age + "','" + $scope.current + "','" + $scope.current + "')";
+          var Insertquery = "INSERT INTO temp_sewadars('name', 'guardian', 'gender', 'address', 'age', mobile_number, icard_id, 'created_at', 'updated_at') VALUES ('" + TempSewadarData.name + "','" + TempSewadarData.guardian + "','" + TempSewadarData.gender + "', '" + TempSewadarData.address + "', '" + TempSewadarData.age + "', '" + TempSewadarData.mobile_number + "', '" + TempSewadarData.icard_id + "','" + $scope.current + "','" + $scope.current + "')";
+
+          console.log(Insertquery);
           $cordovaSQLite.execute($rootScope.db, Insertquery).then(function (resTemp) {
-            TempSewadarData.id = resTemp.insertId;
-            addTempSewadarNested(TempSewadarData);
-          }, function (err) { });
-          return;
+                TempSewadarData.id = resTemp.insertId;
+
+                addTempSewadarNested(TempSewadarData);
+          }, function (err) {
+                console.log(err)
+          });
+
+          return
         }
+
         addTempSewadarNested(res.rows.item(0));
       })
       $scope.closePopoverForTempSewadar();

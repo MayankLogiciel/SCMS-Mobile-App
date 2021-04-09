@@ -1,23 +1,23 @@
-<ion-modal-view class="custom-model">	
-	<div class="bar bar-header bar-balanced">	
+<ion-modal-view class="custom-model">
+	<div class="bar bar-header bar-balanced">
 		<h1 class="title" ng-if="sewadar.batch_no">Sewadar Detail</h1>
 		<h1 class="title" ng-if="!sewadar.batch_no">Open Sewadar Detail</h1>
 	</div>
 	<ion-content class="has-header">
-		<ion-list>			
-			<div class='modal-padding'>	
+		<ion-list>
+			<div class='modal-padding'>
 				<div class="modal-image">
 					<img ng-if='sewadar.photo && !isImageNotAvailable' ng-src="{{imagePath + sewadar.photo}}?{{timeStampPhoto || ''}}"/>
 					<img ng-if='!sewadar.photo || isImageNotAvailable' ng-src="{{defaultImage}}" height="300" width="300"/>
 					<!-- <button class="button button-assertive ion-camera camera-model-button" on-tap="clickPhoto()" ng-if="showCameraOption"></button> -->
-				</div>		
-				<div class="modal-content-left">					
+				</div>
+				<div class="modal-content-left">
 					<h4>
 						<label ng-bind="sewadar.name"></label>
 					</h4>
 					<h4 ng-if="sewadar.guardian" class="g-name">
 						<label>G. Name:</label>
-						<span ng-bind="sewadar.guardian""></span>
+						<span ng-bind="sewadar.guardian"></span>
 					</h4>
 					<h4 ng-if="sewadar.batch_no">
 						<label>Batch No:</label>
@@ -50,19 +50,19 @@
 					<h4 ng-if="sewadar.address">
 						<label>Address:</label>
 						<span ng-bind="sewadar.address"></span>
-					</h4>	
-				</div>	
-			</div>					
+					</h4>
+				</div>
+			</div>
 		</ion-list>
 	</ion-content>
-	<div class="bar bar-footer custom-footer" ng-if="stateName=='satsang_day_attendance'">		
+	<div class="bar bar-footer custom-footer" ng-if="stateName=='satsang_day_attendance'">
 		<div class="button-bar">
 			<a class="button button-assertive" ng-click="closeModalForSewadarDetail(); SaveDataToAttandanceTable(sewadar);closePopoverForSewadar();" ng-bind="buttonTextForSewadarModel" ng-if="buttonTextForSewadarModel=='MARK ATTENDANCE'"></a>
 			<a class="button button-balanced" ng-click="deleteSewadar(sewadar, type);" ng-bind="buttonTextForSewadarModel" ng-if="buttonTextForSewadarModel !='MARK ATTENDANCE' && isCurrentDate && !isAttendaceClosed" ></a>
 			<a class="button button-stable" ng-click="closeModalForSewadarDetail();">CANCEL</a>
-		</div>	
+		</div>
 	</div>
-	<div class="bar bar-footer custom-footer" ng-if="stateName!='satsang_day_attendance'">		
+	<div class="bar bar-footer custom-footer" ng-if="stateName!='satsang_day_attendance'">
 		<div class="button-bar">
 
 			<a class="button button-assertive" ng-click="closeModalForSewadarDetail(); SaveDataToAttandanceTable(sewadar);closePopoverForSewadar();" ng-if="buttonTextForSewadarModel=='MARK ATTENDANCE'">MARK ENTRY</a>
@@ -70,6 +70,6 @@
 			<!-- <a class="button button-assertive" ng-if="isPrintAndEditEnable" ng-click="editUser()">EDIT</a> -->
 			<a class="button button-balanced" ng-if="isPrintAndEditEnable" ng-click="printUser(sewadar, isImageNotAvailable)">PRINT</a>
 			<a class="button button-stable" ng-click="closeModalForSewadarDetail();">CANCEL</a>
-		</div>	
+		</div>
 	</div>
 </ion-modal-view>

@@ -25,7 +25,7 @@
 			margin-right: 6px;
 		}
 	}
-} 
+}
 .modal-content-left {
 	display: block;
 }
@@ -78,14 +78,14 @@
 }
 .satsang-day-view-btn {
 	margin-top: -386px !important;
-	@media (max-width: 480px) { 
+	@media (max-width: 480px) {
 		margin-top: -213px !important;
 	}
 }
 
 .home-day-view-btn {
 	margin-top: -178px !important;
-	@media (max-width: 480px) { 
+	@media (max-width: 480px) {
 		margin-top: -178px !important;
 	}
 }
@@ -94,13 +94,13 @@
 	@media (max-width: 480px) {
 		font-size: 15px !important;
 		padding: 0 !important;
-	}	
+	}
 }
 .sync-nominal-roll {
 	text-align: center;
 	width: 100%;
 	font-size: 25px !important;
-	font-weight: bold; 
+	font-weight: bold;
 
 }
 .sync-nominal-roll-btn {
@@ -155,7 +155,7 @@
    	padding-top: 6px;
 		padding-bottom: 5px;
 		z-index: 9999;
-    margin-top: 9px; 
+    margin-top: 9px;
    	@media(max-width: 480px) {
    		right: 0 !important;
    		padding-top: 1px !important;
@@ -195,7 +195,7 @@
 	}
 
 }
-.welcome-msg {	
+.welcome-msg {
 	padding-bottom: 80px;
     width: 90%;
     margin: auto;
@@ -233,7 +233,7 @@
 			}
 		}
 	}
-	
+
 }
 .stop-scroll-top {
 	top: 0;
@@ -249,7 +249,7 @@
 .scms-home {
 	position: relative;
 	top: 50%;
-	margin-top: -431px;	
+	margin-top: -431px;
 	.row {
 		width: 95%;
 		margin: auto;
@@ -276,7 +276,7 @@
 	}
 
 
-	@media(max-device-width: 1280px) and (orientation: landscape) { 
+	@media(max-device-width: 1280px) and (orientation: landscape) {
 		margin-top: -326px;
 		.button.btn-padding.col {
 			height: 180px;
@@ -294,7 +294,7 @@
 			}
 		}
 	}
-	
+
 }
 
 .download-images-from-db {
@@ -376,7 +376,7 @@
 	    line-height: 43px;
 	    margin-left: 40px;
     }
-    
+
 }
 #floating-menu li {
 	background: $assertive !important;
@@ -467,7 +467,7 @@
 .scms-nominal {
 	position: relative;
 	top: 50%;
-	margin-top: -258px;	
+	margin-top: -258px;
 	.list {
 		.row {
 			padding: 0;
@@ -476,11 +476,11 @@
 }
 .scms-common-margin-for-login-and-home {
 	width: 90%;
-	margin-left: auto; 
+	margin-left: auto;
 	margin-right: auto;
 	#password_id {
 		margin-bottom: 35px;
-	} 
+	}
 }
 .validation-valid {
 	display: none;
@@ -509,7 +509,7 @@
 }
 .custom-popover.active {
 	opacity: 1 !important;
-	@media(max-width: 480px) {		
+	@media(max-width: 480px) {
 		left: 0;
 	    right: 0;
 	    margin-left: auto;
@@ -546,7 +546,7 @@
 			font-size: 16px !important;
 			line-height: 20px !important;
 		}
-	}	
+	}
 }
 .btn-back-left {
 	max-width: 10% !important;
@@ -562,7 +562,7 @@
 	margin: auto;
 	right: 0;
 	left: 0;
-	top: 130px;	
+	top: 130px;
 	@media(min-width: 1025px) {
 		height: 85%;
 		top: 173px;
@@ -613,9 +613,9 @@
 	}
 }
 .modal-padding {
-	padding: 15px;	
+	padding: 15px;
 	@media(max-width: 480px) {
-		padding: 0;	
+		padding: 0;
 	}
 	h4 {
 		font-size: 20px;
@@ -635,7 +635,7 @@
     			font-size: 15px;
     			padding: 0;
     		}
-    		
+
 	    }
 	    img {
 	    	@media(max-width: 480px) {
@@ -689,7 +689,7 @@
 	background: #fff;
 	margin-bottom: 7px;
 
-	a {		
+	a {
 		overflow: visible;
 	    display: block;
 	    min-height: 110px;
@@ -713,7 +713,7 @@
 	    	}
 	    }
 	    .list-content {
-			span {		
+			span {
 				font-weight: bold;
 				font-size: 20px;
 			}
@@ -722,10 +722,10 @@
 			@media(max-width: 480px) {
 	    		font-size: 17px;
 	    	}
-		}	   
+		}
 	    h2 {
 	    	margin-top: 19px;
-	    	font-size: 20px;	    	
+	    	font-size: 20px;
 	    	@media(max-width: 480px) {
 	    		font-size: 14px;
 	    		margin-top: 6px;
@@ -735,13 +735,13 @@
 	    		@media (min-width:481px)  {
 	    			margin-right: 2px;
 	    			font-size: 18px;
-	    		}	
+	    		}
 	    		@media (min-width:1025px)  {
 	    			margin-right: 10px;
 	    			font-size: 20px;
-	    		}    		
+	    		}
 	    	}
-	    }	    
+	    }
 
 	}
 	button {
@@ -763,7 +763,7 @@
 }
 
 .item.item-avatar.input-radio {
-	padding-top: 0;	
+	padding-top: 0;
 	background: #fff;
 	border-bottom: 3px solid #ccc;
 }
@@ -777,7 +777,7 @@
 		direction: ltr;
 		position: static;
 		height: 63px;
-		font-size: 20px; 
+		font-size: 20px;
 	}
 	.icon {
 		&:before {
@@ -809,11 +809,11 @@
     height: 300px;
     left: 0;
     right: 0;
-    margin: auto;  
+    margin: auto;
     p {
     	color: red;
     	padding-left: 15px;
-    } 
+    }
     .temp-sewa {
     	font-size: 25px !important;
     	font-weight: bold;
@@ -866,7 +866,7 @@
 			color: #fff;
     		font-weight: bold;
     		font-size: 25px;
-		} 
+		}
 	}
 	.popup-width {
 		.item-divider {
@@ -929,7 +929,7 @@
 	    top: 5px;
 	}
 	.date {
-		width: 50%;		
+		width: 50%;
 		label {
 			font-size: 20px;
 			font-weight: bold;
@@ -952,7 +952,7 @@
 		font-size: 20px;
 		input {
 			font-size: 18px;
-			@media(max-width: 480px) { 
+			@media(max-width: 480px) {
 				font-size: 14px;
 			}
 		}
@@ -1043,19 +1043,19 @@
 
 #loading-bar-spinner {
 	top: 50% !important;
-    left: 42% !important; 
+    left: 42% !important;
 	.spinner-icon {
     	border: 4px solid transparent;
     	width: 50px !important;
     	height: 50px !important;
     	border-top-color: $balanced !important;
     	border-left-color: $balanced !important;
-    } 
+    }
 }
 .platform-android .temp-sewadar-form {
-	height: 670px;
+	height: 480px;
 	top: 50%;
-    margin-top: -335px;
+	transform: translateY(-50%);
     background: #f2f2f2;
     p {
     	margin-bottom: 10px;
@@ -1069,6 +1069,8 @@
     	top: 65px;
     }
 	.temp-form {
+		height: 370px;
+		overflow-y: scroll;
 		padding: 15px 20px;
 		.custom-text {
 			background: #fff;
@@ -1271,8 +1273,8 @@
 	.action-sheet-has-icons .icon {
 		@media(min-width: 1025px) {
 			right: 20%;
-			left: 0;	
-		}		
+			left: 0;
+		}
 		right: 28%;
 		left: 0;
 		&:before {
@@ -1287,7 +1289,7 @@
 }
 .date-count {
 	a {
-	
+
 		h2 {
 			font-size: 20px;
 			font-weight: bold;
@@ -1338,10 +1340,10 @@
 		color: $homebtn;
 	}
 	.button.button-assertive {
-	    color: $homebtn;		
+	    color: $homebtn;
 	}
 	.button.button-royal {
-	    color: $homebtn;		
+	    color: $homebtn;
 	}
 }
 
@@ -1412,19 +1414,19 @@
 		span {
 			font-size: 20px;
 			font-weight: bold;
-			padding: 15px; 
+			padding: 15px;
 		}
 	}
 	.popup .popup-buttons {
 		button:first-child {
 			background:$stable;
 			color: #000;
-			margin-right: 0 !important; 
+			margin-right: 0 !important;
 			border-right: 1px solid #000;
 		}
 		button:last-child {
 			background:$stable;
-			margin-right: 0 !important; 
+			margin-right: 0 !important;
 			color: #000;
 		}
 	}
@@ -1457,7 +1459,7 @@
 }
 .my-disable{
     pointer-events:none;
-    opacity: 0.4;    
+    opacity: 0.4;
 }
 #floating-menu li span.label {
 	background: grey !important;
@@ -1519,8 +1521,8 @@
     	line-height: 65px !important;
 	}
 }
-.tabs-top > .tabs, .tabs.tabs-top {	
-	background: #fff !important;	
+.tabs-top > .tabs, .tabs.tabs-top {
+	background: #fff !important;
 	top: 65px !important;
 	height: 65px !important;
 	padding-top: 0 !important;
@@ -1632,7 +1634,7 @@
 	color: #fff;
     text-align: left;
     padding-top: 6px;
-    margin-left: 10px; 
+    margin-left: 10px;
 }
 .btn-nom-log {
 	margin-left: -10px;
@@ -1652,7 +1654,7 @@
 		}
 	}
 }
-	
+
 .listing-attend {
 	min-height: 137px;
 	.list-avtar {
@@ -1680,7 +1682,7 @@
 .sewadar-popover {
 	.item {
 		background-color: #fff !important;
-		border-color: #fff !important;	
+		border-color: #fff !important;
 	}
 }
 .sync-pic {
@@ -1714,7 +1716,7 @@
     	.ion-android-sync {
     		padding-right: 7px;
     		font-size: 30px;
-    		font-weight: bold; 
+    		font-weight: bold;
     	}
 	}
 }
@@ -1813,7 +1815,7 @@
 }
 
 @media(max-width: 480px) {
-	
+
 	.welcome-msg {
 		font-size: 20px;
 		padding-bottom: 30px;
@@ -2013,7 +2015,7 @@
 
 	.date-count {
 		a {
-		
+
 			h2 {
 				font-size: 16px;
 				font-weight: bold;
@@ -2064,7 +2066,7 @@
 		font-size: 15px;
 		font-weight: bold;
 	}
-	.search-wrapper { 
+	.search-wrapper {
 		top: 44px;
 	}
 	.stop-scroll {
@@ -2117,7 +2119,7 @@
 	}
 	.list-content-avtar {
 		margin-top: 11px !important;
-		margin-bottom: 5px !important;		
+		margin-bottom: 5px !important;
 	}
 	.list-content-avtar-content span {
 		white-space: normal;
@@ -2153,7 +2155,7 @@
     	max-height: 65px !important;
     	margin-left: -8px !important;
     	margin-top: 0 !important;
-    }   
+    }
     .attendance-to-mark {
     	margin-top: 7px !important;
     }
@@ -2174,7 +2176,7 @@
 	.action-sheet-wrapper .action-sheet-has-icons .icon:before {
     	font-size: 25px;
 	}
-	
+
 	.action-sheet-wrapper .action-sheet-has-icons .icon {
 		right: 46% !important;
 	}
@@ -2209,7 +2211,7 @@
 		}
 	}
 	.nominal-add-edit-form {
-		margin-top: 0; 
+		margin-top: 0;
 	}
 	.nominal-add-edit-form-width {
 	    width: 99% !important;
@@ -2235,12 +2237,12 @@
 	.option-sewa {
 		height: 50px;
 		select {
-			font-size: 13px !important; 
+			font-size: 13px !important;
 			padding-top: 0;
 			padding-bottom: 0;
 			padding-right: 15px;
 			margin-left: -13px;
-			
+
 		}
 	}
 	.item-select:after {
@@ -2263,7 +2265,7 @@
 		top: -4px;
 		background: transparent !important;
 		left: 25px !important;
-	}	
+	}
 
 	.camera-model-button:before {
     	font-size: 24px !important;
@@ -2288,7 +2290,7 @@
 	}
 	.list-button-popover {
 		top: 77px !important;
-		height: 162px !important; 
+		height: 162px !important;
 		left: 70% !important;
 	}
 	.list-button-popover.active {
@@ -2297,7 +2299,7 @@
 	.on-mob-display-none {
 		display: none !important;
 	}
-	.jatha-member .icon.icon-before span { 
+	.jatha-member .icon.icon-before span {
 		font-size: 15px !important;
 		line-height: 25px !important;
 	}
@@ -2385,7 +2387,7 @@
 	}
 	.info-on-mob {
 		margin-left: 3px !important;
-		span { 
+		span {
 			margin-right: 0 !important;
 			font-size: 15px !important;
 		}
@@ -2408,7 +2410,7 @@
 	.member-checkbox .item-checkbox .checkbox {
 		.checkbox-icon:after {
 			top: 14% !important;
-			width: 9px !important;			
+			width: 9px !important;
 		}
 	}
 
@@ -2425,7 +2427,7 @@
 		.checkbox-icon:after {
 			top: 6% !important;
     		width: 18px !important;
-    		height: 5px !important;	
+    		height: 5px !important;
 		}
 	}
 	.list-margin-sec {
@@ -2454,7 +2456,7 @@
     	line-height: normal;
     }
     .for-tab {
-		display: none;		
+		display: none;
 	}
 	.sava-att {
 	    right: 5px !important;
@@ -2466,7 +2468,7 @@
 		font-size: 0;
 	}
 	.list-margin-sewadar {
-		margin-left: 3px; 
+		margin-left: 3px;
 	}
 	.fit.custom-popover.sewadar-popover {
 		top: 68px !important;
@@ -2527,11 +2529,11 @@
 	// 	width: 60% !important;
 	// }
 	.floating-btn-for-list {
-		display: none;	
+		display: none;
 	}
 
 	.floating-btn-for-list-nominal {
-		display: block;	
+		display: block;
 	}
 	.nominal-list-on-tab {
 		padding: 0 5px !important;
@@ -2581,7 +2583,7 @@
 			option {
 				width: 100% !important;
 			}
-		}		
+		}
 		@media(min-width: 1025px) {
 			width:	85%;
 			height: 85%;
@@ -2590,7 +2592,7 @@
 				.button {
 					background-color: #eee;
 					font-weight: bold;
-					font-size: 18px; 
+					font-size: 18px;
 				}
 			}
 			.date_selection {
@@ -2620,7 +2622,7 @@
 				.date_cell {
 	    			border: 1px solid #009688;
 	    			border-radius: 50%;
-				}			
+				}
 			}
 		}
 		width:	85%;
@@ -2630,7 +2632,7 @@
 			.button {
 				background-color: #eee;
 				font-weight: bold;
-				font-size: 20px; 
+				font-size: 20px;
 			}
 		}
 		.selected_date_full {
@@ -2641,7 +2643,7 @@
 		.date_selection {
 			height: 614px;
 		}
-		
+
 		.date_col {
 			padding: 32px;
 		}
@@ -2708,7 +2710,7 @@
 				}
 			}
 		}
-	}	
+	}
 	.nominal-less-data {
 		padding: 7px 0 0 0 !important;
 	}
@@ -2778,7 +2780,7 @@
 		font-size: 16px !important;
 		padding-left: 2px !important;
 		font-weight: 400;
-	}	
+	}
 	.driver-data {
 		label {
 			width: auto !important;
@@ -2794,7 +2796,7 @@
     	height: 23%;
     }
     .floating-btn-for-list {
-			display: block;	
+			display: block;
 		}
 
 	.on-mob-display-none {
@@ -2824,7 +2826,7 @@
 	}
 	.srch-width {
 		width: 92%;
-	} 
+	}
 	.modal-padding h4 span {
 		color: rgba(68, 68, 68, 0.77);
 	}
@@ -2837,7 +2839,7 @@
 			span {
 				font-size: 15px !important;
 			}
-		}		
+		}
 		.nominal-sewa-detail-modal {
 			background: #ccc;
 	    	margin-right: 25px;
@@ -2872,7 +2874,7 @@
 //IOS css
 .platform-ios {
 	@media(max-width: 480px) {
-		.search-wrapper { 
+		.search-wrapper {
 			top: 65px;
 		}
 		.common-search-wrapper {
@@ -2914,16 +2916,16 @@
 				font-size: 25px;
 				font-weight: bold;
 			}
-			
+
 		}
-		.search-wrapper { 
+		.search-wrapper {
 			top: 65px;
 		}
 		.common-search-wrapper {
 			margin-top: 70px;
-		}	
+		}
 		.ios-info-header {
-			.h1 { 
+			.h1 {
 				margin-top: 3px !important;
 			}
 			.edit-info	 {
@@ -2936,12 +2938,12 @@
 			}
 		}
 		.header-title {
-			padding-top: 8px !important; 
+			padding-top: 8px !important;
 		}
 
 		.jatha-member {
 			.icon.icon-before {
-				
+
 				span {
 					width: 300px;
 				}
@@ -2965,7 +2967,7 @@
 		.name-badge-button-popover {
 			top: 130px !important;
 		}
-		
+
 
 	}
 
@@ -2984,7 +2986,7 @@
 	text-transform: capitalize;
 	font-size: 17px !important;
 	@media(max-width: 480px) {
-		max-width: 44%; 
+		max-width: 44%;
 		top: -2px !important;
 		font-size: 14px !important;
 		position: relative;
@@ -3041,7 +3043,7 @@
 	padding: 20px !important;
   font-size: 25px;
 	// span {
-	// 	padding-left: 30px; 
+	// 	padding-left: 30px;
 	// 	font-size: 20px;
 	// }
 }
@@ -3059,7 +3061,7 @@
 	margin-top: 17px;
 	span {
 		margin-right: 10px;
-		font-size:	19px;  
+		font-size:	19px;
 		font-weight: 500;
 	}
 }

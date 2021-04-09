@@ -1,22 +1,22 @@
 (function(){
       'use strict';
-      var sewadarDetailModalDiretive = function ($cordovaSQLite, $ionicModal, $cordovaFile, $ionicPopup, $cordovaToast, $stateParams, $timeout, $state, $rootScope, profilePicService, printService) {          
+      var sewadarDetailModalDiretive = function ($cordovaSQLite, $ionicModal, $cordovaFile, $ionicPopup, $cordovaToast, $stateParams, $timeout, $state, $rootScope, profilePicService, printService) {
             return {
                   restrict: 'A',
                   controller: ['$scope', '$element', '$attrs', function($scope,$element, $attrs){
-                        $scope.imagePath = $rootScope.baseAppDir + 'import/sewadar_pics/'; 
-                        $scope.defaultImage = 'img/imgUnavailable.png'; 
-                        $scope.sewadar ={}; 
+                        $scope.imagePath = $rootScope.baseAppDir + 'import/sewadar_pics/';
+                        $scope.defaultImage = 'img/imgUnavailable.png';
+                        $scope.sewadar ={};
                         $scope.isImageNotAvailable = false;
-                        $scope.nominal_id = $stateParams.id; 
+                        $scope.nominal_id = $stateParams.id;
                         var isModalOpen = false;
-                        
+
                         $scope.printUser = function(sewadar, isImageNotAvailable) {
                               var skillList = [];
                               var vehicleList = [];
                               var occupationList = [];
                               var vendor;
-                              
+
                               if(sewadar.vendor){
                                     vendor = JSON.parse(sewadar.vendor);
                               }
@@ -26,11 +26,11 @@
                               var occupationListQuery = "SELECT name, id FROM occupations";
                               var referedByQuery = "select * from sewadars WHERE id='" + sewadar.refered_by + "' LIMIT 1";
 
-                              
+
                               $cordovaSQLite.execute($rootScope.db, skillListQuery).then(function(skillRes) {
                                     if(skillRes.rows.length) {
-                                          for(var i= 0; i<skillRes.rows.length; i++) { 
-                                                skillList.push(skillRes.rows.item(i)); 
+                                          for(var i= 0; i<skillRes.rows.length; i++) {
+                                                skillList.push(skillRes.rows.item(i));
                                                 if(i == skillRes.rows.length-1) {
                                                       console.log(skillList);
                                                       angular.forEach(skillList, function(listObj) {
@@ -49,7 +49,7 @@
 
                               $cordovaSQLite.execute($rootScope.db, vehicleListQuery).then(function(vehicleRes) {
                                     if(vehicleRes.rows.length) {
-                                          for(var i= 0; i<vehicleRes.rows.length; i++) { 
+                                          for(var i= 0; i<vehicleRes.rows.length; i++) {
                                                 vehicleList.push(vehicleRes.rows.item(i));
                                                 if(i == vehicleRes.rows.length-1) {
                                                       console.log(vehicleRes);
@@ -63,7 +63,7 @@
                                                 }
                                           }
                                     }
-                                    
+
                               }, function(err) {
                                     console.log(err);
                               });
@@ -93,7 +93,7 @@
 
                               sewadar.mobile_number = (vendor.sewadars_mobile_number && vendor.sewadars_mobile_number.length > 0) ? vendor.sewadars_mobile_number[0] : ''
                               sewadar.land_line = (vendor.sewadars_land_line_number && vendor.sewadars_land_line_number.length > 0) ? vendor.sewadars_land_line_number[0] : ''
-                              
+
                               $timeout(function(){
                                     printService.printUserForm(sewadar, isImageNotAvailable, skillList, vehicleList);
                               }, 1500);
@@ -132,11 +132,11 @@
                         var refreshListpage = function() {
                               var query = "select * from sewadars where id =" + $scope.sewadar.id;
                               $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
-                                    for(var i= 0; i<res.rows.length; i++) { 
+                                    for(var i= 0; i<res.rows.length; i++) {
                                           $scope.sewadar = res.rows.item(i);
-                                    }     
+                                    }
                                     $rootScope.$broadcast('refreshPageAfterPhotoClicked', {sewadar: $scope.sewadar, mode: $scope.mode});
-                                    $scope.selectedSewadarDetail($scope.sewadar, $scope.mode, 'doNotOpen'); 
+                                    $scope.selectedSewadarDetail($scope.sewadar, $scope.mode, 'doNotOpen');
                               })
                         }
 
@@ -148,7 +148,7 @@
                                     $scope.timeStampPhoto = filename.substring(filename.lastIndexOf('?') + 1);
                                     profilePicService.setTimeOfPic($scope.timeStampPhoto);
                                     copyNewPhoto(cordova.file.externalCacheDirectory, $scope.croppedImageName, $scope.imagePath, $scope.selectedSewadarPhoto);
-                              }, 
+                              },
                               function fail () {
                               }, imageData, {quality:100});
                         }
@@ -156,10 +156,10 @@
                         var copyNewPhoto = function(fromPath, copiedPhotoName, toPath, replacedPhotoName) {
                               var photo_update_status = 1;
                               $cordovaFile.copyFile(fromPath, copiedPhotoName, toPath, replacedPhotoName).then(function(success) {
-                                    var query = "UPDATE sewadars SET photo = '"+replacedPhotoName+"', photo_update_status = '"+photo_update_status+"' WHERE sewadars.id = '"+$scope.sewadar.id+"'";      
+                                    var query = "UPDATE sewadars SET photo = '"+replacedPhotoName+"', photo_update_status = '"+photo_update_status+"' WHERE sewadars.id = '"+$scope.sewadar.id+"'";
                                     $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
-                                          $cordovaToast.show('Profile picture updated', 'short', 'center');      
-                                          refreshListpage(); 
+                                          $cordovaToast.show('Profile picture updated', 'short', 'center');
+                                          refreshListpage();
                                     });
                               });
                         }
@@ -192,8 +192,8 @@
                               if(isModalOpen) {
                                     $scope.modal.hide();
                               }
-                              showDeleteConfirm(sewadar, type);                
-                        };  
+                              showDeleteConfirm(sewadar, type);
+                        };
 
                         function setFocus() {
                               //Set focus on input textbox;
@@ -206,13 +206,13 @@
                         }
 
 
-                        var showDeleteConfirm = function(sewadar, type) { 
+                        var showDeleteConfirm = function(sewadar, type) {
                               console.log(sewadar, type);
                               $ionicPopup.confirm({
                                     title: 'Please Confirm',
                                     template: 'Are you sure you want to detete '+sewadar.name+' from attendees list? ',
                                     cssClass: 'confirm-delete',
-                                    buttons:[    
+                                    buttons:[
                                     {
                                           text: "Cancel",
                                           type: 'button-balanced',
@@ -239,14 +239,14 @@
                                                                   $scope.sewadarAttendance.splice(i,true);
                                                                   $scope.sewadarsCount();
                                                                   removeDeletedIncharge($scope.nominal_id, sewadar);
-                                                                  $cordovaToast.show('Sewadar removed', 'short', 'center'); 
+                                                                  $cordovaToast.show('Sewadar removed', 'short', 'center');
                                                                   return;
                                                             }
                                                       }
-                                                      
+
                                                 }, function(err) {
-                                                });  
-                                          } 
+                                                });
+                                          }
                                           else {
                                                 if (type == "home_center") {
                                                       var query = "DELETE FROM attendances WHERE attendances.sewadar_id = '" + sewadar.att_id + "' AND attendances.created_at = '" + sewadar.att_created_at +"'";
@@ -263,7 +263,7 @@
                                                             }
 
                                                       }, function (err) {
-                                                      });  
+                                                      });
                                                 }else {
                                                       var query = "DELETE FROM attendances WHERE sewadar_id = '" + sewadar.id + "' AND attendances.type = '" + type +"' AND attendances.nominal_roll_id = 'null'";
                                                       $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
@@ -271,22 +271,24 @@
                                                                   if ($scope.sewadarAttendance[i].id == sewadar.id) {
                                                                         $scope.sewadarAttendance.splice(i, true);
                                                                         $cordovaToast.show('Attendance unmarked successfully', 'short', 'center');
-                       
+
                                                                   }
                                                             }
 
                                                       }, function (err) {
-                                                      });  
-                                                } 
-                                          }                            
+                                                      });
+                                                }
+                                          }
 
 
                                     }
                               }]
-                        });                
-                        };  
-                       
+                        });
+                        };
+
                         $scope.selectedSewadarDetail = function(sewadar, str, warn) {
+
+                              console.log(sewadar);
 
                               $scope.mode = str;
                               $scope.sewadar = sewadar;
@@ -294,27 +296,27 @@
                               $scope.isImageNotAvailable = true;
 
                               $scope.buttonTextForSewadarModel = str === 'viewSewadar' ? 'REMOVE ATTENDANCE' : 'MARK ATTENDANCE';
-                              
-                              $cordovaFile.checkFile($scope.imagePath, sewadar.photo).then(function (success) { 
+
+                              $cordovaFile.checkFile($scope.imagePath, sewadar.photo).then(function (success) {
                                     $scope.isImageNotAvailable = false;
                               });
-                              
+
                               if(warn == 'doNotOpen') {
                                     return;
                               }else {
-                                    
+
                                     if($state.current.name == 'sewadars') {
                                           $scope.isPrintAndEditEnable = true;
                                     }
 
-                                    $scope.openModalForSewadarDetail();                  
+                                    $scope.openModalForSewadarDetail();
                               }
-                        }  
+                        }
 
                         var removeDeletedIncharge = function(id, sewadar) {
                               var checkIncharge = "select incharge_id, incharge_female_id, incharge_female_type from nominal_roles where id = "+$scope.nominal_id;
                               $cordovaSQLite.execute($rootScope.db, checkIncharge).then(function(ressult) {
-                                    for(var i= 0; i<ressult.rows.length; i++) { 
+                                    for(var i= 0; i<ressult.rows.length; i++) {
                                           $scope.incharge = ressult.rows.item(i);
                                     }
 
@@ -330,7 +332,7 @@
                                           checkMaleIncharge($scope.incharge,id);
                                     }
                               });
-                        }   
+                        }
 
                         var checkFemaleIncharge = function(incharge, id) {
                               if(incharge.incharge_female_id == 'null' || incharge.incharge_female_id == null) {
@@ -343,7 +345,7 @@
                               });
                               $rootScope.$broadcast('refreshPage', 'male');
 
-                        } 
+                        }
 
                         var checkMaleIncharge = function(incharge, id) {
                               if(incharge.incharge_id == 'null' || incharge.incharge_id == null) {
@@ -357,7 +359,7 @@
                               });
                               $rootScope.$broadcast('refreshPage', 'female');
 
-                        } 
+                        }
 
                         var getFemaleName = function(incharge, id) {
                               if(incharge.incharge_female_type == 't') {
@@ -366,16 +368,16 @@
                                     var query = "select name, sewadar_contact from sewadars where id =" +  incharge.incharge_female_id;
                               }
                               $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
-                                    for(var i= 0; i<res.rows.length; i++) { 
-                                          var femaleInchangeName = res.rows.item(i).name; 
+                                    for(var i= 0; i<res.rows.length; i++) {
+                                          var femaleInchangeName = res.rows.item(i).name;
                                           if(incharge.incharge_female_type == 't') {
                                                 var femaleInchangeContact = null;
                                           }else {
-                                                var femaleInchangeContact = res.rows.item(i).sewadar_contact; 
-                                                
+                                                var femaleInchangeContact = res.rows.item(i).sewadar_contact;
+
                                           }
                                           setFemaleIncharge(femaleInchangeName, femaleInchangeContact, id);
-                                    }  
+                                    }
                               });
 
                         }
@@ -386,7 +388,7 @@
                                     $rootScope.$broadcast('refreshPage');
                               });
                         }
-                  }]  
+                  }]
             }
       }
       sewadarDetailModalDiretive.$inject = ['$cordovaSQLite', '$ionicModal', '$cordovaFile', '$ionicPopup', '$cordovaToast', '$stateParams', '$timeout', '$state', '$rootScope', 'profilePicService', 'printService'];

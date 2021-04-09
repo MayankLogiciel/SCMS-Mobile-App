@@ -2,15 +2,15 @@
       <div class="bar bar-header bar-balanced">
             <h1 class="title temp-sewa" ng-bind='openSewadarPopoverTitle'></h1>
       </div>
-      <ion-content class="has-header"> 
+      <ion-content class="has-header">
             <form name='FormTemp' class="temp-form" novalidate>
                   <div class="list">
                         <div class="list list-inset login-wraper temp-name">
                               <label class="item item-input custom-text height-on-mob">
                                     <i class="icon ion-person placeholder-icon"></i>
-                                    <input 
-                                    class="text-transform-capital" 
-                                    type="text" 
+                                    <input
+                                    class="text-transform-capital"
+                                    type="text"
                                     name="name"
                                     autocomplete="off"
                                     validator="required"
@@ -18,7 +18,7 @@
                                     ng-model="TempSewadarData.name"
                                     search-popover-diretive
                                     ng-change = "search(TempSewadarData.name, 'open-sewadar')"
-                                    required-error-message="* Enter name for open sewadar" 
+                                    required-error-message="* Enter name for open sewadar"
                                     placeholder="Name"/>
                               </label>
                         </div>
@@ -27,15 +27,15 @@
                         <div class="list list-inset login-wraper temp-name">
                               <label class="item item-input custom-text height-on-mob">
                                     <i class="icon ion-person placeholder-icon"></i>
-                                    <input 
-                                    class="text-transform-capital" 
-                                    type="text" 
+                                    <input
+                                    class="text-transform-capital"
+                                    type="text"
                                     name="gname"
                                     autocomplete="off"
                                     validator="required"
                                     message-id = 'gname_id'
                                     ng-model="TempSewadarData.guardian"
-                                    required-error-message="* Enter name for open sewadar guardian" 
+                                    required-error-message="* Enter name for open sewadar guardian"
                                     placeholder="Father's/ Husband's Name"/>
                               </label>
                         </div>
@@ -44,15 +44,15 @@
                         <div class="list list-inset login-wraper temp-name">
                               <label class="item item-input custom-text  height-on-mob">
                                     <i class="icon ion-home placeholder-icon"></i>
-                                    <input 
-                                    class="text-transform-capital" 
-                                    type="text" 
+                                    <input
+                                    class="text-transform-capital"
+                                    type="text"
                                     name="address"
                                     autocomplete="off"
                                     validator="required"
                                     message-id = 'address_id'
                                     ng-model="TempSewadarData.address"
-                                    required-error-message="* Enter address for open sewadar" 
+                                    required-error-message="* Enter address for open sewadar"
                                     placeholder="Address"/>
                               </label>
                         </div>
@@ -61,20 +61,52 @@
                         <div class="list list-inset login-wraper temp-name">
                               <label class="item item-input custom-text  height-on-mob">
                                     <i class="icon ion-calendar placeholder-icon"></i>
-                                    <input 
-                                    class="text-transform-capital" 
-                                    type="number" 
+                                    <input
+                                    class="text-transform-capital"
+                                    type="number"
                                     name="age"
                                     autocomplete="off"
                                     validator="required"
                                     message-id = 'age_id'
                                     ng-model="TempSewadarData.age"
-                                    required-error-message="* Enter age of open sewadar" 
+                                    required-error-message="* Enter age of open sewadar"
                                     placeholder="age"/>
                               </label>
                         </div>
                         <p id='age_id'></p>
                         <p id='age_id' ng-if="showAge">* Age should be greater than 5</p>
+
+                        <div class="list list-inset login-wraper temp-name">
+                              <label class="item item-input custom-text  height-on-mob">
+                                    <i class="icon ion-iphone placeholder-icon"></i>
+                                    <input
+                                    type="number"
+                                    name="mobile_number"
+                                    validator="required"
+                                    message-id = 'mobile_id'
+                                    ng-model="TempSewadarData.mobile_number"
+                                    required-error-message="* Enter Mobile Number"
+                                    placeholder="Mobile Number"/>
+                              </label>
+                        </div>
+                        <p id='mobile_id'></p>
+                        <p id='mobile_id' ng-if="inValidMobile && TempSewadarData.mobile_number != ''">* Please enter a valid Mobile Number</p>
+
+                        <div class="list list-inset login-wraper temp-name">
+                              <label class="item item-input custom-text  height-on-mob">
+                                    <i class="icon ion-card placeholder-icon"></i>
+                                    <input
+                                    type="number"
+                                    name="icard_id"
+                                    validator="required"
+                                    message-id = 'icard_id'
+                                    ng-model="TempSewadarData.icard_id"
+                                    required-error-message="* Enter Aadhaar Number"
+                                    placeholder="Aadhaar Number"/>
+                              </label>
+                        </div>
+                        <p id='icard_id'></p>
+                        <p id='icard_id' ng-if="inValidAadhaar && TempSewadarData.icard_id != ''">* Please enter a valid Aadhaar Number</p>
 
                         <div class="row custom-text-temp">
                               <div class="col left-col">
@@ -86,13 +118,13 @@
                                     </ion-checkbox>
                               </div>
                         </div>
-                        <p ng-if="showError">* select gender</p> 
+                        <p ng-if="showError">* select gender</p>
                   </div>
-                  <div class="bar bar-footer custom-footer open-sewadar-footer">       
+                  <div class="bar bar-footer custom-footer open-sewadar-footer">
                         <div class="button-bar">
                               <a class="button button-assertive temp-sewa-btn" ng-click="addTempSewadar(TempSewadarData);" validation-submit="FormTemp">{{ButtonValue}}</a>
                               <a class="button button-stable temp-sewa-btn" ng-click="closePopoverForTempSewadar()" validation-reset="FormTemp">CANCEL</a>
-                        </div>      
+                        </div>
                   </div>
             </form>
       </ion-content>

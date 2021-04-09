@@ -10709,9 +10709,9 @@ a.button {
     border-left-color: #952425 !important; }
 
 .platform-android .temp-sewadar-form {
-  height: 670px;
+  height: 480px;
   top: 50%;
-  margin-top: -335px;
+  transform: translateY(-50%);
   background: #f2f2f2; }
   .platform-android .temp-sewadar-form p {
     margin-bottom: 10px; }
@@ -10720,6 +10720,8 @@ a.button {
   .platform-android .temp-sewadar-form .has-header {
     top: 65px; }
   .platform-android .temp-sewadar-form .temp-form {
+    height: 370px;
+    overflow-y: scroll;
     padding: 15px 20px; }
     .platform-android .temp-sewadar-form .temp-form .custom-text {
       background: #fff; }
