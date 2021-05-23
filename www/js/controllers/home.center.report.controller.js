@@ -92,8 +92,6 @@
         if (res.rows.length > 0) {
           for (var i = 0; i < res.rows.length; i++) {
             var sewadar =  res.rows.item(i);
-
-            console.log(sewadar);
             if (sewadar.batch_no != 0) {
               if (sewadar.time_in != null && sewadar.time_in.length > 8) {
                 sewadar.time_in = $filter('date')(new Date(sewadar.time_in), 'HH:mm:ss');
@@ -270,7 +268,7 @@
       if (group.batch_no) {
         query = "SELECT sewadars.id, sewadars.name as name, sewadars.batch_no, sewadars.photo, sewadars.department_name as dname, attendances.date as d, attendances.created_at as att_created_at,  attendances.sewadar_id as att_id, attendances.time_in, attendances.time_out, attendances.hours, attendances.id as s_id FROM sewadars INNER JOIN attendances ON sewadars.id=attendances.sewadar_id where date (attendances.date) == '" + group.d + "' AND att_id == '" + group.att_id + "' AND attendances.type='home_center' order by d Desc";
       } else {
-        query = "SELECT temp_sewadars.id, temp_sewadars.name, NULL as batch_no, NULL as photo, NULL as department_name, attendances.date as d, attendances.created_at as att_created_at, attendances.sewadar_id as att_id, attendances.time_in, attendances.time_out, attendances.hours, attendances.id as s_id FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where date (attendances.date) == '" + group.d + "' AND att_id == '" + group.att_id + "' AND attendances.type='home_center' order by d Desc";
+        query = "SELECT temp_sewadars.id, temp_sewadars.name, NULL as batch_no, NULL as photo, NULL as department_name, attendances.date as d, attendances.created_at as att_created_at, attendances.sewadar_id as att_id, attendances.time_in, attendances.time_out, attendances.hours, attendances.id as s_id FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id=attendances.sewadar_id where date (attendances.date) == '" + group.d + "' AND att_id == '" + group.att_id + "' AND attendances.type='home_center' AND attendances.sewadar_type='temporary' order by d Desc";
 
       }
       $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
