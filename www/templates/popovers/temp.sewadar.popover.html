@@ -82,15 +82,14 @@
                                     <input
                                     type="number"
                                     name="mobile_number"
-                                    validator="required"
                                     message-id = 'mobile_id'
                                     ng-model="TempSewadarData.mobile_number"
-                                    required-error-message="* Enter Mobile Number"
                                     placeholder="Mobile Number"/>
                               </label>
                         </div>
                         <p id='mobile_id'></p>
-                        <p id='mobile_id' ng-if="inValidMobile && TempSewadarData.mobile_number != ''">* Please enter a valid Mobile Number</p>
+                        <!-- <p id='mobile_id'></p>
+                        <p id='mobile_id' ng-if="inValidMobile && TempSewadarData.mobile_number != ''">* Please enter a valid Mobile Number</p> -->
 
                         <div class="list list-inset login-wraper temp-name">
                               <label class="item item-input custom-text  height-on-mob">
@@ -98,15 +97,14 @@
                                     <input
                                     type="number"
                                     name="icard_id"
-                                    validator="required"
                                     message-id = 'icard_id'
                                     ng-model="TempSewadarData.icard_id"
-                                    required-error-message="* Enter Aadhaar Number"
                                     placeholder="Aadhaar Number"/>
                               </label>
                         </div>
                         <p id='icard_id'></p>
-                        <p id='icard_id' ng-if="inValidAadhaar && TempSewadarData.icard_id != ''">* Please enter a valid Aadhaar Number</p>
+                        <!-- <p id='icard_id'></p>
+                        <p id='icard_id' ng-if="inValidAadhaar && TempSewadarData.icard_id != ''">* Please enter a valid Aadhaar Number</p> -->
 
                         <div class="row custom-text-temp">
                               <div class="col left-col">

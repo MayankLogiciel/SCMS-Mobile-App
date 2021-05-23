@@ -381,19 +381,19 @@
                   TempSewadarData.guardian = angular.uppercase(TempSewadarData.guardian);
                   TempSewadarData.address = angular.uppercase(TempSewadarData.address);
 
-                  $scope.inValidAadhaar = false;
-                  $scope.inValidMobile = false;
+                  // $scope.inValidAadhaar = false;
+                  // $scope.inValidMobile = false;
                   $scope.showAge = false;
 
-                  if (String(TempSewadarData.mobile_number).length !=10 ) {
-                     $scope.inValidMobile = true;
-                     return;
-                  }
+                  // if (String(TempSewadarData.mobile_number).length > 0 && String(TempSewadarData.mobile_number).length !=10 ) {
+                  //    $scope.inValidMobile = true;
+                  //    return;
+                  // }
 
-                  if (String(TempSewadarData.icard_id).length != 12 ) {
-                     $scope.inValidAadhaar = true;
-                     return;
-                  }
+                  // if (String(TempSewadarData.icard_id).length > 0 && String(TempSewadarData.icard_id).length != 12 ) {
+                  //    $scope.inValidAadhaar = true;
+                  //    return;
+                  // }
 
                   if (TempSewadarData.age < 5) {
                         $scope.showAge = true;
@@ -623,7 +623,14 @@
             };
 
             $scope.handleAdhardAndPhone = function(number) {
-                  if (angular.isUndefined(number) || number == 'null' || number == null || !number) {
+                  if (
+                        angular.isUndefined(number)
+                        || number == 'null'
+                        || number == 'undefined'
+                        || number == undefined
+                        || number == null
+                        || !number
+                  ) {
                         return '';
                   }
 
@@ -803,7 +810,7 @@
                               var tableRows = [];
                               var tableRowsContinue = [];
 
-                              var footer = '<table style="width: 99%; margin: auto; margin-top: 15px;"><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;"></td><td colspan="2" style="width: 25%; text-align:right; vertical-align: top; margin-right: 100px"><span style="padding-right: 36px; padding-left: 36px;"><img src="' + $scope.signature + '" " width="180"></span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;"></td><td colspan="2" style="width: 25%; text-align:right; vertical-align: top; margin-right: 100px"></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;"></td><td colspan="2" style="width: 25%; text-align:right; vertical-align: top; margin-right: 100px"></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;"><span style="border-top:1px solid #000; padding-right: 30px; padding-left: 30px; font-size: 12px;">(Signature of Jathedar)</span></td><td colspan="2" style="width: 25%; text-align:right; vertical-align: top; margin-right: 100px"></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: bottom  ; text-align: left; font-size: 12px;">Letter No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000; font-size: 12px;">' + $scope.letterNumber + '</span></td><td colspan = "2"  style="width: 25%; text-align: right;"></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left; font-size: 12px;">Jatha : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000; font-size: 12px;">' + $scope.nominalRollsData.jatha_name + '</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: right;"><span style="border-top:1px solid #000; padding-right: 36px; padding-left: 36px; font-size: 12px;">(Signature of Functionary)</span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left; font-size: 12px;">Issue Date : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000; font-size: 12px;">' + $scope.issueDate + '</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: right;"><span style="padding-right: 50px; font-size: 12px;">(Affix Rubber Stamp)</span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: ; font-size: 12px;">Contact No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000; font-size: 12px;">' + $scope.nominalRollsData.contact_no + '</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: right; font-size: 12px;">Contact No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000; font-size: 12px;">' + $scope.placeInfo.mobile1 + ' ' + $scope.placeInfo.mobile2 + '</span></td></tr></table>';
+                              var footer = '<table style="width: 99%; margin: auto; margin-top: 15px;"><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;"></td><td colspan="2" style="width: 25%; text-align:right; vertical-align: bottom; margin-right: 100px"><span style="padding-right: 36px; padding-left: 36px;"><img src="' + $scope.signature + '" " width="150"></span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left;"><span style="border-top:1px solid #000; padding-right: 30px; padding-left: 30px; font-size: 12px;">(Signature of Jathedar)</span></td><td colspan="2" style="width: 25%; text-align:right; vertical-align: top; margin-right: 100px"></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: bottom  ; text-align: left; font-size: 12px;">Letter No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000; font-size: 12px;">' + $scope.letterNumber + '</span></td><td colspan = "2"  style="width: 25%; text-align: right;"></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left; font-size: 12px;">Jatha : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000; font-size: 12px;">' + $scope.nominalRollsData.jatha_name + '</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: right;"><span style="border-top:1px solid #000; padding-right: 36px; padding-left: 36px; font-size: 12px;">(Signature of Functionary)</span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: left; font-size: 12px;">Issue Date : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000; font-size: 12px;">' + $scope.issueDate + '</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: right;"><span style="padding-right: 50px; font-size: 12px;">(Affix Rubber Stamp)</span></td></tr><tr><td colspan="2" style="width: 25%; vertical-align: top; text-align: ; font-size: 12px;">Contact No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000; font-size: 12px;">' + $scope.nominalRollsData.contact_no + '</span></td><td colspan = "2"  style="width: 25%; vertical-align: top; text-align: right; font-size: 12px;">Contact No. : &nbsp;<span style="padding-right: 50px; border-bottom: 1px solid #000; font-size: 12px;">' + $scope.placeInfo.mobile1 + ' ' + $scope.placeInfo.mobile2 + '</span></td></tr></table>';
                               setBlankRows(function () {
                                     for (var i = 0; i < $scope.sewadarPrintList.length; i++) {
                                           if (!angular.isDefined($scope.sewadarPrintList[i].guardian) || $scope.sewadarPrintList[i].guardian == null) {
@@ -896,7 +903,7 @@
                                           var printRecord = 36 * (pageNo + 1) + 23;
                                           var emptyRowsG;
                                           for (var s = $scope.sewadarPrintList.length; s < printRecord; s++) {
-                                                emptyRowsG = '<tr height = "28.4" > <td style="border: 1px solid #000; font-size: 11px; text-align: center;">' + (s + 1) + '</td> <td style="border: 1px solid #000; font-size: 10px; padding-left: 5px; width: 125px;"></td> <td style="border: 1px solid #000; font-size: 10px; padding-left: 5px; width: 125px;"></td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td> <td style="border: 1px solid #000; font-size: 10px; text-overflow:ellipsis; padding-left: 5px"></td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td>  </tr>'
+                                                emptyRowsG = $scope.isForBeas ? '<tr height = "28.4" > <td style="border: 1px solid #000; font-size: 11px; text-align: center;">' + (s + 1) + '</td> <td style="border: 1px solid #000; font-size: 10px; padding-left: 5px; width: 125px;"></td> <td style="border: 1px solid #000; font-size: 10px; padding-left: 5px; width: 125px;"></td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td> <td style="border: 1px solid #000; font-size: 10px; text-overflow:ellipsis; padding-left: 5px"></td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td><td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td></tr>' : '<tr height = "28.4" > <td style="border: 1px solid #000; font-size: 11px; text-align: center;">' + (s + 1) + '</td> <td style="border: 1px solid #000; font-size: 10px; padding-left: 5px; width: 125px;"></td> <td style="border: 1px solid #000; font-size: 10px; padding-left: 5px; width: 125px;"></td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td> <td style="border: 1px solid #000; font-size: 10px; text-overflow:ellipsis; padding-left: 5px"></td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td></tr>'
                                                 printedPage = printedPage.concat(emptyRowsG);
                                           }
                                           var printPageFinal = printedPage;
@@ -904,7 +911,8 @@
                               } else {
                                     var emptyRows, emptyRows1, printedPageExtra = tableStart1, rowBreak = "<br><br>";
                                     for (var r = $scope.sewadarPrintList.length + 1; r < 60; r++) {
-                                          emptyRows = '<tr height = "28.4" > <td style="border: 1px solid #000; font-size: 11px; text-align: center;">' + r + '</td> <td style="border: 1px solid #000; font-size: 10px; padding-left: 5px; width: 125px;"></td> <td style="border: 1px solid #000; font-size: 10px; padding-left: 5px; width: 125px;"></td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td> <td style="border: 1px solid #000; font-size: 10px; text-overflow:ellipsis; padding-left: 5px"></td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td><td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td>  </tr>'
+                                          emptyRows = $scope.isForBeas ? '<tr height = "28.4" > <td style="border: 1px solid #000; font-size: 11px; text-align: center;">' + r + '</td> <td style="border: 1px solid #000; font-size: 10px; padding-left: 5px; width: 125px;"></td> <td style="border: 1px solid #000; font-size: 10px; padding-left: 5px; width: 125px;"></td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td> <td style="border: 1px solid #000; font-size: 10px; text-overflow:ellipsis; padding-left: 5px"></td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td><td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td></tr>' :
+                                          '<tr height = "28.4" > <td style="border: 1px solid #000; font-size: 11px; text-align: center;">' + r + '</td> <td style="border: 1px solid #000; font-size: 10px; padding-left: 5px; width: 125px;"></td> <td style="border: 1px solid #000; font-size: 10px; padding-left: 5px; width: 125px;"></td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td> <td style="border: 1px solid #000; font-size: 10px; text-overflow:ellipsis; padding-left: 5px"></td> <td style="border: 1px solid #000; font-size: 10px; text-align: center;"></td></tr>'
                                           if (r == 24) {
                                                 var footerRow = '<tr><td colspan ='+ $scope.colSpan +'>' + footer + '</td></tr><tr height="10"><td colspan ='+ $scope.colSpan +'></td></tr>';
                                                 emptyRows = emptyRows.concat(footerRow);
@@ -912,6 +920,8 @@
                                           printedPage1 = printedPage1.concat(emptyRows);
                                     }
                                     var printPageFinal = printedPage1;
+
+                                    console.log(printPageFinal);
                               }
                               if ($cordovaPrinter.isAvailable()) {
                                     $cordovaPrinter.print(printPageFinal, { duplex: 'long', portrait: true }, function (res) {

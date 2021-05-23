@@ -27,9 +27,11 @@
         e = 0;
         h = 0;
         angular.forEach($scope.totalHours, function (val) {
+          console.log(val.id, v.id, val.d, v.d)
+          console.log(val, v)
           if (val.id == v.id && val.d == v.d) {
             e += 1;
-            h += Number(val.hours) <= 0 ? 1 : Number(val.hours);
+            h += Number(v.hours) <= 0 ? 1 : Number(v.hours);
             $scope.reportData[i].th = h;
             $scope.reportData[i].entry = e;
           }
@@ -91,44 +93,42 @@
           for (var i = 0; i < res.rows.length; i++) {
             var sewadar =  res.rows.item(i);
 
-            var hour = 1;
+            console.log(sewadar);
+            if (sewadar.batch_no != 0) {
+              if (sewadar.time_in != null && sewadar.time_in.length > 8) {
+                sewadar.time_in = $filter('date')(new Date(sewadar.time_in), 'HH:mm:ss');
+              }
 
-            if (sewadar.hours < 1.5) hour = 1;
-            if (sewadar.hours >= 1.5) hour = 2;
-            if (sewadar.hours > 2) hour = 4;
-            if (sewadar.hours > 4) hour = 8;
+              if (sewadar.time_in == null) sewadar.time_in = '--';
 
-            sewadar.hours = hour;
+              if (
+                sewadar.time_out == null ||
+                sewadar.time_out == 'null' ||
+                sewadar.time_out == '--'
+              ) {
+                sewadar.time_out = '--';
+                sewadar.hours = '1';
+              }
 
-            if (
-              sewadar.time_out == null ||
-              sewadar.time_out == 'null' ||
-              sewadar.time_out == '--'
-            ) {
-              sewadar.time_out = '--';
-            }
+              if (sewadar.time_out != null && sewadar.time_out.length > 8) {
+                sewadar.time_out = $filter('date')(new Date(sewadar.time_out), 'HH:mm:ss');
+              }
 
-            if (
-              sewadar.time_out == null ||
-              sewadar.time_out == 'null' ||
-              sewadar.time_out == '--'
-            ) {
-              sewadar.time_out = '--';
-            }
+              if (sewadar.time_out != null && sewadar.hours == null) {
+                sewadar.hours = diff_hours(
+                  sewadar.d,
+                  sewadar.time_in,
+                  sewadar.time_out
+                );
+              }
+              sewadar.s_no = i + 1;
 
-            if (
-              sewadar.time_in == null ||
-              sewadar.time_in == 'null' ||
-              sewadar.time_in == '--'
-            ) {
-              sewadar.time_in = '--';
-            }
+                $scope.reportData.push(sewadar);
 
-            sewadar.s_no = i + 1;
-            $scope.reportData.push(sewadar);
-            if (res.rows.length - 1 == i) {
-              $scope.calculateHours();
-            }
+                if (res.rows.length - 1 == i) {
+                  $scope.calculateHours();
+                }
+              }
           }
         }
       },
@@ -230,31 +230,40 @@
       var pdate = new Date(date.setDate(date.getDate() - 6));
       var currentDate = $filter('date')(new Date(), 'yyyy-MM-dd');
       var prevdate = $filter('date')(new Date(pdate), 'yyyy-MM-dd');
-      var query = "SELECT sewadars.id, attendances.date as d, attendances.hours FROM sewadars INNER JOIN attendances ON sewadars.id =  attendances.sewadar_id where date(attendances.date) >= '" + prevdate + "' AND date(attendances.date) <= '" + currentDate + "' AND attendances.type = 'home_center'";
+      var query = "SELECT sewadars.id, sewadars.batch_no, attendances.date as d, attendances.hours FROM sewadars INNER JOIN attendances ON sewadars.id =  attendances.sewadar_id where date(attendances.date) >= '" + prevdate + "' AND date(attendances.date) <= '" + currentDate + "' AND attendances.type = 'home_center'";
       $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
         for (var i = 0; i < res.rows.length; i++) {
-          $scope.totalHours.push(res.rows.item(i));
+
+          if(res.rows.item(i).batch_no != 0) {
+            $scope.totalHours.push(res.rows.item(i));
+          }
+
           if (res.rows.length - 1 == i) {
-            var que = "SELECT temp_sewadars.id, attendances.date as d, attendances.hours FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id =  attendances.sewadar_id where date(attendances.date) >= '" + prevdate + "' AND date(attendances.date) <= '" + currentDate + "' AND attendances.type = 'home_center'";
-            $cordovaSQLite.execute($rootScope.db, que).then(function (res1) {
-              if (res1.rows.length > 0) {
-                for (var j = 0; j < res1.rows.length; j++) {
+            var q = "SELECT temp_sewadars.id, NULL as batch_no, attendances.date as d, attendances.hours FROM temp_sewadars INNER JOIN attendances ON temp_sewadars.id =  attendances.sewadar_id where date(attendances.date) >= '" + prevdate + "' AND date(attendances.date) <= '" + currentDate + "' AND attendances.type = 'home_center' AND attendances.sewadar_type='temporary'";
+
+            $cordovaSQLite.execute($rootScope.db, q).then(function (res1) {
+              if (res1.rows.length <= 0) {
+                $scope.getReport();
+                return;
+              }
+
+              for (var j = 0; j < res1.rows.length; j++) {
+                if(res.rows.item(j).batch_no != 0) {
                   $scope.totalHours.push(res1.rows.item(j));
                   if (res1.rows.length - 1 == j) {
                     $scope.getReport();
                   }
                 }
-              } else {
-                $scope.getReport();
               }
-            });
+            })
           }
+
         }
+
       });
     };
 
     $scope.getMultipleRecords = function (group) {
-      console.log(group)
       cfpLoadingBar.start();
       $scope.multipleRecords = [];
       var query = '';

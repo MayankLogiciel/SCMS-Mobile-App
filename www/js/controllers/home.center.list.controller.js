@@ -112,15 +112,16 @@
           for (var i = 0; i < res.rows.length; i++) {
             var sewadar = res.rows.item(i);
 
-
             if (sewadar.time_out != 'null' && sewadar.time_in != 'null') {
 
               var currentDate = $filter('date')(new Date(), 'yyyy-MM-dd');
-              var time_in = currentDate + ' ' + sewadar.time_in;
-              var time_out = currentDate + ' ' + sewadar.time_out;
-              var diffInMs = Date.parse(time_out) - Date.parse(time_in);
-              var diffInHours = diffInMs / 1000 / 60 / 60;
-              var hour = 1;
+              var inTime = $filter('date')(new Date(sewadar.time_in), 'HH:mm:ss');
+              var outTime = $filter('date')(new Date(sewadar.time_out), 'HH:mm:ss');
+
+              var time_in = new Date(currentDate + ' ' + inTime);
+              var time_out = new Date(currentDate + ' ' + outTime);
+              var diffInHours = Math.abs(time_in - time_out) / 36e5;
+               var hour = 1;
 
               if (diffInHours < 1.5) hour = 1;
               if (diffInHours >= 1.5) hour = 2;
