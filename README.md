@@ -33,3 +33,5 @@ cordova.plugins.diagnostic 3.1.7 "Diagnostic"
 ionic-plugin-keyboard 2.2.1 "Keyboard"
 phonegap-plugin-barcodescanner 6.0.6 "BarcodeScanner"
 ```
+
+Sometimes getting issues in file or file transfer plugin so we need to remove and reinstall

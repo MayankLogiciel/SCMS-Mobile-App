@@ -39,7 +39,9 @@
             }
 
             $scope.cancelLoading = function (str) {
-                  $scope.abortTransferRequest.abort();
+                  if(angular.isFunction($scope.abortTransferRequest)) {
+                        $scope.abortTransferRequest.abort();
+                  }
                   $ionicLoading.hide();
             }
 
@@ -338,11 +340,9 @@
                         options.headers = headers;
                         $scope.abortTransferRequest = $cordovaFileTransfer.upload(url, targetPath, options, trustAllHosts);
                         $scope.abortTransferRequest.then(function (result) {
-                              console.log('success', result);
                               $scope.import();
                               localStorage.removeItem("SCMS_AttendaceClosedForDay");
                         }, function (err) {
-                              console.log('err', err);
                               $timeout(function () {
                                     switch (err.http_status) {
                                           case 401:
@@ -357,7 +357,6 @@
                                     }
                               }, 500);
                         }, function (progress) {
-                              console.log(progress);
                               $timeout(function () {
                                     $scope.downloadProgress = Math.floor((progress.loaded / progress.total) * 100);
                                     $ionicLoading.show({ scope: $scope, template: '<div class="btn-animation-sync" style="color: #FFFFFF;"><ion-spinner icon="lines" class="spinner-calm"></ion-spinner><br><span style="vertical-align: middle;">&nbsp;&nbsp;Uploading database (' + $scope.downloadProgress + '%)</span><br><br><br><button class ="button button-clear cancel-btn" ng-click="cancelLoading()"><i class="icon ion-close"></i>&nbsp;&nbsp;Cancel</button></div>' });
