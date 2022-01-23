@@ -12341,6 +12341,9 @@ a.button {
     padding: 0px;
     width: 950px !important; }
 
+.time-in-out {
+  font-size: 14px !important; }
+
 #loading-bar, #loading-bar-spinner {
   pointer-events: none;
   -webkit-pointer-events: none;

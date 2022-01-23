@@ -27,8 +27,6 @@
         e = 0;
         h = 0;
         angular.forEach($scope.totalHours, function (val) {
-          console.log(val.id, v.id, val.d, v.d)
-          console.log(val, v)
           if (val.id == v.id && val.d == v.d) {
             e += 1;
             h += Number(v.hours) <= 0 ? 1 : Number(v.hours);
